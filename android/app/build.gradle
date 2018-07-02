@@ -193,9 +193,9 @@ dependencies {
     implementation "com.android.support:multidex:1.0.1"
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
-    androidTestImplementation(project(":detox"), {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    // androidTestImplementation(project(":detox"), {
+    //     exclude group: 'com.android.support', module: 'support-annotations'
+    // })
 }
 
 // Run this once to be able to run the application with BUCK
