@@ -86,7 +86,6 @@
     "babel-preset-react-native": "4.0.0",
     "babel-preset-react-native-stage-0": "1.0.1",
     "css-to-react-native-transform": "1.6.0",
-    "detox": "8.0.0",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "1.1.1",
     "eslint": "5.0.1",
