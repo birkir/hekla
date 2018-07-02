@@ -1,4 +1,5 @@
-import { YellowBox, AsyncStorage } from 'react-native';
+import './utils/sentry';
+import { YellowBox } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens, startApp } from 'screens';
 import UI from 'stores/UI';

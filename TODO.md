@@ -22,7 +22,5 @@
 - Move ActionSheet actions into separate files (select stories type, select theme, etc.)
 - Move Login.tsx into separate file in account
 
-- Search empty state
-- Better about in Account (related to Cell rewrite)
 - Longpress tooltips for Story/Header icons
 - Hackernews logo for Share a story.

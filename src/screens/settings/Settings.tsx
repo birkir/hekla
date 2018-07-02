@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Platform, Switch } from 'react-native';
 import { observer } from 'mobx-react';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
@@ -9,6 +9,8 @@ import { SETTINGS_GENERAL_SCREEN, SETTINGS_APPEARANCE_SCREEN } from 'screens';
 import { theme, applyThemeOptions } from 'styles';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
+import CodePush from 'react-native-code-push';
+import codePushConfig from 'utils/codePushConfig';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -16,6 +18,7 @@ interface Props {
   testID?: string;
 }
 
+@CodePush(codePushConfig())
 @observer
 export default class SettingsScreen extends React.Component<Props> {
 
@@ -54,6 +57,17 @@ export default class SettingsScreen extends React.Component<Props> {
     });
   }
 
+  @autobind
+  onBetaChange(flag: boolean) {
+    // TODO: Prompt user to confirm and that the app will likely restart.
+    UI.settings.setIsBeta(flag);
+    const config = codePushConfig();
+    config.installMode = CodePush.InstallMode.IMMEDIATE;
+    CodePush.sync(config);
+    console.log(config);
+    // CodePush.restartApp(); // ?
+  }
+
   render() {
     const { testID } = this.props;
 
@@ -77,6 +91,19 @@ export default class SettingsScreen extends React.Component<Props> {
           <Cell title="About" />
           <Cell title="Donate" />
           <Cell title="Rate Hekla" />
+        </CellGroup>
+        <CellGroup header={true}>
+          {Platform.OS === 'android' && (
+            <Cell
+              title="Opt-in to Beta"
+              value={(
+                <Switch
+                  value={UI.settings.isBeta}
+                  onValueChange={this.onBetaChange}
+                />
+              )}
+            />
+          )}
         </CellGroup>
       </ScrollView>
     );

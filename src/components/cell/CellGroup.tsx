@@ -16,8 +16,6 @@ export default class CellGroup extends React.PureComponent<Props, any> {
   renderHeader() {
     const { header } = this.props;
 
-    console.log('header', header, typeof header);
-
     if (!header) return null;
 
     if (typeof header === 'boolean' && header === true) {

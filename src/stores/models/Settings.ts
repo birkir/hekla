@@ -1,6 +1,7 @@
 import { types } from 'mobx-state-tree';
 import StoriesType from './StoriesType';
 import Theme from './Theme';
+import config from 'config';
 
 const General = types
   .model({
@@ -50,6 +51,12 @@ const Settings = types
   .model('Settings', {
     general: types.optional(General, {}),
     appearance: types.optional(Appearance, {}),
-  });
+    isBeta: types.optional(types.boolean, config.isTestFlight || false),
+  })
+  .actions(self => ({
+    setIsBeta(flag: boolean) {
+      self.isBeta = flag;
+    },
+  }));
 
 export default Settings;

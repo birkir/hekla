@@ -9,7 +9,7 @@ import Loading from 'components/loading/Loading';
 import { theme } from 'styles';
 import prettyNumber from 'utils/prettyNumber';
 import { autobind } from 'core-decorators';
-import { userSubmissionsScreen, userCommentsScreen, userFavoritesScreen } from '..';
+import { userSubmissionsScreen, userCommentsScreen, userFavoritesScreen } from 'screens';
 const styles = theme(require('./User.styl'));
 
 interface Props {

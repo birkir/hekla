@@ -5,6 +5,10 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.react.NavigationReactNativeHost;
+import com.reactnativenavigation.react.ReactGateway;
+
+import com.microsoft.codepush.react.ReactInstanceHolder;
 import com.microsoft.codepush.react.CodePush;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -37,10 +41,17 @@ public class MainApplication extends NavigationApplication {
         MultiDex.install(this);
     }
 
-    // @Override
-    // public String getJSBundleFile() {
-    //   return CodePush.getJSBundleFile();
-    // }
+    @Override
+    protected ReactGateway createReactGateway() {
+        ReactNativeHost host = new NavigationReactNativeHost(this, isDebug(), createAdditionalReactPackages()) {
+            @javax.annotation.Nullable
+            @Override
+            protected String getJSBundleFile() {
+                return CodePush.getJSBundleFile();
+            }
+        };
+        return new ReactGateway(this, isDebug(), host);
+    }
 
     @Override
     public boolean isDebug() {
