@@ -1,3 +1,5 @@
+[![Build status](https://build.appcenter.ms/v0.1/apps/7122aa1e-d794-4c37-b8d3-800cb455b694/branches/master/badge)](https://appcenter.ms)
+
 # Hekla for Hacker News
 
 iOS and Android client for Hacker News. Inspired by the Apollo client for Reddit.
