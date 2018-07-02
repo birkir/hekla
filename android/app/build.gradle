@@ -128,19 +128,19 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
-    signingConfigs {
-        release {
-            storeFile file("../keystores/release.keystore")
-            storePassword "$System.env.ANDROID_KEYSTORE_PASSWORD"
-            keyAlias "release"
-            keyPassword "$System.env.ANDROID_KEYSTORE_PASSWORD"
-        }
-    }
+    // signingConfigs {
+    //     release {
+    //         storeFile file("../keystores/release.keystore")
+    //         storePassword "$System.env.ANDROID_KEYSTORE_PASSWORD"
+    //         keyAlias "release"
+    //         keyPassword "$System.env.ANDROID_KEYSTORE_PASSWORD"
+    //     }
+    // }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
