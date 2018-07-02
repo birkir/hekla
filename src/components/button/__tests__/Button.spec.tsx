@@ -5,7 +5,7 @@ import * as renderer from 'react-test-renderer';
 import Button from '../Button';
 
 test('renders correctly', () => {
-  const button = <Button />;
+  const button = <Button title="" />;
   const tree = renderer.create(button).toJSON();
 
   expect(tree).toMatchSnapshot();
@@ -13,7 +13,7 @@ test('renders correctly', () => {
 
 test('Button renders children text', () => {
   const text = 'Sample text';
-  const button = shallow(<Button>{text}</Button>);
+  const button = shallow(<Button title={text} />);
 
   expect(button.findWhere(c => c.text() === text)).toBeTruthy();
 });
