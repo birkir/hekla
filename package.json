@@ -124,7 +124,7 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest",
       "^.+\\.tsx?$": "ts-jest",
-      "^.+\\.css$": "<rootDir>/scripts/jest-css-modules.js"
+      "^.+\\.styl$": "<rootDir>/scripts/jest-css-modules.js"
     },
     "preset": "react-native",
     "modulePaths": [
