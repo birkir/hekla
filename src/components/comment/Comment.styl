@@ -1,0 +1,134 @@
+$gutter = 10px;
+$border-color = #E3E3E3;
+
+.host {
+  position: relative;
+
+  background-color: var(--content-bg-color);
+}
+
+.flex {
+  flex: 1;
+}
+
+.content {
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  background-color: var(--content-bg-color);
+}
+
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
+
+for color, i in colors {
+  .level{i} {
+    margin-left: i * 16px;
+
+    border-left-width: 2px;
+    border-left-color: color;
+  }
+
+  .divider{i} {
+    position: absolute;
+    top: 0px;
+    left: i * 16px;
+    right: 0px;
+    height: var(--hairline-width);
+    background-color: var(--content-divider-color);
+  }
+ }
+
+.level0 {
+  border-left-color: transparent;
+}
+
+.row {
+  flex-direction: row;
+
+  &__expanded {
+    margin-bottom 10px;
+  }
+}
+
+.author {
+  font-family: 'System';
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--content-text-color);
+
+  flex: 1;
+}
+
+.ago {
+  font-family: 'System';
+  font-size: 14px;
+  color: var(--content-text-light-color);
+}
+
+
+.text {
+  font-family: 'System';
+  font-size: 15px;
+  color: var(--content-text-color);
+}
+
+.border {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 48px;
+}
+
+.action {
+  position: absolute;
+  top: var(--hairline-width);
+  bottom: var(--hairline-width);
+  width: 1000px;
+
+  justify-content: center;
+
+  &__left {
+    left: -100px;
+    background-color: var(--primary-color);
+    align-items: flex-start;
+
+    &__active {
+      background-color: var(--primary-active-color);
+    }
+  }
+
+  &__right {
+    right: -100px;
+    background-color: var(--secondary-color);
+    align-items: flex-end;
+
+    &__active {
+      background-color: var(--secondary-active-color);
+    }
+  }
+}
+
+.icon {
+  &__expand {
+    tint-color: #AAA;
+  }
+
+  &__more {
+    tint-color: #AAA;
+
+    margin-right: 8px;
+  }
+
+  &__arrow {
+    tint-color: #FF6C00;
+    margin-top: 1px;
+    margin-left: 2px;
+    margin-bottom: -1px;
+  }
+}

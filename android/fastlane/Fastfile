@@ -1,0 +1,74 @@
+fastlane_version "2.69.2"
+
+default_platform :android
+
+platform :android do
+  before_all do
+  end
+
+  desc "Build Release"
+  lane :build do
+    gradle(
+      task: "assembleRelease"
+    )
+  end
+
+  desc "Bump version number"
+  lane :bump_version do
+    android_set_version_code
+  end
+
+  desc "Tag current version and push to GitHub"
+  lane :tag_version do |options|
+    version = android_get_version_name
+    build = android_get_version_code
+    sh "git checkout master"
+    git_pull
+    git_commit(
+      path: "./app/build.gradle",
+      message: "Version #{version} (build #{build}) [#{options[:ci]}-android] [skip ci]"
+    )
+    add_git_tag(
+      tag: "v#{version}-#{build}-android"
+    )
+    push_to_git_remote(
+      remote_branch: "master",
+      tags: true,
+      force: true
+    )
+    slack(
+      message: "Successfully uploaded #{version} (build #{build}) to Google Play Store"
+    )
+  end
+
+
+  desc "Bitrise build to Google Play"
+  lane :bitrise do
+    if ENV["BUILD_ANDROID"] != "1"
+      UI.important "Skipping build"
+      next
+    end
+    bump_version
+    build
+    upload_to_play_store(
+      track: "beta",
+    )
+    tag_version(ci: "bitrise")
+  end
+
+  desc "Travis build to Google Play"
+  lane :travis do
+    bump_version
+    build
+    upload_to_play_store(
+      track: "beta",
+    )
+    tag_version(ci: "travis")
+  end
+
+  after_all do |lane|
+  end
+
+  error do |lane, exception|
+  end
+end

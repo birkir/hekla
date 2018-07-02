@@ -1,0 +1,71 @@
+.host {
+  background-color: var(--content-bg-color);
+
+  margin-bottom: 8px;
+  padding: 16px;
+}
+
+.title {
+  font-family: 'System';
+  font-size: 17px;
+
+  margin-bottom: 16px;
+
+  color: var(--content-text-color);
+}
+
+.summary {
+  color: var(--content-text-light-color);
+}
+
+.row {
+  flex-direction: row;
+
+  &__left {
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__author {
+    font-family: 'System';
+    font-size: 15px;
+    margin-bottom: 8px;
+
+    color: var(--content-text-light-color);
+  }
+
+  &__text {
+    font-family: 'System';
+    font-size: 14px;
+    padding-right: 8px;
+    color: var(--content-text-light-color);
+  }
+
+  &__icon {
+    tint-color: var(--content-text-light-color);
+    margin-right: 4px;
+  }
+
+  &__actions {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__action {
+    position: relative;
+
+    width: 32px;
+    height: 32px;
+
+    margin-left: 8px;
+
+    &__icon {
+      tint-color: var(--content-text-light-color);
+    }
+
+    &__active {
+      tint-color: var(--secondary-color);
+    }
+  }
+}

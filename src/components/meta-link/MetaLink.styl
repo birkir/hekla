@@ -1,0 +1,110 @@
+.host {
+  width: 100%;
+
+  &__large {
+    margin-bottom: 16px;
+  }
+}
+
+.text {
+  flex: 1;
+}
+
+.image {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  border-top-width: var(--hairline-width);
+  border-left-width: var(--hairline-width);
+  border-right-width: var(--hairline-width);
+  border-bottom-width: var(--hairline-width);
+
+  border-top-color: var(--meta-border-color);
+  border-left-color: var(--meta-border-color);
+  border-right-color: var(--meta-border-color);
+  border-bottom-color: var(--meta-border-color);
+
+  aspect-ratio: 1.77;
+
+  background-color: var(--meta-bg-color);
+}
+
+.content {
+  align-items: center;
+  flex-direction: row;
+
+  padding: 8px;
+
+  background-color: var(--meta-bg-color);
+
+  border-top-width: var(--hairline-width);
+  border-left-width: var(--hairline-width);
+  border-right-width: var(--hairline-width);
+  border-bottom-width: var(--hairline-width);
+
+  border-top-color: var(--meta-border-color);
+  border-left-color: var(--meta-border-color);
+  border-right-color: var(--meta-border-color);
+  border-bottom-color: var(--meta-border-color);
+
+  border-radius: 4px;
+
+  min-height: 48px;
+
+  &__image {
+    margin-top: -10px;
+
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+
+    border-top-width: var(--hairline-width);
+    border-top-color: var(--meta-border-color);
+  }
+
+  &__underlay {
+    background-color: var(--meta-bg-active-color);
+  }
+}
+
+.title {
+  font-family: 'System';
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--meta-text-color);
+
+  margin-bottom: 2px;
+}
+
+.url {
+  &__host {
+    font-family: 'System';
+    font-size: 13px;
+    color: var(--meta-text-light-color);
+  }
+  &__path {
+    font-family: 'System';
+    font-size: 13px;
+    color: var(--meta-text-lighter-color);
+  }
+}
+
+.icon {
+  height: 100%;
+
+  padding-right: 10px;
+  margin-right: 10px;
+
+  border-right-width: var(--hairline-width);
+  border-right-color: var(--meta-divider-color);
+
+  &__safari {
+    tint-color: var(--meta-icon-tint-color);
+    top: 50%;
+    margin-top: -16px;
+  }
+}
+
+.chevron {
+  margin-left: 16px;
+  tint-color: var(--meta-icon-tint-color);
+}

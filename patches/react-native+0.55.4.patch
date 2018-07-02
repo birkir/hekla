@@ -1,0 +1,56 @@
+patch-package
+--- a/node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheetManager.m
++++ b/node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheetManager.m
+@@ -62,7 +62,9 @@ - (CGRect)sourceRectInView:(UIView *)sourceView
+ 
+   NSString *title = [RCTConvert NSString:options[@"title"]];
+   NSString *message = [RCTConvert NSString:options[@"message"]];
+-  NSArray<NSString *> *buttons = [RCTConvert NSStringArray:options[@"options"]];
++
++  NSArray<NSDictionary *> *buttons = [RCTConvert NSDictionaryArray:options[@"options"]];
++
+   NSInteger destructiveButtonIndex = options[@"destructiveButtonIndex"] ? [RCTConvert NSInteger:options[@"destructiveButtonIndex"]] : -1;
+   NSInteger cancelButtonIndex = options[@"cancelButtonIndex"] ? [RCTConvert NSInteger:options[@"cancelButtonIndex"]] : -1;
+ 
+@@ -88,7 +90,7 @@ - (CGRect)sourceRectInView:(UIView *)sourceView
+                                preferredStyle:UIAlertControllerStyleActionSheet];
+ 
+   NSInteger index = 0;
+-  for (NSString *option in buttons) {
++  for (NSDictionary *option in buttons) {
+     UIAlertActionStyle style = UIAlertActionStyleDefault;
+     if (index == destructiveButtonIndex) {
+       style = UIAlertActionStyleDestructive;
+@@ -97,11 +99,27 @@ - (CGRect)sourceRectInView:(UIView *)sourceView
+     }
+ 
+     NSInteger localIndex = index;
+-    [alertController addAction:[UIAlertAction actionWithTitle:option
+-                                                        style:style
+-                                                      handler:^(__unused UIAlertAction *action){
+-      callback(@[@(localIndex)]);
+-    }]];
++    UIAlertAction *action = [UIAlertAction actionWithTitle:[option valueForKey:@"title"]
++                                                      style:style
++                                                    handler:^(__unused UIAlertAction *action){
++                                                        callback(@[@(localIndex)]);
++                                                    }];
++    if ([option objectForKey:@"icon"]) {
++      UIImage *image = [RCTConvert UIImage:[option valueForKey:@"icon"]];
++      [action setValue:image forKey:@"image"];
++    }
++
++    if ([option objectForKey:@"titleTextAlignment"]) {
++      NSNumber *titleTextAlignment = [RCTConvert NSNumber:[option valueForKey:@"titleTextAlignment"]];
++      [action setValue:titleTextAlignment forKey:@"titleTextAlignment"];
++    }
++
++    if ([option objectForKey:@"titleTextColor"]) {
++      UIColor *titleTextColor = [RCTConvert UIColor:[option valueForKey:@"titleTextColor"]];
++      [action setValue:titleTextColor forKey:@"titleTextColor"];
++    }
++
++    [alertController addAction:action];
+ 
+     index++;
+   }

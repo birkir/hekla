@@ -1,0 +1,3 @@
+git_url "git@github.com:birkir/ios-certs.git"
+app_identifier "is.pipe.hekla"
+type "appstore"

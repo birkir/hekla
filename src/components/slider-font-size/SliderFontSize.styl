@@ -1,0 +1,53 @@
+gutter = 15px;
+
+.host {
+  flex-direction: row;
+  flex: 1;
+
+  &__disabled {
+    opacity: 0.45;
+  }
+}
+
+.end {
+  align-items: center;
+  justify-content: center;
+
+  &__small {
+    font-size: 15px;
+    color: var(--content-text-color);
+
+    padding-left: gutter;
+    padding-right: gutter;
+  }
+
+  &__large {
+    font-size: 24px;
+    color: var(--content-text-color);
+
+    padding-left: gutter;
+  }
+}
+
+.content {
+  flex: 1;
+}
+
+.track {
+  position: absolute;
+  top: 18px;
+  left: gutter;
+  right: gutter;
+
+  height: 1px;
+
+  background-color: #aaaaaa;
+
+  &__tick {
+    position: absolute;
+    height: 12px;
+    width: 1px;
+    background-color: #aaaaaa;
+    top: -5px;
+  }
+}
