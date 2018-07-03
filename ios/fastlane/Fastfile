@@ -11,6 +11,15 @@ platform :ios do
   before_all do
   end
 
+  desc "App Center Release"
+  lane :appcenter_release do
+    # Set build number to unique build id from app center
+    increment_build_number(
+      build_number: ENV["APPCENTER_BUILD_ID"],
+      xcodeproj: path
+    )
+  end
+
   desc "Build"
   lane :build do
     xcodebuild(
@@ -35,97 +44,6 @@ platform :ios do
       configuration: "Release",
       export_method: "app-store"
     )
-  end
-
-  desc "Bump version number"
-  lane :bump_version do
-    increment_build_number(
-      xcodeproj: path
-    )
-  end
-
-  desc "Tag current version and push to GitHub"
-  lane :tag_version do |options|
-    version = get_version_number(
-      xcodeproj: path,
-      target: project_name
-    )
-    build = get_build_number(
-      xcodeproj: path
-    )
-    sh "git checkout master"
-    git_pull
-    commit_version_bump(
-      force: true,
-      xcodeproj: path,
-      message: "Version #{version} (build #{build}) [#{options[:ci]}-ios] [skip ci]"
-    )
-    add_git_tag(
-      tag: "v#{version}-#{build}-ios"
-    )
-    push_to_git_remote(
-      remote_branch: "master",
-      tags: true,
-      force: true
-    )
-    slack(
-      message: "Successfully uploaded #{version} (build #{build}) to TestFlight"
-    )
-  end
-
-
-  desc "Manual build to TestFlight"
-  lane :manual_build do
-    match(
-      type: "appstore",
-      readonly: true
-    )
-    build_release
-    testflight(
-      skip_waiting_for_build_processing: true
-    )
-  end
-
-  desc "Bitrise build to TestFlight"
-  lane :bitrise do
-    if ENV["BUILD_IOS"] != "1"
-      UI.important 'Skipping build'
-      next
-    end
-    match(
-      type: "appstore",
-      readonly: true
-    )
-    bump_version
-    build_release
-    testflight(
-      skip_waiting_for_build_processing: true
-    )
-    tag_version(ci: "bitrise")
-  end
-
-  desc "Travis build to TestFlight"
-  lane :travis do
-    create_keychain(
-      name: "ios-build.keychain-db",
-      password: ENV["MATCH_PASSWORD"],
-      default_keychain: true,
-      unlock: true,
-      timeout: 3600,
-      add_to_search_list: true
-    )
-    match(
-      type: "appstore",
-      keychain_name: "ios-build.keychain-db",
-      keychain_password: ENV["MATCH_PASSWORD"],
-      readonly: true
-    )
-    bump_version
-    build_release
-    testflight(
-      skip_waiting_for_build_processing: true
-    )
-    tag_version(ci: "travis")
   end
 
   after_all do |lane|
