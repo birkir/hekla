@@ -1,3 +1,7 @@
+
+echo "Hello world"
+exit 1
+
 echo "[Environment] Initializing..."
 
 if [ ! -z "$GOOGLE_SERVICES_JSON" ]; then
