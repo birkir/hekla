@@ -14,12 +14,14 @@ COMMIT_MESSAGE=$(git log -1 --pretty=%B)
 echo "hello" > hello.txt
 git add hello.txt
 git commit -m "Test commit"
-git push origin master
+git push -f origin master
 
 if [ -z "$APPCENTER_XCODE_PROJECT"]; then
+  echo "ios"
 fi
 
 if [ -z "$APPCENTER_ANDROID_VARIANT" ]; then
+  echo "android"
 fi
 
 
