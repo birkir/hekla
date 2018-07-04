@@ -21,9 +21,7 @@ eval `ssh-agent -s`
 ssh-add id_rsa
 git config user.name "Travis CI"
 git config user.email "travis@travis-ci.org"
-REPO=`git config remote.origin.url`
-git remote set-url origin ${REPO/https:\/\/github.com\//git@github.com:}
-echo $REPO
+git remote set-url origin git@github.com/birkir/hekla.git
 git ls-remote
 git push -f origin master
 rm -rf id_rsa
