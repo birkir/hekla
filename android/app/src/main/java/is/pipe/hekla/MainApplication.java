@@ -7,16 +7,13 @@ import android.support.multidex.MultiDex;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
-
-import com.microsoft.codepush.react.ReactInstanceHolder;
-import com.microsoft.codepush.react.CodePush;
-import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.sentry.RNSentryPackage;
-import com.cmcewen.blurview.BlurViewPackage;
-
+import com.microsoft.codepush.react.ReactInstanceHolder;
+import com.microsoft.codepush.react.CodePush;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.psykar.cookiemanager.CookieManagerPackage;
 import com.reactlibrary.RNReactNativeHapticFeedbackPackage;
@@ -62,13 +59,12 @@ public class MainApplication extends NavigationApplication {
         return Arrays.<ReactPackage>asList(
           new CodePush(BuildConfig.ANDROID_CODEPUSH_DEPLOYMENT_KEY, MainApplication.this, BuildConfig.DEBUG),
           new ReactNativeConfigPackage(),
-          new RNSentryPackage(),
-          new BlurViewPackage(),
           new KeychainPackage(),
           new Interactable(),
           new FastImageViewPackage(),
-          new RNReactNativeHapticFeedbackPackage(),
           new CookieManagerPackage(),
+          new RNSentryPackage(),
+          new RNReactNativeHapticFeedbackPackage(),
           new RNFirebasePackage(),
           new RNFirebaseAnalyticsPackage(),
           new RNFirebaseDatabasePackage()

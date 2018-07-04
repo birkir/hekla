@@ -1,4 +1,3 @@
-/* eslint import/no-extraneous-dependencies: "off" */
 const css2rn = require('css-to-react-native-transform').default;
 
 function process(src) {

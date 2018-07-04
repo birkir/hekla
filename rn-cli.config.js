@@ -3,6 +3,6 @@ module.exports = {
     return require.resolve('./scripts/transformer.js');
   },
   getSourceExts() {
-    return ['ts', 'tsx', 'css', 'styl'];
+    return ['js', 'ts', 'tsx', 'styl'];
   },
 };

@@ -1,4 +1,3 @@
-/* eslint import/no-extraneous-dependencies: 0 */
 const upstreamTransformer = require('metro/src/transformer');
 const cssTransformer = require('react-native-css-transformer');
 const typescriptTransformer = require('react-native-typescript-transformer');

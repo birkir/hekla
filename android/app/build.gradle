@@ -172,7 +172,6 @@ dependencies {
     implementation project(':react-native-navigation')
     implementation project(':react-native-code-push')
     implementation project(':react-native-config')
-    implementation project(':react-native-blur')
     implementation project(':react-native-haptic-feedback')
     implementation project(':react-native-interactable')
     implementation project(':react-native-cookies')
