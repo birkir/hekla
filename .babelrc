@@ -1,3 +1,18 @@
 {
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+  "plugins": [
+    [
+      "module-resolver", {
+        "extensions": [
+          ".js",
+          ".ts",
+          ".tsx",
+          ".styl"
+        ],
+        "root": [
+          "./src"
+        ]
+      }
+    ]
+  ]
 }

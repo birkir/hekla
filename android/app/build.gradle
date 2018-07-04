@@ -128,19 +128,10 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
-    // signingConfigs {
-    //     release {
-    //         storeFile file("../keystores/release.keystore")
-    //         storePassword "$System.env.ANDROID_KEYSTORE_PASSWORD"
-    //         keyAlias "release"
-    //         keyPassword "$System.env.ANDROID_KEYSTORE_PASSWORD"
-    //     }
-    // }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            // signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -164,6 +155,13 @@ android {
 configurations.all {
     resolutionStrategy.force 'com.android.support:support-annotations:25.3.1'
     resolutionStrategy.force 'org.webkit:android-jsc:r224109'
+
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support' && requested.name != 'multidex') {
+            details.useVersion "25.4.0"
+        }
+    }
 }
 
 dependencies {
