@@ -1,10 +1,10 @@
-if [ -z "$APPCENTER_XCODE_PROJECT"]; then
+if [ ! -z "$IOS_CODEPUSH_APPID" ]; then
   cd ios
   fastlane tag_version
   cd -
 fi
 
-if [ -z "$APPCENTER_ANDROID_VARIANT" ]; then
+if [ ! -z "$ANDROID_CODEPUSH_APPID" ]; then
   cd android
   fastlane tag_version
   cd -

@@ -38,7 +38,7 @@ prepare_code_push() {
   code-push login --accessKey $CODEPUSH_ACCESS_KEY
 }
 
-if [ ! -z "$IOS_CODEPUSH_APPID"]; then
+if [ ! -z "$IOS_CODEPUSH_APPID" ]; then
   if [[ "$TRIGGER_IOS" != "" ]]; then
     cd ios
     fastlane bump_version
