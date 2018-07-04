@@ -54,6 +54,11 @@ export default class StoriesScreen extends React.Component<Props> {
           icon: require('assets/icons/25/slider.png'),
         }],
       },
+      bottomTab: {
+        text: 'Stories',
+        testID: 'STORIES_TAB',
+        icon: require('assets/icons/25/stories.png'),
+      },
     });
   }
 

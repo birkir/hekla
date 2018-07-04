@@ -12,6 +12,7 @@ import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import CodePush from 'react-native-code-push';
 import codePushConfig from 'utils/codePushConfig';
+import { autorun } from 'mobx';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -30,11 +31,20 @@ export default class SettingsScreen extends React.Component<Props> {
           text: 'Settings',
         },
       },
+      bottomTab: {
+        text: 'Settings',
+        testID: 'SETTINGS_TAB',
+        icon: require('assets/icons/25/settings.png'),
+      },
     });
   }
 
-  componentDidAppear() {
-    this.updateOptions();
+  componentWillMount() {
+    autorun(() => {
+      if (UI.settings.appearance.theme) {
+        this.updateOptions();
+      }
+    });
   }
 
   @autobind

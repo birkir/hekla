@@ -25,12 +25,28 @@ export const applyThemeOptions = (settings: any) => {
       set(settings, 'topBar.style', 'black');
       set(settings, 'topBar.noBorder', true);
       set(settings, 'bottomTabs.style', 'black');
+
+      if (settings.bottomTab) {
+        set(settings, 'bottomTab.iconColor', '#808080');
+        set(settings, 'bottomTab.textColor', '#808080');
+      }
+
     } else {
       StatusBar.setBarStyle('dark-content');
 
       set(settings, 'topBar.style', 'default');
       set(settings, 'topBar.noBorder', false);
       set(settings, 'bottomTabs.style', 'default');
+
+      if (settings.bottomTab) {
+        set(settings, 'bottomTab.iconColor', '#808080');
+        set(settings, 'bottomTab.textColor', '#808080');
+      }
+    }
+
+    if (settings.bottomTab) {
+      set(settings, 'bottomTab.selectedTextColor', getVar('--primary-color'));
+      set(settings, 'bottomTab.selectedIconColor', getVar('--primary-color'));
     }
 
     set(settings, 'topBar.buttonColor', getVar('--primary-color'));

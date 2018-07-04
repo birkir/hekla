@@ -44,6 +44,11 @@ export default class AccountScreen extends React.Component<Props> {
           },
         ] : [],
       },
+      bottomTab: {
+        text: 'Account',
+        testID: 'ACCOUNT_TAB',
+        icon: require('assets/icons/25/user.png'),
+      },
     });
   }
 

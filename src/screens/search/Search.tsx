@@ -32,6 +32,11 @@ export default class SearchScreen extends React.Component<Props> {
           name: 'hekla.TopBarSearch',
         },
       },
+      bottomTab: {
+        text: 'Search',
+        testID: 'SEARCH_TAB',
+        icon: require('assets/icons/25/search.png'),
+      },
     });
   }
 

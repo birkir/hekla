@@ -6931,9 +6931,9 @@ react-native-keychain@3.0.0-rc.3:
   version "3.0.0-rc.3"
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-3.0.0-rc.3.tgz#891ea07a564d1bf46b644bc615af21f15a04b12b"
 
-react-native-navigation@2.0.2366:
-  version "2.0.2366"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2366.tgz#4d2ec4242ff33879a0ba41810487996c9f2127d3"
+react-native-navigation@2.0.2394:
+  version "2.0.2394"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2394.tgz#c454d007bbb30d6c474f988c10c2113c06030a79"
   dependencies:
     "@types/jest" "22.x.x"
     "@types/lodash" "4.x.x"

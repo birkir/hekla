@@ -65,13 +65,6 @@ export const startApp = () => {
             name: STORIES_SCREEN,
           },
         }],
-        options: {
-          bottomTab: {
-            title: 'Stories',
-            testID: 'STORIES_TAB',
-            icon: require('assets/icons/25/stories.png'),
-          },
-        },
       },
     },
     {
@@ -81,13 +74,6 @@ export const startApp = () => {
             name: ACCOUNT_SCREEN,
           },
         }],
-        options: {
-          bottomTab: {
-            title: 'Account',
-            testID: 'ACCOUNT_TAB',
-            icon: require('assets/icons/25/user.png'),
-          },
-        },
       },
     }, {
       stack: {
@@ -96,13 +82,6 @@ export const startApp = () => {
             name: SEARCH_SCREEN,
           },
         }],
-        options: {
-          bottomTab: {
-            title: 'Settings',
-            testID: 'SEARCH_TAB',
-            icon: require('assets/icons/25/search.png'),
-          },
-        },
       },
     }, {
       stack: {
@@ -111,13 +90,6 @@ export const startApp = () => {
             name: SETTINGS_SCREEN,
           },
         }],
-        options: {
-          bottomTab: {
-            title: 'Settings',
-            testID: 'SETTINGS_TAB',
-            icon: require('assets/icons/25/settings.png'),
-          },
-        },
       },
     },
   ];
