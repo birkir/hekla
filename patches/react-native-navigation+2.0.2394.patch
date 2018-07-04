@@ -60,6 +60,22 @@ new file mode 100644
 + 	if (self.hideShadow) {
 + 		viewController.tabBarController.tabBar.clipsToBounds = [self.hideShadow boolValue];
 + 	}
+--- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
++++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
+@@ -1,5 +1,6 @@
+ #import <Foundation/Foundation.h>
+ #import <React/RCTBridge.h>
++#import "RNNStore.h"
+ #import "RNNBridgeManagerDelegate.h"
+ 
+ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBridge* bridge);
+@@ -11,5 +12,6 @@ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBri
+ - (void)registerExternalComponent:(NSString *)name callback:(RNNExternalViewCreator)callback;
+ 
+ @property (readonly, nonatomic, strong) RCTBridge *bridge;
++@property (readonly, nonatomic, strong) RNNStore *store;
+ 
+ @end
 --- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.m
 @@ -12,6 +12,7 @@
