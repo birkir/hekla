@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		B0739A8F5C9048E9AC93D045 /* libPods-Hekla.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3988A5A05ABF10E5A9B33ED5 /* libPods-Hekla.a */; };
 		E31CF5D020CEFCE40036B5B7 /* RNNAVPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E31CF5CF20CEFCE40036B5B7 /* RNNAVPlayer.m */; };
@@ -169,7 +168,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 920;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
@@ -290,7 +289,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 5PD7JU2FJC;
 				INFOPLIST_FILE = Hekla/Info.plist;
@@ -319,11 +318,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Hekla/Hekla.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Birkir Rafn Gudjonsson (5PD7JU2FJC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Birkir Rafn Gudjonsson (5PD7JU2FJC)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = 5PD7JU2FJC;
+				CURRENT_PROJECT_VERSION = 22;
+				DEVELOPMENT_TEAM = "5PD7JU2FJC";
 				INFOPLIST_FILE = Hekla/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
@@ -337,7 +336,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = is.pipe.hekla;
 				PRODUCT_NAME = Hekla;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6aff70ad-71eb-461c-858d-cb95fa181b6c";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
