@@ -15,6 +15,10 @@ echo "hello" > hello.txt
 git add hello.txt
 git commit -m "Test commit"
 
+echo $ID_RSA | base64 --decode > id_rsa
+cat id_rsa
+eval `ssh-agent -s`
+ssh-add id_rsa
 git config user.name "Travis CI"
 git config user.email "travis@travis-ci.org"
 REPO=`git config remote.origin.url`
