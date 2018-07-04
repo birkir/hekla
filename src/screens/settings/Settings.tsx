@@ -90,7 +90,7 @@ export default class SettingsScreen extends React.Component<Props> {
         <CellGroup header={true}>
           <Cell title="About" />
           <Cell title="Donate" />
-          <Cell title="Rate Hekla 1" />
+          <Cell title="Rate Hekla 2" />
         </CellGroup>
         <CellGroup header={true}>
           {Platform.OS === 'android' && (
