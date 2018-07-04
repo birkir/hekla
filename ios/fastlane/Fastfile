@@ -11,16 +11,7 @@ platform :ios do
   before_all do
   end
 
-  desc "App Center Release"
-  lane :appcenter_release do
-    # Set build number to unique build id from app center
-    increment_build_number(
-      build_number: ENV["APPCENTER_BUILD_ID"],
-      xcodeproj: path
-    )
-  end
-
-  desc "Build"
+  desc "Build Debug"
   lane :build do
     xcodebuild(
       workspace: "./#{project_name}.xcworkspace",
@@ -43,6 +34,39 @@ platform :ios do
       output_directory: "ios/build",
       configuration: "Release",
       export_method: "app-store"
+    )
+  end
+
+  desc "Bump version number"
+  lane :bump_version do
+    increment_build_number(
+      xcodeproj: path
+    )
+  end
+
+  desc "Tag current version and push to GitHub"
+  lane :tag_version do
+    version = get_version_number(
+      xcodeproj: path,
+      target: project_name
+    )
+    build = get_build_number(
+      xcodeproj: path
+    )
+    sh "git checkout master"
+    git_pull
+    commit_version_bump(
+      force: true,
+      xcodeproj: path,
+      message: "Version #{version} (build #{build}) [release ios] [skip ci]"
+    )
+    add_git_tag(
+      tag: "v#{version}-#{build}-ios"
+    )
+    push_to_git_remote(
+      remote_branch: "master",
+      tags: true,
+      force: true
     )
   end
 

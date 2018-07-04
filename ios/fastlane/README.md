@@ -20,7 +20,7 @@ or alternatively using `brew cask install fastlane`
 ```
 fastlane ios build
 ```
-Build
+Build Debug
 ### ios build_release
 ```
 fastlane ios build_release
@@ -36,21 +36,6 @@ Bump version number
 fastlane ios tag_version
 ```
 Tag current version and push to GitHub
-### ios manual_build
-```
-fastlane ios manual_build
-```
-Manual build to TestFlight
-### ios bitrise
-```
-fastlane ios bitrise
-```
-Bitrise build to TestFlight
-### ios travis
-```
-fastlane ios travis
-```
-Travis build to TestFlight
 
 ----
 

@@ -20,6 +20,11 @@ or alternatively using `brew cask install fastlane`
 ```
 fastlane android build
 ```
+Build Debug
+### android build_release
+```
+fastlane android build_release
+```
 Build Release
 ### android bump_version
 ```
@@ -31,16 +36,6 @@ Bump version number
 fastlane android tag_version
 ```
 Tag current version and push to GitHub
-### android bitrise
-```
-fastlane android bitrise
-```
-Bitrise build to Google Play
-### android travis
-```
-fastlane android travis
-```
-Travis build to Google Play
 
 ----
 

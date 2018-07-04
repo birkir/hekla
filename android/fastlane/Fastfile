@@ -6,8 +6,15 @@ platform :android do
   before_all do
   end
 
-  desc "Build Release"
+  desc "Build Debug"
   lane :build do
+    gradle(
+      task: "assembleDebug"
+    )
+  end
+
+  desc "Build Release"
+  lane :build_release do
     gradle(
       task: "assembleRelease"
     )
@@ -19,14 +26,14 @@ platform :android do
   end
 
   desc "Tag current version and push to GitHub"
-  lane :tag_version do |options|
+  lane :tag_version do
     version = android_get_version_name
     build = android_get_version_code
     sh "git checkout master"
     git_pull
     git_commit(
       path: "./app/build.gradle",
-      message: "Version #{version} (build #{build}) [#{options[:ci]}-android] [skip ci]"
+      message: "Version #{version} (build #{build}) [release android] [skip ci]"
     )
     add_git_tag(
       tag: "v#{version}-#{build}-android"
@@ -36,34 +43,6 @@ platform :android do
       tags: true,
       force: true
     )
-    slack(
-      message: "Successfully uploaded #{version} (build #{build}) to Google Play Store"
-    )
-  end
-
-
-  desc "Bitrise build to Google Play"
-  lane :bitrise do
-    if ENV["BUILD_ANDROID"] != "1"
-      UI.important "Skipping build"
-      next
-    end
-    bump_version
-    build
-    upload_to_play_store(
-      track: "beta",
-    )
-    tag_version(ci: "bitrise")
-  end
-
-  desc "Travis build to Google Play"
-  lane :travis do
-    bump_version
-    build
-    upload_to_play_store(
-      track: "beta",
-    )
-    tag_version(ci: "travis")
   end
 
   after_all do |lane|
