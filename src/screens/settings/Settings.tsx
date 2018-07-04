@@ -13,6 +13,7 @@ import { autobind } from 'core-decorators';
 import CodePush from 'react-native-code-push';
 import codePushConfig from 'utils/codePushConfig';
 import { autorun } from 'mobx';
+import config from 'config';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -81,6 +82,13 @@ export default class SettingsScreen extends React.Component<Props> {
     // CodePush.restartApp(); // ?
   }
 
+  @autobind
+  onCodePushPress() {
+    CodePushStore.update();
+    alert(JSON.stringify(config));
+    alert(JSON.stringify(codePushConfig()));
+  }
+
   render() {
     const { testID } = this.props;
 
@@ -134,7 +142,7 @@ export default class SettingsScreen extends React.Component<Props> {
           )}
           <Cell
             title="Get CodePush metadata"
-            onPress={CodePushStore.update}
+            onPress={this.onCodePushPress}
           />
         </CellGroup>
       </ScrollView>
