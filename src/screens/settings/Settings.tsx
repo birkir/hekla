@@ -5,6 +5,7 @@ import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import CellIcon from 'components/cell/CellIcon';
 import UI from 'stores/UI';
+import CodePushStore from 'stores/CodePush';
 import { SETTINGS_GENERAL_SCREEN, SETTINGS_APPEARANCE_SCREEN } from 'screens';
 import { theme, applyThemeOptions } from 'styles';
 import { Navigation } from 'react-native-navigation';
@@ -90,10 +91,20 @@ export default class SettingsScreen extends React.Component<Props> {
         <CellGroup header={true}>
           <Cell title="About" />
           <Cell title="Donate" />
-          <Cell title="Rate Hekla 3" />
+          <Cell title="Rate Hekla" />
         </CellGroup>
         <CellGroup header={true}>
-          {Platform.OS === 'android' && (
+          <Cell
+            title="Version"
+            value={CodePushStore.version}
+          />
+          {CodePushStore.updateMetadata && (
+            <Cell
+              title="Description"
+              value={CodePushStore.updateMetadata.description}
+            />
+          )}
+          {Platform.OS === 'android' ? (
             <Cell
               title="Opt-in to Beta"
               value={(
@@ -103,7 +114,16 @@ export default class SettingsScreen extends React.Component<Props> {
                 />
               )}
             />
+          ) : (
+            <Cell
+              title="Beta"
+              value={UI.settings.isBeta ? 'Yes' : 'No'}
+            />
           )}
+          <Cell
+            title="Get CodePush metadata"
+            onPress={CodePushStore.update}
+          />
         </CellGroup>
       </ScrollView>
     );

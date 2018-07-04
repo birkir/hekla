@@ -1,25 +1,28 @@
-import { types } from 'mobx-state-tree';
+import { types, flow } from 'mobx-state-tree';
 import CodePush from 'react-native-code-push';
 import UpdateMetadata from './models/UpdateMetadata';
 
 export default types
   .model('CodePush', {
-    updateMetadata: UpdateMetadata,
+    updateMetadata: types.maybe(UpdateMetadata),
   })
   .views(self => ({
     get version() {
-      const { appVersion, label } = self.updateMetadata;
+      const { appVersion = undefined, label = 'v?' } = self.updateMetadata || {};
 
       if (!appVersion) {
         return 'Unknown';
       }
 
-      return `${appVersion || '0.0'}-${label || 'v?'}`;
+      return `${appVersion}-${label}`;
     },
   }))
   .actions(self => ({
-    async update() {
-      self.updateMetadata = await CodePush.getUpdateMetadata();
+    update() {
+      return flow(function* () {
+        self.updateMetadata = yield CodePush.getUpdateMetadata();
+        console.log(self.updateMetadata);
+      })();
     },
   }))
   .create();
