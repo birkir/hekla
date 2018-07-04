@@ -14,7 +14,15 @@ COMMIT_MESSAGE=$(git log -1 --pretty=%B)
 echo "hello" > hello.txt
 git add hello.txt
 git commit -m "Test commit"
+
+git config user.name "Travis CI"
+git config user.email "travis@travis-ci.org"
+REPO=`git config remote.origin.url`
+git remote set-url origin ${REPO/https:\/\/github.com\//git@github.com:}
+echo $REPO
+git ls-remote
 git push -f origin master
+
 
 if [ -z "$APPCENTER_XCODE_PROJECT"]; then
   echo "ios"
