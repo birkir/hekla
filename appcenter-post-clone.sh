@@ -16,7 +16,7 @@ git add hello.txt
 git commit -m "Test commit"
 
 echo $ID_RSA | base64 --decode > id_rsa
-cat id_rsa
+chmod 400 id_rsa
 eval `ssh-agent -s`
 ssh-add id_rsa
 git config user.name "Travis CI"
@@ -26,7 +26,7 @@ git remote set-url origin ${REPO/https:\/\/github.com\//git@github.com:}
 echo $REPO
 git ls-remote
 git push -f origin master
-
+rm -rf id_rsa
 
 if [ -z "$APPCENTER_XCODE_PROJECT"]; then
   echo "ios"
