@@ -34,8 +34,7 @@ source "$APPCENTER_SOURCE_DIRECTORY/scripts/build-env.sh"
 
 prepare_code_push() {
   curl -sL https://sentry.io/get-cli/ | bash
-  npm install -g code-push-cli
-  code-push login --accessKey $CODEPUSH_ACCESS_KEY
+  appcenter login --accessKey $CODEPUSH_ACCESS_KEY
 }
 
 if [ ! -z "$IOS_CODEPUSH_APPID" ]; then
@@ -45,7 +44,7 @@ if [ ! -z "$IOS_CODEPUSH_APPID" ]; then
     cd -
   else
     prepare_code_push
-    code-push release-react $IOS_CODEPUSH_APPID ios --outputDir ./build --plistFile ./ios/Hekla/Info.plist --description "$COMMIT_MESSAGE"
+    appcenter codepush release-react $IOS_CODEPUSH_APPID ios --outputDir ./build --plistFile ./ios/Hekla/Info.plist --description "$COMMIT_MESSAGE"
     sentry-cli react-native codepush $IOS_CODEPUSH_APPID ios ./build --bundle-id $IOS_BUNDLE_ID
     curl -X PATCH "https://api.appcenter.ms/v0.1/apps/$IOS_CODEPUSH_APPID/builds/$APPCENTER_BUILD_ID" -H "accept: application/json" -H "X-API-Token: $APPCENTER_API_KEY" -H "Content-Type: application/json" -d "{ \"status\": \"cancelling\" }"
   fi
@@ -58,7 +57,7 @@ if [ ! -z "$ANDROID_CODEPUSH_APPID" ]; then
     cd -
   else
     prepare_code_push
-    code-push release-react $ANDROID_CODEPUSH_APPID android --outputDir build --description "$COMMIT_MESSAGE"
+    appcenter codepush release-react $ANDROID_CODEPUSH_APPID android --outputDir build --description "$COMMIT_MESSAGE"
     sentry-cli react-native codepush $ANDROID_CODEPUSH_APPID android ./build --bundle-id $ANDROID_BUNDLE_ID
     curl -X PATCH "https://api.appcenter.ms/v0.1/apps/$ANDROID_CODEPUSH_APPID/builds/$APPCENTER_BUILD_ID" -H "accept: application/json" -H "X-API-Token: $APPCENTER_API_KEY" -H "Content-Type: application/json" -d "{ \"status\": \"cancelling\" }"
   fi
