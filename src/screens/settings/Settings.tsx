@@ -40,11 +40,13 @@ export default class SettingsScreen extends React.Component<Props> {
   }
 
   componentWillMount() {
-    autorun(() => {
-      if (UI.settings.appearance.theme) {
-        this.updateOptions();
-      }
-    });
+    if (Platform.OS === 'ios') {
+      autorun(() => {
+        if (UI.settings.appearance.theme) {
+          this.updateOptions();
+        }
+      });
+    }
   }
 
   @autobind
