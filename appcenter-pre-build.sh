@@ -32,7 +32,7 @@ done
 
 source "$APPCENTER_SOURCE_DIRECTORY/scripts/build-env.sh"
 
-if [ -z "$APPCENTER_XCODE_PROJECT"]; then
+if [ -z "$IOS_CODEPUSH_APPID"]; then
   if [[ "$TRIGGER_IOS" != "" ]]; then
     cd ios
     fastlane bump_version
@@ -46,7 +46,7 @@ if [ -z "$APPCENTER_XCODE_PROJECT"]; then
   fi
 fi
 
-if [ -z "$APPCENTER_ANDROID_VARIANT" ]; then
+if [ -z "$ANDROID_CODEPUSH_APPID" ]; then
   if [[ "$TRIGGER_ANDROID" != "" ]]; then
     cd android
     fastlane bump_version
