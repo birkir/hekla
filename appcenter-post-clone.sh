@@ -12,8 +12,6 @@ COMMIT_MESSAGE=$(git log -1 --pretty=%B)
 # git ls-remote
 
 echo "hello" > hello.txt
-git add hello.txt
-git commit -m "Test commit"
 
 echo $ID_RSA | base64 --decode > id_rsa
 chmod 400 id_rsa
@@ -21,8 +19,12 @@ eval `ssh-agent -s`
 ssh-add id_rsa
 git config user.name "Travis CI"
 git config user.email "travis@travis-ci.org"
-git remote set-url origin git@github.com/birkir/hekla.git
+git remote set-url --push origin git@github.com/birkir/hekla.git
 git ls-remote
+
+git checkout master
+git add hello.txt
+git commit -m "Test commit"
 git push -f origin master
 rm -rf id_rsa
 
