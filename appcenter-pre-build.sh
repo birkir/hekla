@@ -1,7 +1,5 @@
 COMMIT_MESSAGE=$(git log -1 --pretty=%B)
 COMMIT_HASH="$BUILD_SOURCEVERSION"
-BUILD_ANDROID="0"
-BUILD_IOS="0"
 LAST_ANDROID=$(git log --grep='\[release android\]' -1 | grep -o -E -e "[0-9a-f]{40}")
 LAST_IOS=$(git log --grep='\[release ios\]' -1 | grep -o -E -e "[0-9a-f]{40}")
 
@@ -39,6 +37,9 @@ prepare_code_push() {
 }
 
 if [ ! -z "$IOS_CODEPUSH_APPID" ]; then
+  echo "LAST_IOS: $LAST_IOS"
+  echo "TRIGGER_IOS: $TRIGGER_IOS"
+
   if [[ "$TRIGGER_IOS" != "" ]]; then
     cd ios
     fastlane bump_version
@@ -52,6 +53,9 @@ if [ ! -z "$IOS_CODEPUSH_APPID" ]; then
 fi
 
 if [ ! -z "$ANDROID_CODEPUSH_APPID" ]; then
+  echo "LAST_ANDROID: $LAST_ANDROID"
+  echo "TRIGGER_ANDROID: $TRIGGER_ANDROID"
+
   if [[ "$TRIGGER_ANDROID" != "" ]]; then
     cd android
     fastlane bump_version
