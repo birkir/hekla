@@ -111,7 +111,7 @@ export default class SettingsScreen extends React.Component<Props> {
         <CellGroup header={true}>
           <Cell title="About" />
           <Cell title="Donate" />
-          <Cell title="Rate Hekla" />
+          <Cell title="Rate" />
         </CellGroup>
         <CellGroup header={true}>
           <Cell

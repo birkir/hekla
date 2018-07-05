@@ -42,6 +42,10 @@ platform :ios do
     increment_build_number(
       xcodeproj: path
     )
+    increment_version_number(
+      xcodeproj: path,
+      bump_type: "patch"
+    )
   end
 
   desc "Tag current version and push to GitHub"
