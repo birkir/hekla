@@ -114,8 +114,10 @@ console.log(Account);
       expiration: (new Date(addOneYear)).toISOString(),
     });
   }
+  try {
+    await Account.login(username, password);
+  } catch (err) {}
 
-  await Account.login(username, password);
   Account.setIsChecking(false);
 })();
 

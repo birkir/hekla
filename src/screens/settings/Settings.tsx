@@ -13,7 +13,6 @@ import { autobind } from 'core-decorators';
 import CodePush from 'react-native-code-push';
 import codePushConfig from 'utils/codePushConfig';
 import { autorun } from 'mobx';
-import config from 'config';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -71,6 +70,10 @@ export default class SettingsScreen extends React.Component<Props> {
     });
   }
 
+  onThemePress() {
+    return;
+  }
+
   @autobind
   onBetaChange(flag: boolean) {
     // TODO: Prompt user to confirm and that the app will likely restart.
@@ -78,15 +81,6 @@ export default class SettingsScreen extends React.Component<Props> {
     const config = codePushConfig();
     config.installMode = CodePush.InstallMode.IMMEDIATE;
     CodePush.sync(config);
-    console.log(config);
-    // CodePush.restartApp(); // ?
-  }
-
-  @autobind
-  onCodePushPress() {
-    CodePushStore.update();
-    alert(JSON.stringify(config));
-    alert(JSON.stringify(codePushConfig()));
   }
 
   render() {
@@ -96,22 +90,62 @@ export default class SettingsScreen extends React.Component<Props> {
       <ScrollView style={styles.host} contentContainerStyle={styles.host__container} testID={testID}>
         <CellGroup footer={true}>
           <Cell
-            // left={<CellIcon source={require('assets/icons/32/reply.png')} backgroundColor="red" tintColor="white" />}
+            left={<CellIcon
+              source={require('assets/icons/32/settings.png')}
+              size={26}
+              backgroundColor="#8e8e93"
+            />}
             title="General"
             onPress={this.onGeneralPress}
             more={true}
           />
           <Cell
-            // left={<CellIcon source={require('assets/icons/32/reply.png')} backgroundColor="red" tintColor="white" />}
+            left={<CellIcon
+              backgroundColor="#157dfa"
+              source={require('assets/icons/32/font-size-filled.png')}
+              size={19}
+            />}
             title="Appearance"
             onPress={this.onAppearancePress}
             more={true}
           />
+          <Cell
+            left={<CellIcon
+              backgroundColor="#5e5fe3"
+              source={require('assets/icons/32/paint-palette-filled.png')}
+              size={19}
+            />}
+            title="Theme"
+            onPress={this.onThemePress}
+            more={true}
+          />
         </CellGroup>
         <CellGroup header={true}>
-          <Cell title="About" />
-          <Cell title="Donate" />
-          <Cell title="Rate" />
+          <Cell
+            title="About"
+            left={<CellIcon
+              backgroundColor="#157dfa"
+              source={require('assets/icons/32/email-filled.png')}
+              size={20}
+            />}
+            more={true}
+          />
+          <Cell
+            title="Donate"
+            left={<CellIcon
+              source={require('assets/icons/32/beer.png')}
+              backgroundColor="#42d855"
+              size={22}
+            />}
+          />
+          <Cell
+            title="Rate"
+            left={<CellIcon
+              source={require('assets/icons/32/heart.png')}
+              backgroundColor="#fc3259"
+              size={22}
+            />}
+          />
         </CellGroup>
         <CellGroup header={true}>
           <Cell
@@ -127,12 +161,7 @@ export default class SettingsScreen extends React.Component<Props> {
           {Platform.OS === 'android' ? (
             <Cell
               title="Opt-in to Beta"
-              value={(
-                <Switch
-                  value={UI.settings.isBeta}
-                  onValueChange={this.onBetaChange}
-                />
-              )}
+              value={<Switch value={UI.settings.isBeta} onValueChange={this.onBetaChange} />}
             />
           ) : (
             <Cell
@@ -140,10 +169,6 @@ export default class SettingsScreen extends React.Component<Props> {
               value={UI.settings.isBeta ? 'Yes' : 'No'}
             />
           )}
-          <Cell
-            title="Get CodePush metadata"
-            onPress={this.onCodePushPress}
-          />
         </CellGroup>
       </ScrollView>
     );

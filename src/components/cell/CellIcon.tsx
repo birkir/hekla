@@ -7,6 +7,7 @@ const styles = theme(require('./CellIcon.styl'));
 interface Props {
   key?: string;
   source?: ImageSourcePropType;
+  size?: number;
   backgroundColor?: ColorProperty;
   tintColor?: ColorProperty;
   testID?: string;
@@ -15,11 +16,11 @@ interface Props {
 export default class CellIcon extends React.PureComponent<Props, any> {
 
   render() {
-    const { source, backgroundColor, tintColor, ...rest } = this.props;
+    const { source, backgroundColor, size = 26, tintColor = '#ffffff', ...rest } = this.props;
 
     return (
       <View style={[styles.host, { backgroundColor }]}>
-        <Image source={source} style={[styles.host__image, { tintColor }]} {...rest} />
+        <Image source={source} resizeMode="center" style={[styles.host__image, { tintColor, maxWidth: size, maxHeight: size }]} {...rest} />
       </View>
     );
   }

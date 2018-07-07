@@ -73,7 +73,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.title}>
-        <Text style={styles.title__text}>{String(title)}</Text>
+        <Text style={styles.title__text} numberOfLines={1}>{String(title)}</Text>
       </View>
     );
   }
@@ -138,7 +138,7 @@ export default class Cell extends React.Component<Props, any> {
   render() {
     const { bordered = true, index, more, selected, disabled, onPress, onPressIn, onLongPress, testID } = this.props;
     const border = bordered && (typeof index === 'undefined' || index > 0);
-
+    const isRight = selected || more || this.props.value || this.props.right;
     return (
       <Touchable
         onPress={onPress && this.onPress}

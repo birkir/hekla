@@ -1,6 +1,5 @@
-import { types, flow, onSnapshot, applySnapshot } from 'mobx-state-tree';
+import { types, flow, applySnapshot } from 'mobx-state-tree';
 import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage } from 'react-native';
-import { Navigation } from 'react-native-navigation';
 import Settings from './models/Settings';
 import prettyNumber from 'utils/prettyNumber';
 
@@ -13,6 +12,7 @@ const UI = types
     width: types.optional(types.number, width),
     height: types.optional(types.number, height),
     isIpad: Platform.OS === 'ios' && (Platform as PlatformIOSStatic).isPad,
+    isConnected: types.optional(types.boolean, false),
     preview: types.optional(
       types.model('Preview', {
         srcComponentId: types.maybe(types.string),
@@ -35,18 +35,26 @@ const UI = types
     },
   }))
   .actions(self => ({
+
     setComponentId(componentId: string) {
       self.componentId = componentId;
     },
+
     setPreview(preview) {
       self.preview = preview;
     },
+
+    setIsConnected(connected) {
+      self.isConnected = connected;
+    },
+
     async clearCache() {
       try {
         await AsyncStorage.clear();
       } catch (err) {}
       (self as any).updateCache();
     },
+
     updateCache() {
       return flow(function* () {
         try {
@@ -56,11 +64,13 @@ const UI = types
         } catch (err) {}
       })();
     },
+
     updateWindow() {
       const { width, height } = Dimensions.get('window');
       self.width = width;
       self.height = height;
     },
+
     openURL(url: string, elementId?: string) {
       return NativeModules.RNUeno.openSafari(
         self.componentId,
@@ -68,6 +78,7 @@ const UI = types
         elementId,
       );
     },
+
     hydrate() {
       return flow(function* () {
         try {
@@ -80,39 +91,5 @@ const UI = types
     },
   }))
   .create();
-
-Navigation.events().registerNativeEventListener((name, params) => {
-  if (name === 'previewContext') {
-    UI.setPreview({
-      srcComponentId: params.componentId,
-      dstComponentId: params.previewComponentId,
-      active: true,
-    });
-  }
-
-  if (name === 'previewCommit') {
-    UI.setPreview({
-      active: false,
-    });
-  }
-});
-
-Navigation.events().registerComponentDidAppearListener((componentId, componentName) => {
-  UI.setComponentId(componentId);
-});
-
-Navigation.events().registerComponentDidDisappearListener((componentId, componentName) => {
-  if (UI.preview.dstComponentId === componentId) {
-    UI.setComponentId(UI.preview.srcComponentId);
-    UI.setPreview({
-      active: false,
-    });
-  }
-});
-
-// Persist Settings!
-onSnapshot(UI.settings, (snapshot) => {
-  AsyncStorage.setItem('UI.settings', JSON.stringify(snapshot));
-});
 
 export default UI;

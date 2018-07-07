@@ -20,7 +20,6 @@
 - Account list ICONS
 
 - Move ActionSheet actions into separate files (select stories type, select theme, etc.)
-- Move Login.tsx into separate file in account
 
 - Longpress tooltips for Story/Header icons
 - Hackernews logo for Share a story.

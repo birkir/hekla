@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, Switch } from 'react-native';
+import { ScrollView, Switch, LayoutAnimation } from 'react-native';
 import { observer } from 'mobx-react';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
@@ -51,7 +51,6 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
   @autobind
   onThemeChange(e, { id }) {
     UI.settings.appearance.setTheme(id);
-    this.updateOptions();
   }
 
   onFontSizeChange(size) {
@@ -92,7 +91,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
             )}
           />
           <Cell
-            title={(
+            value={(
               <SliderFontSize
                 value={UI.settings.appearance.fontSize}
                 onValueChange={this.onFontSizeChange}

@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { View, Text, NativeModules, Image, KeyboardAvoidingView, ScrollView, Alert, Keyboard } from 'react-native';
+import { View, ScrollView, Alert } from 'react-native';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
-import Button from 'components/button/Button';
 import Loading from 'components/loading/Loading';
 import Account from 'stores/Account';
 import { Navigation } from 'react-native-navigation';
 import prettyNumber from 'utils/prettyNumber';
-import Input from './components/Input';
 import { when } from 'mobx';
 import { theme, applyThemeOptions } from 'styles';
 import { userSubmissionsScreen, userCommentsScreen, userFavoritesScreen, accountVotedScreen, accountHiddenScreen } from 'screens';
+import Login from './Login';
 const styles = theme(require('./Account.styl'));
 
 interface Props {
@@ -22,14 +21,6 @@ interface Props {
 
 @observer
 export default class AccountScreen extends React.Component<Props> {
-
-  private passwordRef;
-
-  state = {
-    username: '',
-    password: '',
-    loading: false,
-  };
 
   static get options() {
     return applyThemeOptions({
@@ -70,67 +61,20 @@ export default class AccountScreen extends React.Component<Props> {
 
   onNavigationButtonPressed(buttonId) {
     if (buttonId === 'logout') {
-      this.logout();
+      this.onLogout();
     }
   }
 
-  @autobind
-  async login() {
-    Keyboard.dismiss();
+  async onLogin(username, password) {
     try {
-      const user = await Account.login(this.state.username, this.state.password);
+      const user = await Account.login(username, password);
     } catch (err) {
       Alert.alert('Login failed', err.message);
     }
-    Navigation.mergeOptions(this.props.componentId, AccountScreen.options);
   }
 
-  logout() {
+  onLogout() {
     Account.logout();
-    Navigation.mergeOptions(this.props.componentId, AccountScreen.options);
-  }
-
-  @autobind
-  onSignInPress() {
-    this.login();
-  }
-
-  @autobind
-  onCreateAccountPress() {
-    NativeModules.RNUeno.openSafari(
-      this.props.componentId,
-      'https://news.ycombinator.com/login?goto=news',
-      null,
-    );
-  }
-
-  @autobind
-  onPasswordRef(ref) {
-    this.passwordRef = ref;
-  }
-
-  @autobind
-  onUsernameChangeText(text) {
-    this.setState({
-      username: text,
-    });
-  }
-
-  @autobind
-  onPasswordChangeText(text) {
-    this.setState({
-      password: text,
-    });
-  }
-
-  @autobind
-  onUsernameSubmitEditing() {
-    this.passwordRef.focus();
-  }
-
-  @autobind
-  onPasswordSubmitEditing() {
-    this.login();
   }
 
   @autobind
@@ -158,39 +102,6 @@ export default class AccountScreen extends React.Component<Props> {
     return userFavoritesScreen(Account.user.id);
   }
 
-  renderLogin() {
-    return (
-      <ScrollView style={styles.flex} contentContainerStyle={styles.login}>
-        <KeyboardAvoidingView behavior="padding" style={styles.container} keyboardVerticalOffset={140}>
-          <Image style={styles.login__logo} source={require('assets/icons/128/hacker-news-logo.png')} />
-          <Text style={styles.login__text}>Sign In to access your Hacker News account to vote, post, comment and more!</Text>
-          <View style={styles.login__button}>
-            <Input
-              placeholder="Username"
-              returnKeyType="next"
-              onSubmitEditing={this.onUsernameSubmitEditing}
-              onChangeText={this.onUsernameChangeText}
-            />
-          </View>
-          <View style={styles.login__button}>
-            <Input
-              placeholder="Password"
-              returnKeyType="done"
-              secureTextEntry={true}
-              innerRef={this.onPasswordRef}
-              onChangeText={this.onPasswordChangeText}
-              onSubmitEditing={this.onPasswordSubmitEditing}
-            />
-          </View>
-          <View style={styles.login__button}>
-            <Button fill={true} onPress={this.onSignInPress} title="Sign In" loading={Account.isLoading} />
-          </View>
-          <Button onPress={this.onCreateAccountPress} title="Create Account" />
-        </KeyboardAvoidingView>
-      </ScrollView>
-    );
-  }
-
   render() {
     const { testID } = this.props;
 
@@ -203,7 +114,12 @@ export default class AccountScreen extends React.Component<Props> {
     }
 
     if (!Account.isLoggedIn) {
-      return this.renderLogin();
+      return (
+        <Login
+          onLogin={this.onLogin}
+          onLogout={this.onLogout}
+        />
+      );
     }
 
     return (

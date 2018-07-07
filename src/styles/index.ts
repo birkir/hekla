@@ -1,5 +1,4 @@
 import { Platform, StyleSheet, StatusBar } from 'react-native';
-import get from 'lodash/get';
 import set from 'lodash/set';
 import UI from 'stores/UI';
 import themes from 'styles/themes';

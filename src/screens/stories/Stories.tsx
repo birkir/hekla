@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, ActionSheetIOS, Platform, NativeModules } from 'react-native';
+import { View, FlatList, ActionSheetIOS, Platform, NativeModules, Dimensions } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import { observer } from 'mobx-react';
@@ -11,6 +11,7 @@ import Item from 'stores/models/Item';
 import { observable, autorun } from 'mobx';
 import UI from 'stores/UI';
 import { theme, applyThemeOptions } from 'styles';
+import Toast from 'components/toast/Toast';
 const styles = theme(require('./Stories.styl'));
 
 interface Props {
@@ -27,6 +28,13 @@ const typeIcons = {
 };
 
 type IItemType = typeof Item.Type;
+type Layout = {
+  bottomTabsHeight: number;
+  topBarHeight: number;
+  statusBarHeight: number;
+  width: number;
+  height: number;
+};
 
 @observer
 export default class StoriesScreen extends React.Component<Props> {
@@ -40,7 +48,10 @@ export default class StoriesScreen extends React.Component<Props> {
   offset = 0;
 
   @observable
-  limit = 10;
+  limit = 25;
+
+  @observable
+  layout = {} as Layout;
 
   static get options() {
     return applyThemeOptions({
@@ -72,12 +83,20 @@ export default class StoriesScreen extends React.Component<Props> {
   }
 
   componentWillMount() {
-    Stories.fetchStories(this.offset, this.limit);
+
+    // Fetch data needed to display screen
+    this.fetchData();
+
+    // Update screen options on Stories.type change
     autorun(() => {
       if (Stories.type) {
         this.updateOptions();
       }
     });
+  }
+
+  componentWillUnmount() {
+    Stories.dispose();
   }
 
   onNavigationButtonPressed(buttonId) {
@@ -91,7 +110,7 @@ export default class StoriesScreen extends React.Component<Props> {
     this.offset = 0;
     Stories.clear();
     this.isRefreshing = true;
-    await Stories.fetchStories(this.offset, this.limit);
+    this.fetchData();
     this.isRefreshing = false;
   }
 
@@ -99,7 +118,7 @@ export default class StoriesScreen extends React.Component<Props> {
   onEndReached(e) {
     if (!Stories.isLoading) {
       this.offset += this.limit;
-      Stories.fetchStories(this.offset, this.limit);
+      this.fetchData();
     }
   }
 
@@ -142,8 +161,24 @@ export default class StoriesScreen extends React.Component<Props> {
   }
 
   @autobind
+  async onLayout() {
+    const heights = await NativeModules.RNUeno.getHeights(this.props.componentId);
+    const { width, height } = Dimensions.get('window');
+    this.layout = {
+      ...heights,
+      width,
+      height,
+    };
+  }
+
+  async fetchData() {
+    // Fetch items needed to display this screen
+    await Stories.fetchStories(this.offset, this.limit);
+  }
+
+  @autobind
   async scrollToTop() {
-    const { topBarHeight, statusBarHeight } = await NativeModules.RNUeno.getHeights(UI.componentId);
+    const { topBarHeight, statusBarHeight } = this.layout;
     this.listRef.current.scrollToOffset({ offset: -(topBarHeight + statusBarHeight) });
   }
 
@@ -169,6 +204,7 @@ export default class StoriesScreen extends React.Component<Props> {
       <View
         style={styles.host}
         testID="STORIES_SCREEN"
+        onLayout={this.onLayout}
       >
         <FlatList
           ref={this.listRef}
@@ -183,6 +219,13 @@ export default class StoriesScreen extends React.Component<Props> {
           onRefresh={this.onRefresh}
           onEndReached={this.onEndReached}
           scrollEnabled={UI.scrollEnabled}
+        />
+        <Toast
+          // top={this.layout.topBarHeight + this.layout.statusBarHeight}
+          bottom={this.layout.bottomTabsHeight}
+          visible={!UI.isConnected}
+          message="You are offline"
+          icon={require('assets/icons/16/offline.png')}
         />
       </View>
     );

@@ -2,7 +2,7 @@ import { types, flow } from 'mobx-state-tree';
 import CodePush from 'react-native-code-push';
 import UpdateMetadata from './models/UpdateMetadata';
 
-export default types
+const CodePushStore = types
   .model('CodePush', {
     updateMetadata: types.maybe(UpdateMetadata),
   })
@@ -21,8 +21,12 @@ export default types
     update() {
       return flow(function* () {
         self.updateMetadata = yield CodePush.getUpdateMetadata();
-        console.log(self.updateMetadata);
       })();
     },
   }))
   .create();
+
+// Update CodePush
+CodePushStore.update();
+
+export default CodePushStore;

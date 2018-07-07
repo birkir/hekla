@@ -1,8 +1,10 @@
 import './utils/sentry';
-import { YellowBox } from 'react-native';
+import { YellowBox, NetInfo, AsyncStorage } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens, startApp } from 'screens';
 import UI from 'stores/UI';
+import { db } from 'utils/firebase';
+import { onSnapshot } from 'mobx-state-tree';
 
 // Ignore yellow box
 YellowBox.ignoreWarnings([
@@ -29,4 +31,56 @@ Navigation.events().registerComponentDidAppearListener((componentId, componentNa
 // Start application
 Navigation.events().registerAppLaunchedListener(() => {
   UI.hydrate().then(startApp);
+});
+
+// Listen for Navigation events
+Navigation.events().registerNativeEventListener((name, params) => {
+  if (name === 'previewContext') {
+    UI.setPreview({
+      srcComponentId: params.componentId,
+      dstComponentId: params.previewComponentId,
+      active: true,
+    });
+  }
+
+  if (name === 'previewCommit') {
+    UI.setPreview({
+      active: false,
+    });
+  }
+});
+
+// Listen for componentDidAppear screen events
+Navigation.events().registerComponentDidAppearListener((componentId, componentName) => {
+  UI.setComponentId(componentId);
+});
+
+// Listen for componentDidDisappear screen events
+Navigation.events().registerComponentDidDisappearListener((componentId, componentName) => {
+  if (UI.preview.dstComponentId === componentId) {
+    UI.setComponentId(UI.preview.srcComponentId);
+    UI.setPreview({
+      active: false,
+    });
+  }
+});
+
+// Firebase connection state
+db.ref('.info').on('value', (s: any) => {
+  UI.setIsConnected(s.val().connected);
+});
+
+// Listen to device connection state
+NetInfo.addEventListener('connectionChange', ({ type }: any) => {
+  UI.setIsConnected(type !== 'none');
+});
+
+// Initial device connection state
+NetInfo.getConnectionInfo().then(({ type }) => {
+  UI.setIsConnected(type !== 'none');
+});
+
+// Persist Settings!
+onSnapshot(UI.settings, (snapshot) => {
+  AsyncStorage.setItem('UI.settings', JSON.stringify(snapshot));
 });
