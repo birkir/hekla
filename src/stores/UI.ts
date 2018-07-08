@@ -2,6 +2,7 @@ import { types, flow, applySnapshot } from 'mobx-state-tree';
 import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage } from 'react-native';
 import Settings from './models/Settings';
 import prettyNumber from 'utils/prettyNumber';
+import Stories from './Stories';
 
 const { width, height } = Dimensions.get('window');
 
@@ -79,12 +80,18 @@ const UI = types
       );
     },
 
+    // Apply current settings to all their counter-parts
+    apply() {
+      Stories.setType(UI.settings.general.defaultStoriesToLoad);
+    },
+
     hydrate() {
       return flow(function* () {
         try {
           const data = yield AsyncStorage.getItem('UI.settings');
           const state = JSON.parse(data);
           applySnapshot(UI.settings, state);
+          (self as any).apply();
         } catch (err) {}
         return;
       })();

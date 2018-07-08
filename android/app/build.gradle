@@ -175,6 +175,9 @@ dependencies {
     implementation project(':react-native-cookies')
     implementation project(':react-native-keychain')
     implementation project(':react-native-fast-image')
+    implementation project(':react-native-rate')
+    implementation project(':react-native-iap')
+    implementation project(':react-native-custom-tabs')
 
     implementation(project(':react-native-firebase')) {
         transitive = false

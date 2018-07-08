@@ -19,6 +19,9 @@ import com.psykar.cookiemanager.CookieManagerPackage;
 import com.reactlibrary.RNReactNativeHapticFeedbackPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.wix.interactable.Interactable;
+import com.github.droibit.android.reactnative.customtabs.CustomTabsPackage;
+import com.RNRate.RNRatePackage;
+import com.dooboolab.RNIap.RNIapPackage;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactApplication;
@@ -65,6 +68,9 @@ public class MainApplication extends NavigationApplication {
           new CookieManagerPackage(),
           new RNSentryPackage(),
           new RNReactNativeHapticFeedbackPackage(),
+          new CustomTabsPackage(),
+          new RNRatePackage(),
+          new RNIapPackage(),
           new RNFirebasePackage(),
           new RNFirebaseAnalyticsPackage(),
           new RNFirebaseDatabasePackage()

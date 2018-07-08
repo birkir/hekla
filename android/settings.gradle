@@ -4,6 +4,15 @@ rootProject.name = 'Hekla'
 
 include ':app'
 
+include ':react-native-rate'
+project(':react-native-rate').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-rate/android')
+
+include ':react-native-iap'
+project(':react-native-iap').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-iap/android')
+
+include ':react-native-custom-tabs'
+project(':react-native-custom-tabs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-custom-tabs/android')
+
 include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
 

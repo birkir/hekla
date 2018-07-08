@@ -77,7 +77,7 @@ export default class SettingsScreen extends React.Component<Props> {
   @autobind
   onBetaChange(flag: boolean) {
     // TODO: Prompt user to confirm and that the app will likely restart.
-    UI.settings.setIsBeta(flag);
+    UI.settings.setValue('isBeta', flag);
     const config = codePushConfig();
     config.installMode = CodePush.InstallMode.IMMEDIATE;
     CodePush.sync(config);

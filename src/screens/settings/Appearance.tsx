@@ -45,16 +45,16 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
   }
 
   onSystemTextSizeChange(flag: boolean) {
-    UI.settings.appearance.setUseSystemFontSize(flag);
+    UI.settings.setValue('appearance.useSystemFontSize', flag);
   }
 
   @autobind
   onThemeChange(e, { id }) {
-    UI.settings.appearance.setTheme(id);
+    UI.settings.setValue('appearance.theme', id);
   }
 
   onFontSizeChange(size) {
-    UI.settings.appearance.setFontSize(size);
+    UI.settings.setValue('appearance.fontSize', size);
   }
 
   onStorySizePress() {
@@ -67,12 +67,12 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
     }];
 
     openActionSheet({ options }, ({ id }) => {
-      UI.settings.appearance.setStorySize(id);
+      UI.settings.setValue('appearance.storySize', id);
     });
   }
 
   onShowPageEndingsChange(flag: boolean) {
-    UI.settings.appearance.setShowPageEndings(flag);
+    UI.settings.setValue('appearance.showPageEndings', flag);
   }
 
   render() {

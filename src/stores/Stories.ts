@@ -5,6 +5,9 @@ import { db } from 'utils/firebase';
 import { ItemReference } from './models/Item';
 import StoriesType from './models/StoriesType';
 import Items from './Items';
+import UI from './UI';
+
+const MAX_TIMEOUT = 3000;
 
 const Stories = types
   .model('Stories', {
@@ -48,6 +51,7 @@ const Stories = types
        */
       fetchStories(offset: number = 0, limit: number = 25) {
         return flow(function* () {
+          const start = new Date().getTime();
 
           self.isLoading = true;
 
@@ -62,7 +66,7 @@ const Stories = types
           // Get story ids from Firebase
           const res = yield new Promise((resolve) => {
             ref.once('value').then(s => resolve(s.val()));
-            setTimeout(() => ref.off('value') && resolve({}), 3000);
+            setTimeout(() => ref.off('value') && resolve({}), MAX_TIMEOUT);
           });
 
           // Convert into an array of item id's as strings
@@ -74,6 +78,13 @@ const Stories = types
             const metadata = index < 2 && offset === 0;
             return Items.fetchItem(id, { metadata });
           }));
+
+          // Wait at least 990ms for new data to make loading
+          // indicators non janky.
+          const delay = 990 - (new Date().getTime() - start);
+          if (delay > 0) {
+            yield new Promise(r => setTimeout(r, delay));
+          }
 
           // Push items into stories array
           self.stories.push(...storyIds.filter(uniqById));

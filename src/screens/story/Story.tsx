@@ -13,6 +13,7 @@ import Empty from '../../components/empty/Empty';
 import Comment from 'components/comment/Comment';
 import Loading from 'components/loading/Loading';
 import { theme, applyThemeOptions } from 'styles';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 const styles = theme(require('./Story.styl'));
 
 interface Props {
@@ -63,11 +64,20 @@ export default class StoryScreen extends React.Component<Props> {
   @autobind
   async fetch() {
     try {
+      const start = new Date().getTime();
       this.setState({ loading: 1 });
       this.story = await Items.fetchItem(this.props.id, { timeout: 1000 }) as IItemType;
       this.updateOptions();
       this.setState({ loading: 2 });
       await this.story.fetchComments();
+
+      // Wait at least 990ms for new data to make loading
+      // indicators non janky.
+      const delay = 990 - (new Date().getTime() - start);
+      if (delay > 0 && this.isRefreshing) {
+        await new Promise(r => setTimeout(r, delay));
+      }
+
       this.setState({ loading: 0 });
     } catch (err) {
       console.log('Failed to fetch Story: %o', err);
@@ -88,8 +98,9 @@ export default class StoryScreen extends React.Component<Props> {
 
   @autobind
   async onRefresh() {
+    ReactNativeHapticFeedback.trigger('impactLight', true);
     this.isRefreshing = true;
-    await this.story.fetchComments();
+    await this.fetch();
     this.isRefreshing = false;
   }
 

@@ -2519,6 +2519,12 @@ domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
+dooboolab-welcome@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.0.5.tgz#7b9a5e8db3cace4cc98764258830180c009d7e70"
+  dependencies:
+    chalk "^2.3.0"
+
 dot-prop@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-4.2.0.tgz#1f19e0c2e1aa0e32797c49799f2837ac6af69c57"
@@ -6294,6 +6300,10 @@ react-native-css-transformer@1.2.1:
     css-to-react-native-transform "^1.6.0"
     semver "^5.5.0"
 
+react-native-custom-tabs@0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/react-native-custom-tabs/-/react-native-custom-tabs-0.1.7.tgz#2dfb4028b0a443610d94792b2019810f68dde525"
+
 react-native-fast-image@4.0.14:
   version "4.0.14"
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-4.0.14.tgz#1e84c9a01b1471793e294ef4e7c3cc20e09562a0"
@@ -6311,6 +6321,18 @@ react-native-firebase@4.2.0:
 react-native-haptic-feedback@1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.1.7.tgz#9ff27b9a83ce7983ce5f298362129a6b4b958d56"
+
+react-native-iap@1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-1.2.3.tgz#086e2ef68d2e40d1f34489b274752a4a2e51cb38"
+  dependencies:
+    dooboolab-welcome "^1.0.5"
+
+"react-native-iap@github:dooboolab/react-native-iap":
+  version "1.2.3"
+  resolved "https://codeload.github.com/dooboolab/react-native-iap/tar.gz/1d42e932ad2e5d7a4a05d0805e2091f976ed871c"
+  dependencies:
+    dooboolab-welcome "^1.0.5"
 
 react-native-interactable@0.1.10:
   version "0.1.10"
@@ -6346,6 +6368,12 @@ react-native-progress@3.5.0:
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-3.5.0.tgz#d1ccc7f96dc17c609aedb43b2e6695d67deae0ec"
   dependencies:
     prop-types "^15.5.8"
+
+react-native-rate@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-rate/-/react-native-rate-1.0.9.tgz#2f11cff30f7ec7cd443d843a4af96d8d5266f6b5"
+  dependencies:
+    react-native-iap "github:dooboolab/react-native-iap"
 
 react-native-safari-view@2.1.0:
   version "2.1.0"

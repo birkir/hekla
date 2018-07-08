@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, Animated, LayoutAnimation, TouchableWithoutFeedback, ActionSheetIOS, StyleSheet, Share, TouchableOpacity } from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import { View, Text, Image, TouchableHighlight, Animated, LayoutAnimation, TouchableWithoutFeedback, StyleSheet, Share, TouchableOpacity } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import Interactable from 'react-native-interactable';
+import openActionSheet from 'utils/openActionSheet';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
 import { replyScreen, userScreen } from 'screens';
-import Interactable from 'react-native-interactable';
 import FormatText from 'components/format-text/FormatText';
 import UI from 'stores/UI';
 import Account from 'stores/Account';
@@ -52,83 +52,82 @@ export default class Comment extends React.PureComponent<Props, State> {
   onMorePress() {
     const { isUserVote, isUserFavorite, isUserHidden } = this.props.item;
     const options = [{
-      icon:  resolveAssetSource(require('assets/icons/32/arrow-up.png')),
+      id: 'vote',
+      icon: require('assets/icons/32/arrow-up.png'),
       title: isUserVote ? 'Unvote' : 'Vote',
       titleTextAlignment: 0,
     }, {
-      icon:  resolveAssetSource(require('assets/icons/32/star.png')),
+      id: 'favorite',
+      icon: require('assets/icons/32/star.png'),
       title: isUserFavorite ? 'Unfavorite' : 'Favorite',
       titleTextAlignment: 0,
     }, {
-      icon:  resolveAssetSource(require('assets/icons/32/hide.png')),
+      id: 'hide',
+      icon: require('assets/icons/32/hide.png'),
       title: isUserHidden ? 'Unhide' : 'Hide',
       titleTextAlignment: 0,
     }, {
-      icon:  resolveAssetSource(require('assets/icons/32/reply.png')),
+      id: 'reply',
+      icon: require('assets/icons/32/reply.png'),
       title: 'Reply',
       titleTextAlignment: 0,
     }, {
-      icon:  resolveAssetSource(require('assets/icons/32/user.png')),
+      id: 'user',
+      icon: require('assets/icons/32/user.png'),
       title: this.props.item.by,
       titleTextAlignment: 0,
     }, {
-      icon:  resolveAssetSource(require('assets/icons/32/share.png')),
+      id: 'share',
+      icon: require('assets/icons/32/share.png'),
       title: 'Share',
       titleTextAlignment: 0,
     }];
 
     if (this.props.item.by === Account.user.id) {
       options.push({
+        id: 'edit',
         title: 'Edit',
         titleTextAlignment: 0,
       } as any);
       options.push({
+        id: 'delete',
         title: 'Delete',
         titleTextAlignment: 0,
       } as any);
     }
 
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        cancelButtonIndex: options.length,
-        options: [
-          ...options,
-          {
-            title: 'Cancel',
-          },
-        ] as any,
-      },
-      (index) => {
-        if (index === 0) {
-          this.props.item.vote();
-        }
-        if (index === 1) {
-          this.props.item.favorite();
-        }
-        if (index === 2) {
-          this.props.item.hide();
-        }
-        if (index === 3) {
-          replyScreen(this.props.item.id);
-        }
-        if (index === 4) {
-          userScreen(this.props.item.by);
-        }
-        if (index === 5) {
-          Share.share({
-            message: this.props.item.prettyText,
-          });
-        }
-        if (this.props.item.by === Account.user.id) {
-          if (index === 6) {
-            replyScreen(this.props.item.id, true);
-          }
-          if (index === 7) {
-            this.onDelete();
-          }
-        }
-      },
-    );
+    openActionSheet({ options, cancel: 'Cancel' }, this.onAction);
+  }
+
+  onAction({ id }) {
+    if (id === 'vote') {
+      this.props.item.vote();
+    }
+    if (id === 'favorite') {
+      this.props.item.favorite();
+    }
+    if (id === 'hide') {
+      this.props.item.hide();
+    }
+    if (id === 'reply') {
+      replyScreen(this.props.item.id);
+    }
+    if (id === 'user') {
+      userScreen(this.props.item.by);
+    }
+    if (id === 'share') {
+      Share.share({
+        message: this.props.item.prettyText,
+      });
+    }
+    if (this.props.item.by === Account.user.id) {
+      if (id === 'edit') {
+        replyScreen(this.props.item.id, true);
+      }
+      if (id === 'delete') {
+        this.onDelete();
+      }
+    }
   }
 
   @autobind

@@ -1,6 +1,7 @@
 import { types } from 'mobx-state-tree';
 import StoriesType from './StoriesType';
 import Theme from './Theme';
+import set from 'lodash/set';
 import config from 'config';
 
 const General = types
@@ -28,23 +29,6 @@ const Appearance = types
 
       return false;
     },
-  }))
-  .actions(self => ({
-    setUseSystemFontSize(flag: boolean) {
-      self.useSystemFontSize = flag;
-    },
-    setFontSize(size: number) {
-      self.fontSize = size;
-    },
-    setTheme(theme: typeof self.theme) {
-      self.theme = theme;
-    },
-    setStorySize(size: typeof self.storySize) {
-      self.storySize = size;
-    },
-    setShowPageEndings(flag: boolean) {
-      self.showPageEndings = flag;
-    },
   }));
 
 const Settings = types
@@ -54,8 +38,9 @@ const Settings = types
     isBeta: types.optional(types.boolean, config.isTestFlight || false),
   })
   .actions(self => ({
-    setIsBeta(flag: boolean) {
-      self.isBeta = flag;
+    // Bad idea in a typed environment but I am lazy.
+    setValue(key, value) {
+      set(self, key, value);
     },
   }));
 

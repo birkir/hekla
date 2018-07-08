@@ -75,8 +75,6 @@ const Account = types
   })
   .create();
 
-console.log(Account);
-
 /**
  * BOOTSTRAP ACCOUNT
  */
@@ -92,11 +90,9 @@ console.log(Account);
       password = credentials.password;
     } else {
       Account.setIsChecking(false);
-      console.log('Failed fetching credeentials from keychain. User aborted.');
       return false;
     }
   } catch (err) {
-    console.log('Failed fetching credeentials from keychain: %o', err);
     Account.setIsChecking(false);
     return false;
   }
