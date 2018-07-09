@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ActionSheetIOS, Share, AlertIOS } from 'react-native';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Share, Alert } from 'react-native';
 import FormatText from 'components/format-text/FormatText';
 import MetaLink from 'components/meta-link/MetaLink';
 import Item from 'stores/models/Item';
+import openActionSheet from 'utils/openActionSheet';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import { replyScreen } from 'screens';
@@ -31,7 +31,7 @@ export default class StoryHeader extends React.Component<Props> {
       return this.props.item.flag();
     }
 
-    AlertIOS.alert(
+    Alert.alert(
       'Confirm report',
       'Do you want to report this story?',
       [
@@ -60,40 +60,38 @@ export default class StoryHeader extends React.Component<Props> {
   @autobind
   onSharePress() {
     if (!this.props.item.url) {
-      return this.share(`https://news.ycombinator.com/item?id=${this.props.item.id}`);
+      return this.share(this.props.item.hackernewsUrl);
     }
 
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        cancelButtonIndex: 2,
-        options: [{
-          icon: resolveAssetSource(require('assets/icons/32/safari-line.png')),
-          title: 'Hackernews Link',
-          titleTextAlignment: 0,
-        }, {
-          icon: resolveAssetSource(require('assets/icons/32/safari-line.png')),
-          title: 'Content Link',
-          titleTextAlignment: 0,
-        }, {
-          title: 'Cancel',
-        }] as any,
-      },
-      (index) => {
-        if (index === 0) {
-          this.share(`https://news.ycombinator.com/item?id=${this.props.item.id}`);
-        }
-        if (index === 1) {
-          this.share(this.props.item.url);
-        }
-        console.log('done', index);
-      },
-    );
+    const options = [{
+      id: 'hackernews',
+      icon: require('assets/icons/32/safari-line.png'),
+      title: 'Hackernews Link',
+      titleTextAlignment: 0,
+    }, {
+      id: 'content',
+      icon: require('assets/icons/32/safari-line.png'),
+      title: 'Content Link',
+      titleTextAlignment: 0,
+    }];
+
+    return openActionSheet({ options, cancel: 'Cancel' }, this.onShareAction);
+  }
+
+  @autobind
+  onShareAction({ id }) {
+    if (id === 'hackernews') {
+      this.share(this.props.item.hackernewsUrl);
+    }
+    if (id === 'content') {
+      this.share(this.props.item.url);
+    }
   }
 
   share(url: string) {
     Share.share({
+      url,
       title: this.props.item.title,
-      url: this.props.item.url,
     });
   }
 
@@ -144,12 +142,12 @@ export default class StoryHeader extends React.Component<Props> {
               style={[styles.icon, item.isUserFlag && styles.icon__active, { width: 23, height: 23 }]}
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.actions__item} onPress={this.onHidePress}>
+          <TouchableOpacity style={styles.actions__item} onPress={this.onHidePress}>
             <Image
               source={require('assets/icons/100/hide.png')}
               style={[styles.icon, item.isUserHidden && styles.icon__active]}
             />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity style={styles.actions__item} onPress={this.onReplyPress}>
             <Image
               source={require('assets/icons/100/reply.png')}

@@ -1,5 +1,5 @@
 import { types, flow } from 'mobx-state-tree';
-import distance_in_words_to_now from 'date-fns/distance_in_words_to_now';
+import age from 'utils/age';
 import Hackernews from '../services/Hackernews';
 
 const User = types
@@ -15,11 +15,7 @@ const User = types
   })
   .views(self => ({
     get age() {
-      return distance_in_words_to_now(new Date(self.created * 1000))
-        .replace(/about|ago/, '')
-        .replace(/months?/, 'mo')
-        .replace(/(year|week|day|hour|minute|second)s?/, r => r[0])
-        .replace(/ /g, '');
+      return age(new Date(self.created * 1000));
     },
   }))
   .actions((self) => {

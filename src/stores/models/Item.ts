@@ -1,7 +1,7 @@
 import { types, flow } from 'mobx-state-tree';
 import { XmlEntities } from 'html-entities';
 import flattenDeep from 'lodash/flattenDeep';
-import distance_in_words_to_now from 'date-fns/distance_in_words_to_now';
+import age from 'utils/age';
 import Metadata from './Metadata';
 import Items from '../Items';
 import Hackernews from '../services/Hackernews';
@@ -47,16 +47,16 @@ const Item = types.model('Item', {
     return self.belongsTo.length;
   },
 
+  get hackernewsUrl() {
+    return `https://news.ycombinator.com/item?id=${self.id}`;
+  },
+
   /**
    * Print date in short format like `10h` or `6w`
    * @return {string}
    */
   get ago() {
-    return distance_in_words_to_now(new Date(self.time * 1000))
-      .replace(/about|ago/, '')
-      .replace(/months?/, 'mo')
-      .replace(/(year|week|day|hour|minute|second)s?/, r => r[0])
-      .replace(/ /g, '');
+    return age(new Date(self.time * 1000));
   },
 
   get prettyText() {
@@ -97,7 +97,16 @@ const Item = types.model('Item', {
     yield Promise.all(
       commentIds.map(async (id, index) => {
         // Fetch comment from backend (or cache)
-        const comment = await Items.fetchItem(id);
+        let comment;
+
+        try {
+          comment = await Items.fetchItem(id) as any;
+        } catch (err) {}
+
+        if (!comment) {
+          commentIds.splice(commentIds.indexOf(id), 1);
+          return;
+        }
 
         // Update belongsTo list with parents
         comment.setBelongsTo([self.id, ...self.belongsTo]);

@@ -24,11 +24,15 @@ const Items = types
             const ref = db.ref(`v0/item/${id}`);
             ref.keepSynced(true);
 
-          // Get story ids from Firebase
-          const data = yield new Promise((resolve) => {
-            ref.once('value').then(s => resolve(s.val()));
-            setTimeout(() => ref.off('value') && resolve({}), 1500);
-          });
+            // Get story ids from Firebase
+            const data = yield new Promise((resolve) => {
+              ref.once('value').then(s => resolve(s.val()));
+              setTimeout(() => ref.off('value') && resolve({}), 1500);
+            });
+
+            if (!data) {
+              return null;
+            }
 
             data.id = key;
             data.parent = data.parent ? String(data.parent) : null;

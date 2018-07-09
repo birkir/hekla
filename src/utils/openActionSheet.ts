@@ -1,9 +1,11 @@
 import { ActionSheetIOS } from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
-export default ({ options, cancel = null }, callback) => {
+export default ({ options, title = undefined, message = undefined, cancel = null }, callback) => {
   ActionSheetIOS.showActionSheetWithOptions(
     {
+      title,
+      message,
       cancelButtonIndex: options.length,
       options: [
         ...options.map((item) => {
