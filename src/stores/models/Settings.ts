@@ -1,14 +1,25 @@
 import { types } from 'mobx-state-tree';
-import StoriesType from './StoriesType';
+import StoriesType, { formatStoryType } from './StoriesType';
 import Theme from './Theme';
 import set from 'lodash/set';
 import config from 'config';
+import DefaultBrowser from './DefaultBrowser';
 
 const General = types
   .model({
     defaultStoriesToLoad: types.optional(StoriesType, 'topstories'),
     markReadOn3dTouch: types.optional(types.boolean, false),
-  });
+    hideBarsOnScroll: types.optional(types.boolean, false),
+    commentTapToCollapse: types.optional(types.boolean, true),
+    commentSwipeActions: types.optional(types.boolean, true),
+    browserUseReaderMode: types.optional(types.boolean, false),
+    browserOpenIn: types.optional(DefaultBrowser, 'inApp'),
+  })
+  .views(self => ({
+    get defaultStoriesToLoadValue() {
+      return formatStoryType(self.defaultStoriesToLoad);
+    },
+  }));
 
 const Appearance = types
   .model({

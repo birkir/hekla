@@ -10,6 +10,7 @@ import com.reactnativenavigation.react.ReactGateway;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.sentry.RNSentryPackage;
 import com.microsoft.codepush.react.ReactInstanceHolder;
 import com.microsoft.codepush.react.CodePush;
@@ -22,6 +23,7 @@ import com.wix.interactable.Interactable;
 import com.github.droibit.android.reactnative.customtabs.CustomTabsPackage;
 import com.RNRate.RNRatePackage;
 import com.dooboolab.RNIap.RNIapPackage;
+import com.apsl.versionnumber.RNVersionNumberPackage;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactApplication;
@@ -71,9 +73,11 @@ public class MainApplication extends NavigationApplication {
           new CustomTabsPackage(),
           new RNRatePackage(),
           new RNIapPackage(),
+          new RNVersionNumberPackage(),
           new RNFirebasePackage(),
           new RNFirebaseAnalyticsPackage(),
-          new RNFirebaseDatabasePackage()
+          new RNFirebaseDatabasePackage(),
+          new RNFirebaseFirestorePackage()
         );
     }
 

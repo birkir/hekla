@@ -20,6 +20,7 @@ target 'Hekla' do
   pod 'RNIap', :path => '../node_modules/react-native-iap'
   pod 'RNRate', :path => '../node_modules/react-native-rate/ios'
   pod 'react-native-custom-tabs', :path => '../node_modules/react-native-custom-tabs/ios'
+  pod 'react-native-version-number', :path => '../node_modules/react-native-version-number'
 
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'

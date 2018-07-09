@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, Animated, LayoutAnimation, TouchableWithoutFeedback, StyleSheet, Share, TouchableOpacity } from 'react-native';
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import Interactable from 'react-native-interactable';
+import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity } from 'react-native';
 import openActionSheet from 'utils/openActionSheet';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
-import { replyScreen, userScreen } from 'screens';
+import { replyScreen, userScreen, storyScreen } from 'screens';
 import FormatText from 'components/format-text/FormatText';
-import UI from 'stores/UI';
 import Account from 'stores/Account';
 import { theme, getVar } from 'styles';
 const styles = theme(require('./Comment.styl'));
@@ -17,36 +14,18 @@ type IItemType = typeof Item.Type;
 interface Props {
   key?: string;
   item: IItemType;
-  depth: number;
-  collapsed: boolean;
-  hidden: boolean;
-  onCollapse: (item: any) => void;
-  onExpand: (item: any) => void;
+  parent?: IItemType;
+  depth?: number;
+  collapsed?: boolean;
+  hidden?: boolean;
+  metalinks?: boolean;
+  numberOfLines?: number;
+  onPress?: (Props) => void;
+  card?: boolean;
   testID?: string;
 }
 
-interface State {
-  isActionLeftActive: boolean;
-  isActionRightActive: boolean;
-}
-
-export default class Comment extends React.PureComponent<Props, State> {
-
-  private deltaX = new Animated.Value(0);
-
-  state = {
-    isActionLeftActive: false,
-    isActionRightActive: false,
-  } as State;
-
-  @autobind
-  onPress() {
-    if (!this.props.collapsed) {
-      this.props.onCollapse(this.props.item);
-    } else {
-      this.props.onExpand(this.props.item);
-    }
-  }
+export default class Comment extends React.PureComponent<Props> {
 
   @autobind
   onMorePress() {
@@ -96,10 +75,10 @@ export default class Comment extends React.PureComponent<Props, State> {
       } as any);
     }
 
-    openActionSheet({ options, cancel: 'Cancel' }, this.onAction);
+    openActionSheet({ options, cancel: 'Cancel' }, this.onActionSelect);
   }
 
-  onAction({ id }) {
+  onActionSelect({ id }) {
     if (id === 'vote') {
       this.props.item.vote();
     }
@@ -131,41 +110,27 @@ export default class Comment extends React.PureComponent<Props, State> {
   }
 
   @autobind
-  onAlert({ nativeEvent: { left, right } }: any) {
-    if (left === 'enter') {
-      ReactNativeHapticFeedback.trigger('impactLight', true);
-      this.setState({ isActionLeftActive: true });
-    } else if (right === 'leave') {
-      ReactNativeHapticFeedback.trigger('impactLight', true);
-      this.setState({ isActionRightActive: true });
-    } else {
-      this.setState({
-        isActionLeftActive: false,
-        isActionRightActive: false,
-      });
+  async onPress() {
+    const { onPress } = this.props;
+    if (typeof onPress === 'function') {
+      return onPress(this.props);
     }
-  }
 
-  @autobind
-  onDrag({ nativeEvent }) {
-    if (nativeEvent.state === 'end') {
-      if (this.state.isActionLeftActive) {
-        this.onActionLeftToggle();
+    const getRoot = item => new Promise((resolve) => {
+      if (item.parent && item.type !== 'story') {
+        return item.fetchParent().then((parent) => {
+          if (parent) {
+            return getRoot(parent);
+          }
+        })
+        .then(resolve);
       }
-      if (this.state.isActionRightActive) {
-        this.onActionRightToggle();
-      }
-    }
-  }
+      resolve(item);
+    });
 
-  @autobind
-  onActionLeftToggle() {
-    this.props.item.vote();
-  }
+    const root = await getRoot(this.props.item) as IItemType;
 
-  @autobind
-  onActionRightToggle() {
-    setTimeout(() => replyScreen(this.props.item.id), 225);
+    return storyScreen(root);
   }
 
   @autobind
@@ -178,113 +143,82 @@ export default class Comment extends React.PureComponent<Props, State> {
     this.props.item.delete();
   }
 
-  componentWillUpdate() {
-    LayoutAnimation.easeInEaseOut();
+  renderParent() {
+    if (this.props.collapsed || !this.props.parent) {
+      return null;
+    }
+
+    const { text, prettyText, title, by } = this.props.parent;
+    return (
+      <View style={styles.parent}>
+        {text ? (
+          <FormatText
+            noLinks={true}
+            noFormat={true}
+            numberOfLines={5}
+            style={styles.parent__text}
+          >
+            {prettyText}
+          </FormatText>
+        ) : (
+          <Text style={styles.parent__title}>{title}</Text>
+        )}
+        <Text style={styles.parent__author}>{by}</Text>
+      </View>
+    );
   }
 
   render() {
-    const { isActionLeftActive, isActionRightActive } = this.state;
-    const { hidden, collapsed, depth, item } = this.props;
+    const {
+      hidden = false,
+      collapsed = false,
+      card = false,
+      metalinks = true,
+      depth = 0,
+      numberOfLines,
+      item,
+    } = this.props;
     const { ago, by, isUserVote } = item;
 
     if (!by || hidden) {
       return null;
     }
 
-    const dragDistance = 100;
-    const actionWidth = 50;
-    const damping = 1 - 0.6;
-    const tension = 300;
-
     return (
-      <View style={styles.host}>
-        <Animated.View
-          style={[
-            styles.action,
-            styles.action__left,
-            isActionLeftActive && styles.action__left__active,
-            {
-              width: UI.width,
-              paddingLeft: dragDistance + actionWidth,
-              transform: [{
-                translateX: this.deltaX.interpolate({
-                  inputRange: [0, dragDistance],
-                  outputRange: [-dragDistance, 0],
-                  extrapolate: 'clamp',
-                }),
-              }],
-            },
-          ]}
-        >
-          <Image source={require('assets/icons/32/arrow-up.png')} style={{ tintColor: '#FFF' }} />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.action,
-            styles.action__right,
-            isActionRightActive && styles.action__right__active,
-            hidden ? { opacity: 0 } : {},
-            {
-              width: UI.width,
-              paddingRight: actionWidth,
-              transform: [{
-                translateX: this.deltaX.interpolate({
-                  inputRange: [-dragDistance, 0],
-                  outputRange: [-dragDistance, 0],
-                  extrapolateLeft: 'clamp',
-                }),
-              }],
-            },
-          ]}
-        >
-          <Image source={require('assets/icons/25/reply.png')} style={{ tintColor: '#FFF' }} />
-        </Animated.View>
-
-        <Interactable.View
-          horizontalOnly={true}
-          snapPoints={[{ tension, x: 0, damping: 1 - damping }]}
-          alertAreas={[
-            { id: 'left', influenceArea: { left: dragDistance } },
-            { id: 'right', influenceArea: { left: -dragDistance } },
-          ]}
-          boundaries={{ left: -150, right: 150, bounce: 0.5 }}
-          onAlert={this.onAlert}
-          onDrag={this.onDrag}
-          dragToss={0.01}
-          animatedValueX={this.deltaX}
-          animatedNativeDriver={true}
-        >
-          <TouchableHighlight
-            onPress={this.onPress}
-            onLongPress={this.onMorePress}
-            activeOpacity={1}
-            underlayColor={getVar('--content-bg-active-color')}
-            style={styles.content}
-          >
-            <View style={[styles.container, styles[`level${depth}`]]}>
-              <View style={[styles.row, !collapsed && styles.row__expanded]}>
-                <TouchableOpacity onPress={this.onUserPress}>
-                  <Text style={styles.author}>{by}</Text>
-                </TouchableOpacity>
-                {isUserVote && <Image style={styles.icon__arrow} source={require('assets/icons/16/arrow-up.png')} />}
-                <View style={styles.flex} />
-                {!collapsed && (
-                  <TouchableWithoutFeedback onPress={this.onMorePress}>
-                    <Image source={require('assets/icons/16/more.png')} style={styles.icon__more} />
-                  </TouchableWithoutFeedback>
-                )}
-                {!collapsed && <Text style={styles.ago}>{ago}</Text>}
-                {collapsed && <Image source={require('assets/icons/16/chevron-down.png')} style={styles.icon__expand} />}
-              </View>
-              {!collapsed && (
-                <FormatText style={styles.text}>{item.prettyText}</FormatText>
-              )}
-            </View>
-          </TouchableHighlight>
-        </Interactable.View>
-        <View style={styles.border} />
-        <View style={[styles[`divider${depth}`], { height: StyleSheet.hairlineWidth }]} />
-      </View>
+      <TouchableHighlight
+        onPress={this.onPress}
+        onLongPress={this.onMorePress}
+        activeOpacity={1}
+        underlayColor={getVar('--content-bg-active-color')}
+        style={[styles.host, card && styles.host__card]}
+      >
+        <View style={[styles.container, styles[`level${depth}`]]}>
+          <View style={[styles.row, !collapsed && styles.row__expanded]}>
+            <TouchableOpacity onPress={this.onUserPress}>
+              <Text style={styles.author}>{by}</Text>
+            </TouchableOpacity>
+            {isUserVote && <Image style={styles.icon__arrow} source={require('assets/icons/16/arrow-up.png')} />}
+            <View style={styles.flex} />
+            {!collapsed && (
+              <TouchableWithoutFeedback onPress={this.onMorePress}>
+                <Image source={require('assets/icons/16/more.png')} style={styles.icon__more} />
+              </TouchableWithoutFeedback>
+            )}
+            {!collapsed && <Text style={styles.ago}>{ago}</Text>}
+            {collapsed && <Image source={require('assets/icons/16/chevron-down.png')} style={styles.icon__expand} />}
+          </View>
+          {!collapsed && (
+            <FormatText
+              style={styles.text}
+              numberOfLines={numberOfLines}
+              noLinks={!metalinks}
+            >
+              {item.prettyText}
+            </FormatText>
+          )}
+          {this.renderParent()}
+        </View>
+      </TouchableHighlight>
     );
   }
 }

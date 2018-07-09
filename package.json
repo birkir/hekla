@@ -47,7 +47,8 @@
     "react-native-rate": "1.0.9",
     "react-native-safari-view": "2.1.0",
     "react-native-search-bar": "3.4.2",
-    "react-native-sentry": "0.38.1"
+    "react-native-sentry": "0.38.1",
+    "react-native-version-number": "0.3.4"
   },
   "devDependencies": {
     "@firebase/app-types": "0.3.2",

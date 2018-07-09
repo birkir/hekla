@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { ScrollView, Platform, Switch } from 'react-native';
+import { ScrollView, Platform, Switch, NativeModules } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import { observer } from 'mobx-react';
+import { autorun } from 'mobx';
+import { autobind } from 'core-decorators';
+import Rate, { AndroidMarket } from 'react-native-rate';
+import CodePush from 'react-native-code-push';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import CellIcon from 'components/cell/CellIcon';
 import UI from 'stores/UI';
-import CodePushStore from 'stores/CodePush';
-import { SETTINGS_GENERAL_SCREEN, SETTINGS_APPEARANCE_SCREEN } from 'screens';
-import { theme, applyThemeOptions } from 'styles';
-import { Navigation } from 'react-native-navigation';
-import { autobind } from 'core-decorators';
-import CodePush from 'react-native-code-push';
 import codePushConfig from 'utils/codePushConfig';
-import { autorun } from 'mobx';
+import { SETTINGS_GENERAL_SCREEN, SETTINGS_APPEARANCE_SCREEN, SETTINGS_THEME_SCREEN, SETTINGS_ABOUT_SCREEN } from 'screens';
+import { theme, applyThemeOptions } from 'styles';
+import config from 'config';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -71,16 +72,30 @@ export default class SettingsScreen extends React.Component<Props> {
   }
 
   onThemePress() {
-    return;
+    Navigation.push(UI.componentId, {
+      component: {
+        name: SETTINGS_THEME_SCREEN,
+      },
+    });
   }
 
-  @autobind
-  onBetaChange(flag: boolean) {
-    // TODO: Prompt user to confirm and that the app will likely restart.
-    UI.settings.setValue('isBeta', flag);
-    const config = codePushConfig();
-    config.installMode = CodePush.InstallMode.IMMEDIATE;
-    CodePush.sync(config);
+  onAboutPress() {
+    Navigation.push(UI.componentId, {
+      component: {
+        name: SETTINGS_ABOUT_SCREEN,
+      },
+    });
+  }
+
+  onRatePress() {
+    const options = {
+      AppleAppID: config.IOS_APPSTORE_ID,
+      GooglePackageName: config.ANDROID_BUNDLE_ID,
+      preferredAndroidMarket: AndroidMarket.Google,
+      preferInApp: false,
+    };
+
+    Rate.rate(options, () => null);
   }
 
   render() {
@@ -129,6 +144,7 @@ export default class SettingsScreen extends React.Component<Props> {
               size={20}
             />}
             more={true}
+            onPress={this.onAboutPress}
           />
           <Cell
             title="Donate"
@@ -145,30 +161,8 @@ export default class SettingsScreen extends React.Component<Props> {
               backgroundColor="#fc3259"
               size={22}
             />}
+            onPress={this.onRatePress}
           />
-        </CellGroup>
-        <CellGroup header={true}>
-          <Cell
-            title="Version"
-            value={CodePushStore.version}
-          />
-          {CodePushStore.updateMetadata && (
-            <Cell
-              title="Description"
-              value={CodePushStore.updateMetadata.description}
-            />
-          )}
-          {Platform.OS === 'android' ? (
-            <Cell
-              title="Opt-in to Beta"
-              value={<Switch value={UI.settings.isBeta} onValueChange={this.onBetaChange} />}
-            />
-          ) : (
-            <Cell
-              title="Beta"
-              value={UI.settings.isBeta ? 'Yes' : 'No'}
-            />
-          )}
         </CellGroup>
       </ScrollView>
     );

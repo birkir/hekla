@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Switch, Platform } from 'react-native';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import { Navigation } from 'react-native-navigation';
@@ -8,6 +8,8 @@ import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import UI from 'stores/UI';
 import { theme, applyThemeOptions } from 'styles';
+import { DefaultBrowserValues, formatDefaultBrowser } from 'stores/models/DefaultBrowser';
+import openActionSheet from 'utils/openActionSheet';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -42,6 +44,41 @@ export default class SettingsGeneralScreen extends React.Component<Props> {
     storyTypeActionSheet(({ id }) => UI.settings.setValue('general.defaultStoriesToLoad', id));
   }
 
+  onMarkReadOn3dTouchChange(value: boolean) {
+    UI.settings.setValue('general.markReadOn3dTouch', value);
+  }
+
+  onHideBarsOnScrollChange(value: boolean) {
+    UI.settings.setValue('general.hideBarsOnScroll', value);
+  }
+
+  onCommentTapToCollapseChange(value: boolean) {
+    UI.settings.setValue('general.commentTapToCollapse', value);
+  }
+
+  onCommentSwipeActionsChange(value: boolean) {
+    UI.settings.setValue('general.commentSwipeActions', value);
+  }
+
+  @autobind
+  onOpenLinksInPress() {
+    const options = (Object as any).entries(DefaultBrowserValues).map(([id, title]) => ({
+      id,
+      title,
+      titleTextAlignment: 0,
+    }));
+    openActionSheet({ options }, this.onOpenLinksInChange);
+  }
+
+  @autobind
+  onOpenLinksInChange(item) {
+    UI.settings.setValue('general.browserOpenIn', item.id);
+  }
+
+  onBrowserUseReaderMode(value: boolean) {
+    UI.settings.setValue('general.browserUseReaderMode', value);
+  }
+
   render() {
     const { testID } = this.props;
 
@@ -50,20 +87,55 @@ export default class SettingsGeneralScreen extends React.Component<Props> {
         <CellGroup header="General">
           <Cell
             title="Default Stories to Load"
-            value={UI.settings.general.defaultStoriesToLoad}
+            value={UI.settings.general.defaultStoriesToLoadValue}
             onPress={this.onDefaultStoriesToLoadPress}
           />
-          <Cell title="3D Touch Marks Stories Read" />
-          <Cell title="Open YouTube links in YouTube app" />
-          <Cell title="Hide bars on Scroll" />
+          <Cell
+            title="3D Touch Marks Stories Read"
+            value={<Switch
+              value={UI.settings.general.markReadOn3dTouch}
+              onValueChange={this.onMarkReadOn3dTouchChange}
+            />}
+          />
+          <Cell
+            title="Hide bars on Scroll"
+            value={<Switch
+              value={UI.settings.general.hideBarsOnScroll}
+              onValueChange={this.onHideBarsOnScrollChange}
+            />}
+          />
         </CellGroup>
         <CellGroup header="Comments">
-          <Cell title="Tap to Collapse" />
-          <Cell title="Enable Actions on Swipe" />
+          <Cell
+            title="Tap to Collapse"
+            value={<Switch
+              value={UI.settings.general.commentTapToCollapse}
+              onValueChange={this.onCommentTapToCollapseChange}
+            />}
+          />
+          <Cell
+            title="Enable Actions on Swipe"
+            value={<Switch
+              value={UI.settings.general.commentSwipeActions}
+              onValueChange={this.onCommentSwipeActionsChange}
+            />}
+          />
         </CellGroup>
         <CellGroup header="Browser">
-          <Cell title="Always Use Reader Mode" />
-          <Cell title="Open links in" />
+          {Platform.OS === 'ios' && (
+            <Cell
+              title="Always Use Reader Mode"
+              value={<Switch
+                value={UI.settings.general.browserUseReaderMode}
+                onValueChange={this.onBrowserUseReaderMode}
+              />}
+            />
+          )}
+          <Cell
+            title="Open links in"
+            value={formatDefaultBrowser(UI.settings.general.browserOpenIn)}
+            onPress={this.onOpenLinksInPress}
+          />
         </CellGroup>
         <CellGroup header="Cache">
           <Cell

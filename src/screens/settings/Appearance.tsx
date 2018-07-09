@@ -8,7 +8,6 @@ import { autobind } from 'core-decorators';
 import UI from 'stores/UI';
 import { Navigation } from 'react-native-navigation';
 import { theme, applyThemeOptions } from 'styles';
-import { themes } from 'stores/models/Theme';
 import openActionSheet from 'utils/openActionSheet';
 const styles = theme(require('./Settings.styl'));
 
@@ -46,11 +45,6 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
 
   onSystemTextSizeChange(flag: boolean) {
     UI.settings.setValue('appearance.useSystemFontSize', flag);
-  }
-
-  @autobind
-  onThemeChange(e, { id }) {
-    UI.settings.setValue('appearance.theme', id);
   }
 
   onFontSizeChange(size) {
@@ -99,17 +93,6 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
               />
             )}
           />
-        </CellGroup>
-        <CellGroup header="Theme">
-          {(Object as any).entries(themes).map(([key, value]) => (
-            <Cell
-              key={key}
-              id={key}
-              title={value}
-              onPress={this.onThemeChange}
-              selected={UI.settings.appearance.theme === key}
-            />
-          ))}
         </CellGroup>
         <CellGroup header="Stories">
           <Cell

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, NativeModules, Dimensions } from 'react-native';
+import { View, FlatList, NativeModules, Dimensions, Platform } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { autobind } from 'core-decorators';
 import { observer } from 'mobx-react';
@@ -126,9 +126,22 @@ export default class StoriesScreen extends React.Component<Props> {
 
   @autobind
   async onLayout() {
+    let bars = {
+      bottomTabsHeight: 0,
+      topBarHeight: 0,
+      statusBarHeight: 0,
+    };
+
+    if (Platform.OS === 'ios') {
+      bars = await NativeModules.RNUeno.getHeights(this.props.componentId);
+    }
+
+    const { width, height } = Dimensions.get('window');
+
     this.layout = {
-      ...await NativeModules.RNUeno.getHeights(this.props.componentId),
-      ...Dimensions.get('window'),
+      ...bars,
+      width,
+      height,
     };
   }
 

@@ -1,0 +1,70 @@
+$gutter = 10px;
+$border-color = #E3E3E3;
+$colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
+
+.host {
+  position: relative;
+
+  background-color: var(--content-bg-color);
+}
+
+for color, i in $colors {
+  .divider{i} {
+    position: absolute;
+    top: 0px;
+    left: i * 16px;
+    right: 0px;
+    height: var(--hairline-width);
+    background-color: var(--content-divider-color);
+  }
+ }
+
+.border {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 48px;
+}
+
+.action {
+  position: absolute;
+  top: var(--hairline-width);
+  bottom: var(--hairline-width);
+  width: 1000px;
+
+  justify-content: center;
+
+  &__left {
+    left: -100px;
+    background-color: var(--primary-color);
+    align-items: flex-start;
+
+    &__active {
+      background-color: var(--primary-active-color);
+    }
+  }
+
+  &__right {
+    right: -100px;
+    background-color: var(--secondary-color);
+    align-items: flex-end;
+
+    &__active {
+      background-color: var(--secondary-active-color);
+    }
+  }
+}
+
+.icon {
+  &__expand {
+    tint-color: #AAA;
+  }
+
+  &__arrow {
+    tint-color: #FF6C00;
+    margin-top: 1px;
+    margin-left: 2px;
+    margin-bottom: -1px;
+  }
+}

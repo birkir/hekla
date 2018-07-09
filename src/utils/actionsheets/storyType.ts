@@ -1,5 +1,5 @@
 import openActionSheet from '../openActionSheet';
-import Stories from 'stores/Stories';
+import { formatStoryType } from 'stores/models/StoriesType';
 
 const icons = {
   topstories: require('assets/icons/32/trophy.png'),
@@ -19,7 +19,7 @@ const types = [
 
 const options = types.map(type => ({
   id: type,
-  title: Stories.pretty(type),
+  title: formatStoryType(type),
   titleTextAlignment: 0,
   icon: icons[type],
 }));

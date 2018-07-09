@@ -1,5 +1,6 @@
 import { types, flow, applySnapshot } from 'mobx-state-tree';
 import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage } from 'react-native';
+import { CustomTabs } from 'react-native-custom-tabs';
 import Settings from './models/Settings';
 import prettyNumber from 'utils/prettyNumber';
 import Stories from './Stories';
@@ -72,12 +73,22 @@ const UI = types
       self.height = height;
     },
 
-    openURL(url: string, elementId?: string) {
-      return NativeModules.RNUeno.openSafari(
-        self.componentId,
-        url,
-        elementId,
-      );
+    openURL(url: string, reactTag: number = -1) {
+      if (Platform.OS === 'ios') {
+        return NativeModules.RNUeno.openSafari(
+          self.componentId,
+          url,
+          reactTag,
+        );
+      }
+      if (Platform.OS === 'android' && reactTag === -1) {
+        CustomTabs.openURL(url, {
+          toolbarColor: '#607D8B',
+          enableUrlBarHiding: true,
+          showPageTitle: true,
+          enableDefaultShare: true,
+        });
+      }
     },
 
     // Apply current settings to all their counter-parts

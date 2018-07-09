@@ -1,6 +1,9 @@
 import cheerio from 'react-native-cheerio'; // tslint:disable-line import-name
 import { AsyncStorage } from 'react-native';
+import firebase from 'react-native-firebase';
+import FastImage from 'react-native-fast-image';
 
+const ref = firebase.firestore().collection('metadata');
 const getKey = url => `MetaData_${url}`;
 
 export const fetchMetadataCache = async (url: string) => {
@@ -25,6 +28,16 @@ export default async (url: string) => {
   const cached = await fetchMetadataCache(url);
   if (cached) {
     return cached;
+  }
+
+  const docs = await ref.where('url', '==', url).get() as any;
+  if (!docs.empty) {
+    const doc = docs.docs[0];
+    if (doc.exists) {
+      const obj = doc.data();
+      AsyncStorage.setItem(key, JSON.stringify(obj));
+      return obj;
+    }
   }
 
   const metaModel = {} as {
@@ -144,10 +157,11 @@ export default async (url: string) => {
 
   // Setup cache object
   const { title, description, author, tags, image } = metaModel;
-  const obj = { title, description, author, tags, image };
+  const obj = { url, title, description, author, tags, image };
 
   // Store as cache
   AsyncStorage.setItem(key, JSON.stringify(obj));
+  ref.add(obj);
 
   return obj;
 };

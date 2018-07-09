@@ -31,6 +31,7 @@ const Items = types
           });
 
             data.id = key;
+            data.parent = data.parent ? String(data.parent) : null;
 
             if (!data) {
               // TODO: Make sure to cache deleted items so we don't need to fetch

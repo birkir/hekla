@@ -11,6 +11,8 @@ import Reply from './reply/Reply';
 import Settings from './settings/Settings';
 import SettingsGeneral from './settings/General';
 import SettingsAppearance from './settings/Appearance';
+import SettingsThemeScreen from './settings/Theme';
+import SettingsAbout from './settings/About';
 import User from './user/User';
 import UserSubmissions from './user/Submissions';
 import UserComments from './user/Comments';
@@ -31,6 +33,8 @@ export const REPLY_SCREEN = 'hekla.ReplyScreen';
 export const SETTINGS_SCREEN = 'hekla.SettingsScreen';
 export const SETTINGS_GENERAL_SCREEN = 'hekla.SettingsGeneralScreen';
 export const SETTINGS_APPEARANCE_SCREEN = 'hekla.SettingsAppearanceScreen';
+export const SETTINGS_THEME_SCREEN = 'hekla.SettingsThemeScreen';
+export const SETTINGS_ABOUT_SCREEN = 'hekla.SettingsAboutScreen';
 export const USER_SCREEN = 'hekla.UserScreen';
 export const USER_SUBMISSIONS_SCREEN = 'hekla.UserSubmissionsScreen';
 export const USER_COMMENTS_SCREEN = 'hekla.UserCommentsScreen';
@@ -48,6 +52,8 @@ Screens.set(REPLY_SCREEN, Reply);
 Screens.set(SETTINGS_SCREEN, Settings);
 Screens.set(SETTINGS_GENERAL_SCREEN, SettingsGeneral);
 Screens.set(SETTINGS_APPEARANCE_SCREEN, SettingsAppearance);
+Screens.set(SETTINGS_THEME_SCREEN, SettingsThemeScreen);
+Screens.set(SETTINGS_ABOUT_SCREEN, SettingsAbout);
 Screens.set(USER_SCREEN, User);
 Screens.set(USER_SUBMISSIONS_SCREEN, UserSubmissions);
 Screens.set(USER_COMMENTS_SCREEN, UserComments);
@@ -233,7 +239,7 @@ export const accountVotedScreen = (userId: string) => Navigation.push(UI.compone
   },
 });
 
-export const storyScreen = (story: IItemType | string, elementId?: string) => {
+export const storyScreen = (story: IItemType | string, reactTag?: number) => {
   const id = typeof story === 'object' ? story.id : story;
   const comments = typeof story === 'object' ? story.descendants || 0 : null;
 
@@ -249,8 +255,8 @@ export const storyScreen = (story: IItemType | string, elementId?: string) => {
             text: comments ? prettyNumber(comments, 'Comments') : undefined,
           },
         },
-        preview: elementId ? {
-          elementId,
+        preview: reactTag ? {
+          reactTag,
           commit: true,
         } : undefined,
       },

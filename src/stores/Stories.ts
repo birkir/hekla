@@ -3,7 +3,7 @@ import values from 'lodash/values';
 import compact from 'lodash/compact';
 import { db } from 'utils/firebase';
 import { ItemReference } from './models/Item';
-import StoriesType from './models/StoriesType';
+import StoriesType, { formatStoryType } from './models/StoriesType';
 import Items from './Items';
 import UI from './UI';
 
@@ -16,24 +16,8 @@ const Stories = types
     stories: types.optional(types.array(ItemReference), []),
   })
   .views(self => ({
-    pretty(type) {
-
-      if (type === 'askstories') {
-        return 'Ask HN';
-      }
-      if (type === 'showstories') {
-        return 'Show HN';
-      }
-      if (type === 'jobstories') {
-        return 'Jobs';
-      }
-
-      const justType = type.replace(/stories/, '');
-      return `${justType.substr(0, 1).toUpperCase()}${justType.substr(1)} Stories`;
-    },
-
     get prettyType() {
-      return (self as any).pretty(self.type);
+      return formatStoryType(self.type);
     },
   }))
   .actions((self) => {

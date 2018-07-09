@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight } from 'react-native';
+import { View, Text, Image, TouchableHighlight, findNodeHandle, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Element from 'components/element/Element';
 import { Navigation } from 'react-native-navigation';
@@ -13,7 +13,6 @@ const styles = theme(require('./MetaLink.styl'));
 interface Props {
   title?: string;
   url: string;
-  elementId?: string;
   image?: string;
   large?: boolean;
 }
@@ -33,12 +32,12 @@ export default class MetaLink extends React.Component<Props, State> {
   private preview: boolean = false;
   private startTimestamp: number = 0;
   private dead: boolean = false;
+  private hostRef = React.createRef() as any;
 
   state = {
     title: this.props.title,
     image: this.props.image,
   } as State;
-  elementId = this.props.elementId || `element_${this.props.url}`;
 
   componentWillMount() {
     this.fetch();
@@ -74,7 +73,10 @@ export default class MetaLink extends React.Component<Props, State> {
 
   @autobind
   async onPressIn() {
-    UI.openURL(this.props.url, this.elementId);
+    if (Platform.OS !== 'ios') return;
+
+    const reactTag = findNodeHandle(this.hostRef.current);
+    UI.openURL(this.props.url, reactTag);
   }
 
   @autobind
@@ -182,39 +184,38 @@ export default class MetaLink extends React.Component<Props, State> {
     );
 
     return (
-      <Element elementId={this.elementId}>
-        <TouchableHighlight
-          style={[styles.host, large && styles.host__large]}
-          onPress={this.onPress}
-          onPressIn={this.onPressIn}
-          activeOpacity={1}
-          underlayColor="transparent"
-          onHideUnderlay={this.onHideUnderlay}
-          onShowUnderlay={this.onShowUnderlay}
-        >
-          <View onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onTouchMove={this.onTouchMove}>
-            {large && image && !error && (
-              <FastImage
-                source={{ uri: image }}
-                style={styles.image}
-                onError={this.onImageError}
-                resizeMode="cover"
-              />
-            )}
-            <View style={contentStyles}>
-              {this.renderIcon()}
-              <View style={styles.text}>
-                {titleElement}
-                {linkElement}
-              </View>
-              <Image
-                style={styles.chevron}
-                source={require('assets/icons/16/chevron-right.png')}
-              />
+      <TouchableHighlight
+        ref={this.hostRef}
+        style={[styles.host, large && styles.host__large]}
+        onPress={this.onPress}
+        onPressIn={this.onPressIn}
+        activeOpacity={1}
+        underlayColor="transparent"
+        onHideUnderlay={this.onHideUnderlay}
+        onShowUnderlay={this.onShowUnderlay}
+      >
+        <View onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onTouchMove={this.onTouchMove}>
+          {large && image && !error && (
+            <FastImage
+              source={{ uri: image }}
+              style={styles.image}
+              onError={this.onImageError}
+              resizeMode="cover"
+            />
+          )}
+          <View style={contentStyles}>
+            {this.renderIcon()}
+            <View style={styles.text}>
+              {titleElement}
+              {linkElement}
             </View>
+            <Image
+              style={styles.chevron}
+              source={require('assets/icons/16/chevron-right.png')}
+            />
           </View>
-        </TouchableHighlight>
-      </Element>
+        </View>
+      </TouchableHighlight>
     );
   }
 }

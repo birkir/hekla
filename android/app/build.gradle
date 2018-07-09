@@ -178,6 +178,7 @@ dependencies {
     implementation project(':react-native-rate')
     implementation project(':react-native-iap')
     implementation project(':react-native-custom-tabs')
+    implementation project(':react-native-version-number')
 
     implementation(project(':react-native-firebase')) {
         transitive = false
@@ -185,9 +186,10 @@ dependencies {
         // exclude group: 'com.google.firebase', :module 'firebase-invites'
         // exclude group: 'com.google.firebase', :module 'firebase-ads'
     }
-    implementation "com.google.android.gms:play-services-base:11.6.0"
-    implementation "com.google.firebase:firebase-core:11.6.0"
-    implementation "com.google.firebase:firebase-database:11.6.0"
+    implementation "com.google.android.gms:play-services-base:15.0.0"
+    implementation "com.google.firebase:firebase-core:15.0.2"
+    implementation "com.google.firebase:firebase-database:15.0.0"
+    implementation "com.google.firebase:firebase-firestore:16.0.0"
     implementation "com.android.support:appcompat-v7:25.4.0"
     implementation "com.facebook.react:react-native:+"
     implementation "com.android.support:multidex:1.0.1"

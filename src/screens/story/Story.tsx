@@ -9,11 +9,11 @@ import Items from 'stores/Items';
 import UI from 'stores/UI';
 import prettyNumber from 'utils/prettyNumber';
 import Header from './components/Header';
-import Empty from '../../components/empty/Empty';
-import Comment from 'components/comment/Comment';
+import Empty from 'components/empty/Empty';
 import Loading from 'components/loading/Loading';
 import { theme, applyThemeOptions } from 'styles';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import CommentThread from 'components/comment-thread/CommentThread';
 const styles = theme(require('./Story.styl'));
 
 interface Props {
@@ -137,7 +137,7 @@ export default class StoryScreen extends React.Component<Props> {
 
     if (item.type === 'comment') {
       return (
-        <Comment
+        <CommentThread
           onCollapse={this.onCollapse}
           onExpand={this.onExpand}
           depth={item.belongsTo.length - 1}

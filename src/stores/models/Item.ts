@@ -25,7 +25,7 @@ const Item = types.model('Item', {
   title: types.maybe(types.string),
   text: types.maybe(types.string),
   url: types.maybe(types.string),
-  parent: types.maybe(types.late(() => ItemReference)),
+  parent: types.maybe(types.string),
 
   // App specific fields
   metadata: types.maybe(Metadata),
@@ -82,6 +82,14 @@ const Item = types.model('Item', {
 }))
 .actions((self) => {
 
+  const fetchParent = async () => {
+    if (self.parent) {
+      const parent = await Items.fetchItem(self.parent);
+      return parent;
+    }
+    return null;
+  };
+
   const fetchComments = flow(function* () {
 
     const commentIds = self.kids.map(String);
@@ -107,6 +115,7 @@ const Item = types.model('Item', {
 
   return {
     fetchComments,
+    fetchParent,
 
     setMetadata(metadata: any) {
       self.metadata = metadata;

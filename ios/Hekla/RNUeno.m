@@ -72,13 +72,11 @@ RCT_EXPORT_METHOD(openVideoPlayer:(NSString *)componentId url:(NSString *)url el
  }
 }
 
-RCT_EXPORT_METHOD(openSafari:(NSString *)componentId url:(NSString *)url elementId:(NSString *)elementId) {
+RCT_EXPORT_METHOD(openSafari:(NSString *)componentId url:(NSString *)url reactTag:(nonnull NSNumber *)reactTag) {
  UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
  SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:[[NSURL alloc] initWithString:url]];
  (void)safariViewController.view;
- if (elementId != nil) {
-   RNNElementFinder* elementFinder = [[RNNElementFinder alloc] initWithFromVC:vc];
-   RNNElementView* elementView = [elementFinder findElementForId:elementId];
+ if ([reactTag intValue] >= 0) {
    if ([vc isKindOfClass:[RNNRootViewController class]]) {
      RNNRootViewController* rootVc = (RNNRootViewController*)vc;
      rootVc.previewController = safariViewController;
@@ -87,7 +85,10 @@ RCT_EXPORT_METHOD(openSafari:(NSString *)componentId url:(NSString *)url element
        [vc.navigationController presentViewController:safariViewController animated:NO completion:nil];
        [theVc.eventEmitter sendComponentDidDisappear:theVc.componentId componentName:theVc.componentId];
      };
-     [rootVc registerForPreviewingWithDelegate:(id)rootVc sourceView:elementView];
+     RCTExecuteOnMainQueue(^{
+       UIView *view = [[ReactNativeNavigation getBridge].uiManager viewForReactTag:reactTag];
+       [rootVc registerForPreviewingWithDelegate:(id)rootVc sourceView:view];
+     });
    }
  } else {
    [vc.navigationController presentViewController:safariViewController animated:YES completion:nil];

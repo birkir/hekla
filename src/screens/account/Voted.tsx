@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import StoryCard from 'components/story-card/StoryCard';
-import CommentCard from 'components/comment-card/CommentCard';
+import Comment from 'components/comment/Comment';
 import Loading from 'components/loading/Loading';
 import Empty from 'components/empty/Empty';
 import UI from 'stores/UI';
@@ -132,10 +132,12 @@ export default class AccountVotedScreen extends React.Component<Props> {
 
     if (item[0].type === 'comment') {
       return (
-        <CommentCard
+        <Comment
           key={item[0].id}
           item={item[0]}
           parent={item[1]}
+          metalinks={false}
+          card={true}
         />
       );
     }

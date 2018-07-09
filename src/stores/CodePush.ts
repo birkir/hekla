@@ -7,14 +7,13 @@ const CodePushStore = types
     updateMetadata: types.maybe(UpdateMetadata),
   })
   .views(self => ({
+    get description() {
+      const { description = null } = self.updateMetadata || {};
+      return description;
+    },
     get version() {
-      const { appVersion = undefined, label = 'v?' } = self.updateMetadata || {};
-
-      if (!appVersion) {
-        return 'Unknown';
-      }
-
-      return `${appVersion}-${label}`;
+      const { label = null } = self.updateMetadata || {};
+      return label;
     },
   }))
   .actions(self => ({

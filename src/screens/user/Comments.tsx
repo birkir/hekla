@@ -10,7 +10,7 @@ import Items from 'stores/Items';
 import Item from 'stores/models/Item';
 import { applyThemeOptions } from 'styles';
 import Loading from 'components/loading/Loading';
-import CommentCard from 'components/comment-card/CommentCard';
+import Comment from 'components/comment/Comment';
 import Empty from 'components/empty/Empty';
 
 type IItemType = typeof Item.Type;
@@ -104,10 +104,12 @@ export default class UserCommentsScreen extends React.Component<Props> {
   renderComment({ item }: { item: IItemType[] }) {
     if (!item[0]) return null;
     return (
-      <CommentCard
+      <Comment
         key={item[0].id}
         item={item[0]}
         parent={item[1]}
+        metalinks={false}
+        card={true}
       />
     );
   }

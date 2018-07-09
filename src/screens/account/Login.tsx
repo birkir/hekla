@@ -46,11 +46,7 @@ export default class Login extends React.Component<Props> {
 
   @autobind
   onCreateAccountPress() {
-    NativeModules.RNUeno.openSafari(
-      UI.componentId,
-      'https://news.ycombinator.com/login?goto=news',
-      null,
-    );
+    UI.openURL('https://news.ycombinator.com/login?goto=news');
   }
 
   @autobind

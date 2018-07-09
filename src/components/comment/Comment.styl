@@ -1,21 +1,20 @@
-$gutter = 10px;
-$border-color = #E3E3E3;
+$gutter = 8px;
+$colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
 
-.host {
-  position: relative;
-
-  background-color: var(--content-bg-color);
-}
 
 .flex {
   flex: 1;
 }
 
-.content {
+.host {
   padding-top: 10px;
   padding-bottom: 10px;
 
   background-color: var(--content-bg-color);
+
+  &__card {
+    margin-bottom: 8px;
+  }
 }
 
 .container {
@@ -23,23 +22,12 @@ $border-color = #E3E3E3;
   padding-right: 16px;
 }
 
-colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
-
-for color, i in colors {
+for color, i in $colors {
   .level{i} {
     margin-left: i * 16px;
 
     border-left-width: 2px;
     border-left-color: color;
-  }
-
-  .divider{i} {
-    position: absolute;
-    top: 0px;
-    left: i * 16px;
-    right: 0px;
-    height: var(--hairline-width);
-    background-color: var(--content-divider-color);
   }
  }
 
@@ -85,50 +73,30 @@ for color, i in colors {
   width: 48px;
 }
 
-.action {
-  position: absolute;
-  top: var(--hairline-width);
-  bottom: var(--hairline-width);
-  width: 1000px;
-
-  justify-content: center;
-
-  &__left {
-    left: -100px;
-    background-color: var(--primary-color);
-    align-items: flex-start;
-
-    &__active {
-      background-color: var(--primary-active-color);
-    }
-  }
-
-  &__right {
-    right: -100px;
-    background-color: var(--secondary-color);
-    align-items: flex-end;
-
-    &__active {
-      background-color: var(--secondary-active-color);
-    }
-  }
-}
-
 .icon {
-  &__expand {
-    tint-color: #AAA;
-  }
-
   &__more {
     tint-color: #AAA;
 
     margin-right: 8px;
   }
+}
 
-  &__arrow {
-    tint-color: #FF6C00;
-    margin-top: 1px;
-    margin-left: 2px;
-    margin-bottom: -1px;
+.parent {
+  background-color: var(--meta-bg-color);
+  border-radius: 4px;
+  padding: 16px;
+
+  &__text {
+    color: var(--meta-text-light-color);
+  }
+
+  &__title {
+    color: var(--meta-text-light-color);
+    margin-bottom: 8px;
+  }
+
+  &__author {
+    font-weight: bold;
+    color: var(--meta-text-light-color);
   }
 }
