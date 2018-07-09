@@ -13,7 +13,11 @@ const styles = theme(require('./MetaLink.styl'));
 interface Props {
   title?: string;
   url: string;
-  image?: string;
+  image?: {
+    url: string;
+    width?: number;
+    height?: number;
+  };
   large?: boolean;
 }
 
@@ -22,7 +26,11 @@ interface State {
   error: boolean;
   loading: boolean;
   title: string;
-  image: string;
+  image?: {
+    url: string;
+    width?: number;
+    height?: number;
+  };
 }
 
 @observer
@@ -54,7 +62,7 @@ export default class MetaLink extends React.Component<Props, State> {
     const { title, image } = await fetchMetadata(url);
     if (this.dead) return;
     if (image) {
-      const res = await FastImage.preload([{ uri: image }]);
+      const res = await FastImage.preload([{ uri: image.url }]);
     }
     if (this.dead) return;
     this.setState({
@@ -197,7 +205,7 @@ export default class MetaLink extends React.Component<Props, State> {
         <View onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onTouchMove={this.onTouchMove}>
           {large && image && !error && (
             <FastImage
-              source={{ uri: image }}
+              source={{ uri: image.url }}
               style={styles.image}
               onError={this.onImageError}
               resizeMode="cover"

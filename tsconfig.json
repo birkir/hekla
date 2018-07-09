@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
     "target": "es2015",
+    "module": "es2015",
     "jsx": "react",
     "baseUrl": "./src",
     "noEmit": true,
     "noImplicitAny": false,
+    "strictPropertyInitialization": false,
     "strictNullChecks": false,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "sourceMap": true,
+    "skipLibCheck": true,
+    "lib": ["es2017", "dom"]
   },
   "exclude": [
     "node_modules"

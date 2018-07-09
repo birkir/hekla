@@ -1,4 +1,4 @@
-const upstreamTransformer = require('metro/src/transformer');
+const upstreamTransformer = require('metro/src/reactNativeTransformer');
 const cssTransformer = require('react-native-css-transformer');
 const typescriptTransformer = require('react-native-typescript-transformer');
 const stylusTransformer = require('react-native-stylus-transformer');

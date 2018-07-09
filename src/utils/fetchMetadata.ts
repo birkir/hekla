@@ -1,8 +1,9 @@
-import cheerio from 'react-native-cheerio'; // tslint:disable-line import-name
+// import cheerio from 'react-native-cheerio'; // tslint:disable-line import-name
 import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
-import FastImage from 'react-native-fast-image';
+import config from 'config';
 
+let token;
 const ref = firebase.firestore().collection('metadata');
 const getKey = url => `MetaData_${url}`;
 
@@ -40,124 +41,28 @@ export default async (url: string) => {
     }
   }
 
-  const metaModel = {} as {
-    title: string;
-    description: string;
-    author: string;
-    tags: string[];
-    image: string;
-    opengraph: any;
-    twitter: any;
-    itemProp: any;
-    article: any;
-    facebookAppId: string;
-  };
+  const obj = { url } as any;
 
   try {
-
-    if (url.match(/\.pdf$/)) {
-      return {};
+    if (!token) {
+      const { access_token } = await fetch(`https://graph.facebook.com/oauth/access_token?client_id=${config.FB_CLIENT_ID}&client_secret=${config.FB_CLIENT_SECRET}&grant_type=client_credentials`).then(r => r.json());
+      token = access_token;
     }
-
-    const body = await (await fetch(url)).text();
-    const $ = await cheerio.load(body);
-
-    // Fetch base tags
-    metaModel.title = $('title').text();
-    metaModel.description = $('meta[name=description]').attr('content');
-    metaModel.author = $('meta[name=author]').attr('content');
-    if (metaModel.author === undefined) {
-      metaModel.author = $('meta[property="author"]').attr('content');
-    }
-    const tags = $('meta[name=keywords]').attr('content') || '';
-    metaModel.tags = tags.split(',').map((item: string) => item.trim());
-
-    // Fetch opengraph
-    metaModel.opengraph = {
-      url: $('meta[property="og:url"]').attr('content'),
-      type: $('meta[property="og:type"]').attr('content'),
-      title: $('meta[property="og:title"]').attr('content'),
-      image: $('meta[property="og:image"]').attr('content'),
-      site_name: $('meta[property="og:site_name"]').attr('content'),
-      description: $('meta[property="og:description"]').attr('content'),
-      website: $('meta[property="og:website"]').attr('content'),
-      profile: {
-        first_name: $('meta[property="og:profile:first_name"]').attr('content'),
-        last_name: $('meta[property="og:profile:last_name"]').attr('content'),
-        username: $('meta[property="og:profile:username"]').attr('content'),
-        gender: $('meta[property="og:profile:gender"]').attr('content'),
-      },
-      book: {
-        author: $('meta[property="og:book:author"]').attr('content'),
-        isbn: $('meta[property="og:book:isbn"]').attr('content'),
-        release_date:$('meta[property="og:book:release_date"]').attr('content'),
-        tag: $('meta[property="og:book:tag"]').attr('content'),
-      },
-      article: {
-        published_time: $('meta[property="og:article:published_time"]').attr('content'),
-        modified_time: $('meta[property="og:article:modified_time"]').attr('content'),
-        expiration_time: $('meta[property="og:article:expiration_time"]').attr('content'),
-        author: $('meta[property="og:article:author"]').attr('content'),
-        section: $('meta[property="og:article:section"]').attr('content'),
-        tag: $('meta[property="og:article:tag"]').attr('content'),
-      },
-      video: $('meta[property="og:video"]').attr('content'),
-      video_type: $('meta[property="og:video:type"]').attr('content'),
-      audio: $('meta[property="og:audio"]').attr('content'),
-      audio_type: $('meta[property="og:audio:type"]').attr('content'),
-      price_amount: $('meta[property="og:price:amount"]').attr('content'),
-      price_currency: $('meta[property="og:price:currency"]').attr('content'),
-    };
-
-    // Fetch twitter
-    const twitterKey = $('meta[property="twitter:title"]').attr('content') === undefined
-      ? 'name' : 'property';
-    if (twitterKey) {
-      metaModel.twitter = {
-        card: $(`meta[${twitterKey}="twitter:card"]`).attr('content'),
-        site: $(`meta[${twitterKey}="twitter:site"]`).attr('content'),
-        title: $(`meta[${twitterKey}="twitter:title"]`).attr('content'),
-        image: $(`meta[${twitterKey}="twitter:image"]`).attr('content'),
-        creator: $(`meta[${twitterKey}="twitter:creator"]`).attr('content'),
-        description: $(`meta[${twitterKey}="twitter:description"]`).attr('content'),
-      };
-    }
-
-    // Facebook app id
-    const facebookKey = $('meta[property="fb:app_id"]').attr('content') === undefined
-      ? 'name' : 'property';
-    metaModel.facebookAppId = $(`meta[${facebookKey}="fb:app_id"]`).attr('content');
-
-    // Fetch item props
-    metaModel.itemProp = {
-      name: $('meta[itemprop=name]').attr('content'),
-      description: $('meta[itemprop=description]').attr('content'),
-      image: $('meta[itemprop=image]').attr('content'),
-    };
-
-    // Fetch article
-    metaModel.article = {
-      tag: $('meta[property="article:tag"]').attr('content'),
-      section: $('meta[property="article:section"]').attr('content'),
-      published_time: $('meta[property="article:published_time"]').attr('content'),
-      modified_time: $('meta[property="article:modified_time"]').attr('content'),
-    };
-
-    // Set image
-    if (metaModel.image === undefined) {
-      if (metaModel.itemProp.image) {
-        metaModel.image = metaModel.itemProp.image;
-      } else if (metaModel.opengraph.image) {
-        metaModel.image = metaModel.opengraph.image;
-      } else if (metaModel.twitter.image) {
-        metaModel.image = metaModel.twitter.image;
+    const { og_object } = await fetch(`https://graph.facebook.com/${encodeURIComponent(url)}`).then(r => r.json());
+    if (og_object) {
+      obj.title = og_object.title;
+      obj.description = og_object.description;
+      obj.type = og_object.type;
+      try {
+        const { image } = await fetch(`https://graph.facebook.com/${og_object.id}?fields=image&access_token=${token}`).then(r => r.json());
+        obj.image = image.shift();
+      } catch (err) {
+        token = null;
       }
     }
-  } catch (err) {}
-
-  // Setup cache object
-  const { title, description, author, tags, image } = metaModel;
-  const obj = { url, title, description, author, tags, image };
+  } catch (err) {
+    token = null;
+  }
 
   // Store as cache
   AsyncStorage.setItem(key, JSON.stringify(obj));
