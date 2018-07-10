@@ -10,7 +10,8 @@ if (Platform.OS === 'android') {
 }
 
 if (Platform.OS === 'ios') {
-  font['San Francisco'] = 'San Fransisco';
+  font['American Typewriter'] = 'American Typewriter';
+  font['Avenir Next'] = 'Avenir Next';
 }
 
 export const formatFont = (key: string) => {

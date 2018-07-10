@@ -35,6 +35,12 @@ const UI = types
       }
       return `${prettyNumber(self.cacheSizeInBytes, '', 1024)}b`;
     },
+    font(size: number, heading: boolean = false) {
+      return {
+        fontFamily: heading ? self.settings.appearance.fontFamilyHeading : self.settings.appearance.fontFamilyBody,
+        fontSize: size + self.settings.appearance.fontSize - 3,
+      };
+    },
   }))
   .actions(self => ({
 

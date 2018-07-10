@@ -4,6 +4,7 @@ import { theme } from 'styles';
 import { observer, Observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { autobind } from 'core-decorators';
+import UI from 'stores/UI';
 const styles = theme(require('./Cell.styl'));
 
 interface Props {
@@ -73,7 +74,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.title}>
-        <Text style={styles.title__text} numberOfLines={1}>{String(title)}</Text>
+        <Text style={[styles.title__text, UI.font(17)]} numberOfLines={1} allowFontScaling={UI.settings.appearance.useSystemFontSize}>{String(title)}</Text>
       </View>
     );
   }
@@ -89,7 +90,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.subtitle}>
-        <Text style={styles.subtitle__text}>{String(subtitle)}</Text>
+        <Text style={[styles.subtitle__text, UI.font(12)]} allowFontScaling={UI.settings.appearance.useSystemFontSize}>{String(subtitle)}</Text>
       </View>
     );
   }
@@ -106,7 +107,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.value}>
-        <Text style={styles.value__text}>{String(value)}</Text>
+        <Text style={[styles.value__text, UI.font(17)]} allowFontScaling={UI.settings.appearance.useSystemFontSize}>{String(value)}</Text>
       </View>
     );
   }
