@@ -1,20 +1,37 @@
 patch-package
+--- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
++++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
+@@ -1,6 +1,7 @@
+ #import <Foundation/Foundation.h>
+ #import <React/RCTBridge.h>
+ #import "RNNBridgeManagerDelegate.h"
++#import "RNNStore.h"
+ 
+ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBridge* bridge);
+ 
+@@ -11,5 +12,6 @@ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBri
+ - (void)registerExternalComponent:(NSString *)name callback:(RNNExternalViewCreator)callback;
+ 
+ @property (readonly, nonatomic, strong) RCTBridge *bridge;
++@property (readonly, nonatomic, strong) RNNStore *store;
+ 
+ @end
 --- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.m
 @@ -12,6 +12,7 @@
  @interface RNNBridgeManager() <RCTBridgeDelegate>
-
+ 
  @property (nonatomic, strong, readwrite) RCTBridge *bridge;
 +@property (nonatomic, strong, readwrite) RNNStore *store;
-
+ 
  @end
-
+ 
 --- a/node_modules/react-native-navigation/lib/ios/RNNPreviewOptions.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNPreviewOptions.h
 @@ -2,7 +2,7 @@
-
+ 
  @interface RNNPreviewOptions : RNNOptions
-
+ 
 -@property (nonatomic, strong) NSString* elementId;
 +@property (nonatomic, strong) NSNumber* reactTag;
  @property (nonatomic, strong) NSNumber* width;
@@ -24,33 +41,33 @@ patch-package
 +++ b/node_modules/react-native-navigation/lib/ios/RNNRootViewController.h
 @@ -12,6 +12,7 @@
  @class RNNRootViewController;
-
+ 
  typedef void (^RNNReactViewReadyCompletionBlock)(void);
 +typedef void(^PreviewCallback)(UIViewController *vc);
-
+ 
  @interface RNNRootViewController : UIViewController	<RNNRootViewProtocol, UIViewControllerPreviewingDelegate, UISearchResultsUpdating, UISearchBarDelegate>
-
+ 
 @@ -22,6 +23,7 @@ typedef void (^RNNReactViewReadyCompletionBlock)(void);
  @property (nonatomic) id<RNNRootViewCreator> creator;
  @property (nonatomic, strong) RNNAnimator* animator;
  @property (nonatomic, strong) UIViewController* previewController;
 +@property (nonatomic, copy) PreviewCallback previewCallback;
-
-
+ 
+ 
  -(instancetype)initWithName:(NSString*)name
 --- a/node_modules/react-native-navigation/lib/ios/RNNRootViewController.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNRootViewController.m
 @@ -22,6 +22,8 @@ @interface RNNRootViewController() {
-
+ 
  @implementation RNNRootViewController
-
+ 
 +@synthesize previewCallback;
 +
  -(instancetype)initWithName:(NSString*)name
  				withOptions:(RNNNavigationOptions*)options
  			withComponentId:(NSString*)componentId
 @@ -281,28 +283,22 @@ - (void)orientationDidChange:(NSNotification*)notification {
-
+ 
  - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
  	if (self.previewController) {
 -		RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
@@ -68,8 +85,8 @@ patch-package
  	}
  	return self.previewController;
  }
-
-
+ 
+ 
  - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
 -	RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
 -	NSDictionary * params = @{
@@ -86,14 +103,14 @@ patch-package
 +		self.previewCallback(self);
 +  }
  }
-
+ 
  - (void)onActionPress:(NSString *)id {
 --- a/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.h
 +++ b/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.h
 @@ -15,4 +15,6 @@ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBri
-
+ 
  + (RCTBridge *)getBridge;
-
+ 
 ++ (UIViewController *)findViewController:(NSString *)componentId;
 +
  @end
@@ -102,11 +119,11 @@ patch-package
 @@ -31,6 +31,10 @@ + (RCTBridge *)getBridge {
  	return [[ReactNativeNavigation sharedInstance].bridgeManager bridge];
  }
-
+ 
 ++ (UIViewController *)findViewController:(NSString *)componentId {
 +  RNNStore *store = [[ReactNativeNavigation sharedInstance].bridgeManager store];
 +  return [store findComponentForId:componentId];
 +}
-
+ 
  # pragma mark - instance
-
+ 
