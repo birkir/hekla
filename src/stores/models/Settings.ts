@@ -1,9 +1,13 @@
 import { types } from 'mobx-state-tree';
-import StoriesType, { formatStoryType } from './StoriesType';
-import Theme from './Theme';
 import set from 'lodash/set';
 import config from 'config';
-import DefaultBrowser from './DefaultBrowser';
+import StoriesType, { formatStoriesType } from '../enums/StoriesType';
+import Theme from '../enums/Theme';
+import StorySize from '../enums/StorySize';
+import DefaultBrowser from '../enums/DefaultBrowser';
+import CompactThumbnail from '../enums/CompactThumbnail';
+import CompactVoteButton from '../enums/CompactVoteButton';
+import Font from '../enums/Font';
 
 const General = types
   .model({
@@ -17,22 +21,27 @@ const General = types
   })
   .views(self => ({
     get defaultStoriesToLoadValue() {
-      return formatStoryType(self.defaultStoriesToLoad);
+      return formatStoriesType(self.defaultStoriesToLoad);
     },
   }));
 
 const Appearance = types
   .model({
     useSystemFontSize: types.optional(types.boolean, true),
-    fontSize: types.optional(types.number, 4),
+    fontSize: types.optional(types.number, 3),
+    fontFamilyHeading: types.optional(Font, 'System'),
+    fontFamilyBody: types.optional(Font, 'System'),
     theme: types.optional(Theme, 'light'),
-    storySize: types.optional(types.enumeration('StorySize', ['large', 'compact']), 'large'),
+    storySize: types.optional(StorySize, 'large'),
     showPageEndings: types.optional(types.boolean, false),
+    largeShowVoteButton: types.optional(types.boolean, true),
+    largeShowDownloadButton: types.optional(types.boolean, true),
+    compactThumbnail: types.optional(CompactThumbnail, 'left'),
+    compactVoteButton: types.optional(CompactVoteButton, 'left'),
+    commentsUseColorScheme: types.optional(types.boolean, true),
+    commentsShowMetaLinks: types.optional(types.boolean, true),
   })
   .views(self => ({
-    storySizeValue(id = self.storySize) {
-      return self.storySize;
-    },
     get isDarkTheme() {
       if (self.theme === 'dark') {
         return true;

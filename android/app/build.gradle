@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
@@ -179,6 +180,9 @@ dependencies {
     implementation project(':react-native-iap')
     implementation project(':react-native-custom-tabs')
     implementation project(':react-native-version-number')
+    implementation project(':react-native-dialogs')
+    implementation project(':react-native-bottom-action-sheet')
+    implementation project(':react-native-vector-icons')
 
     implementation(project(':react-native-firebase')) {
         transitive = false

@@ -1,5 +1,6 @@
 import openActionSheet from '../openActionSheet';
-import { formatStoryType } from 'stores/models/StoriesType';
+import { storiesType, formatStoriesType } from 'stores/enums/StoriesType';
+import Stories from 'stores/Stories';
 
 const icons = {
   topstories: require('assets/icons/32/trophy.png'),
@@ -9,19 +10,11 @@ const icons = {
   jobstories: require('assets/icons/32/jobs.png'),
 };
 
-const types = [
-  'topstories',
-  'newstories',
-  'askstories',
-  'showstories',
-  'jobstories',
-];
-
-const options = types.map(type => ({
+const options = Object.keys(storiesType).map((type: string) => ({
   id: type,
-  title: formatStoryType(type),
+  title: formatStoriesType(type),
   titleTextAlignment: 0,
   icon: icons[type],
 }));
 
-export default cb => openActionSheet({ options, cancel: 'Cancel' },  cb);
+export default cb => openActionSheet({ options, selectedId: Stories.type, cancel: 'Cancel' },  cb);

@@ -21,9 +21,9 @@ export const applyThemeOptions = (settings: any) => {
     if (isDarkTheme) {
       StatusBar.setBarStyle('light-content');
 
-      set(settings, 'topBar.style', 'black');
+      set(settings, 'topBar.barStyle', 'black');
       set(settings, 'topBar.noBorder', true);
-      set(settings, 'bottomTabs.style', 'black');
+      set(settings, 'bottomTabs.barStyle', 'black');
 
       if (settings.bottomTab) {
         set(settings, 'bottomTab.iconColor', '#808080');
@@ -33,9 +33,9 @@ export const applyThemeOptions = (settings: any) => {
     } else {
       StatusBar.setBarStyle('dark-content');
 
-      set(settings, 'topBar.style', 'default');
+      set(settings, 'topBar.barStyle', 'default');
       set(settings, 'topBar.noBorder', false);
-      set(settings, 'bottomTabs.style', 'default');
+      set(settings, 'bottomTabs.barStyle', 'default');
 
       if (settings.bottomTab) {
         set(settings, 'bottomTab.iconColor', '#808080');

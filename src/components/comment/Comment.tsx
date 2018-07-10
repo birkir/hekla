@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity, Platform } from 'react-native';
 import openActionSheet from 'utils/openActionSheet';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
@@ -33,36 +33,42 @@ export default class Comment extends React.PureComponent<Props> {
     const options = [{
       id: 'vote',
       icon: require('assets/icons/32/arrow-up.png'),
+      materialIcon: 'arrow-up',
       title: isUserVote ? 'Unvote' : 'Vote',
       titleTextAlignment: 0,
     }, {
       id: 'favorite',
       icon: require('assets/icons/32/star.png'),
+      materialIcon: 'star-outline',
       title: isUserFavorite ? 'Unfavorite' : 'Favorite',
       titleTextAlignment: 0,
     }, {
       id: 'hide',
       icon: require('assets/icons/32/hide.png'),
+      materialIcon: isUserHidden ? 'eye-outline' : 'eye-off-outline',
       title: isUserHidden ? 'Unhide' : 'Hide',
       titleTextAlignment: 0,
     }, {
       id: 'reply',
       icon: require('assets/icons/32/reply.png'),
+      materialIcon: 'reply',
       title: 'Reply',
       titleTextAlignment: 0,
     }, {
       id: 'user',
       icon: require('assets/icons/32/user.png'),
+      materialIcon: 'account',
       title: this.props.item.by,
       titleTextAlignment: 0,
     }, {
       id: 'share',
       icon: require('assets/icons/32/share.png'),
+      materialIcon: 'share',
       title: 'Share',
       titleTextAlignment: 0,
     }];
 
-    if (this.props.item.by === Account.user.id) {
+    if (Account.isLoggedIn && this.props.item.by === Account.user.id) {
       options.push({
         id: 'edit',
         title: 'Edit',
@@ -75,7 +81,9 @@ export default class Comment extends React.PureComponent<Props> {
       } as any);
     }
 
-    openActionSheet({ options, cancel: 'Cancel' }, this.onActionSelect);
+    const title = Platform.OS === 'android' ? 'Comment' : undefined;
+
+    openActionSheet({ options, title, sheet: true, cancel: 'Cancel' }, this.onActionSelect);
   }
 
   onActionSelect({ id }) {

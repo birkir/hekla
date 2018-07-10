@@ -68,7 +68,9 @@ export default class StoryScreen extends React.Component<Props> {
     this.story = await Items.fetchItem(this.props.id, { timeout: 1000 }) as IItemType;
     this.updateOptions();
     this.setState({ loading: 2 });
-    await this.story.fetchComments();
+    if (this.story) {
+      await this.story.fetchComments();
+    }
 
     // Wait at least 990ms for new data to make loading
     // indicators non janky.

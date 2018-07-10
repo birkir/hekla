@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Animated, Image, View, Slider, GestureResponderEvent } from 'react-native';
+import { Text, Animated, Image, View, Slider, GestureResponderEvent, Platform } from 'react-native';
 import { theme } from 'styles';
 import { observer } from 'mobx-react';
 const styles = theme(require('./SliderFontSize.styl'));
@@ -36,6 +36,7 @@ export default class SliderFontSize extends React.Component<Props> {
             maximumValue={6}
             onValueChange={this.props.onValueChange}
             disabled={disabled}
+            style={Platform.select({ ios: styles.slider__ios, android: styles.slider__android })}
           />
         </View>
         <View style={styles.end}>

@@ -3,9 +3,8 @@ import values from 'lodash/values';
 import compact from 'lodash/compact';
 import { db } from 'utils/firebase';
 import { ItemReference } from './models/Item';
-import StoriesType, { formatStoryType } from './models/StoriesType';
+import StoriesType, { formatStoriesType } from './enums/StoriesType';
 import Items from './Items';
-import UI from './UI';
 
 const MAX_TIMEOUT = 3000;
 
@@ -17,7 +16,7 @@ const Stories = types
   })
   .views(self => ({
     get prettyType() {
-      return formatStoryType(self.type);
+      return formatStoriesType(self.type);
     },
   }))
   .actions((self) => {

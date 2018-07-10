@@ -6,8 +6,10 @@ import { Navigation } from 'react-native-navigation';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import UI from 'stores/UI';
-import { themes } from 'stores/models/Theme';
+import { themes } from 'stores/enums/Theme';
 import { theme, applyThemeOptions } from 'styles';
+import { formatFont, font } from 'stores/enums/Font';
+import openActionSheet from 'utils/openActionSheet';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
@@ -42,6 +44,22 @@ export default class SettingsThemeScreen extends React.Component<Props> {
     UI.settings.setValue('appearance.theme', id);
   }
 
+  onFontFamilyHeadingPress() {
+    const options = (Object as any).entries(font).map(([id, title]) => ({ id, title }));
+
+    openActionSheet({ options, title: 'Headings Font', selectedId: UI.settings.appearance.fontFamilyHeading }, ({ id }) => {
+      UI.settings.setValue('appearance.fontFamilyHeading', id);
+    });
+  }
+
+  onFontFamilyBodyPress() {
+    const options = (Object as any).entries(font).map(([id, title]) => ({ id, title }));
+
+    openActionSheet({ options, title: 'Body Font', selectedId: UI.settings.appearance.fontFamilyBody }, ({ id }) => {
+      UI.settings.setValue('appearance.fontFamilyBody', id);
+    });
+  }
+
   render() {
     const { testID } = this.props;
     return (
@@ -49,11 +67,13 @@ export default class SettingsThemeScreen extends React.Component<Props> {
         <CellGroup header="Font family">
           <Cell
             title="Headings"
-            value="San Francisco"
+            value={formatFont(UI.settings.appearance.fontFamilyHeading)}
+            onPress={this.onFontFamilyHeadingPress}
           />
           <Cell
             title="Body"
-            value="San Francisco"
+            value={formatFont(UI.settings.appearance.fontFamilyBody)}
+            onPress={this.onFontFamilyBodyPress}
           />
         </CellGroup>
         <CellGroup header="Theme">

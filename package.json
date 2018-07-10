@@ -19,6 +19,7 @@
     ]
   },
   "dependencies": {
+    "autocompletetextview": "1.0.5",
     "core-decorators": "0.20.0",
     "date-fns": "1.29.0",
     "firebase": "5.1.0",
@@ -31,11 +32,13 @@
     "prop-types": "15.6.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
+    "react-native-bottom-action-sheet": "0.0.16",
     "react-native-cheerio": "1.0.0-rc.4",
     "react-native-code-push": "5.3.5",
     "react-native-config": "0.11.5",
     "react-native-cookies": "^3.3.0",
     "react-native-custom-tabs": "0.1.7",
+    "react-native-dialogs": "1.0.1",
     "react-native-fast-image": "4.0.14",
     "react-native-firebase": "4.2.0",
     "react-native-haptic-feedback": "1.1.7",
@@ -48,6 +51,7 @@
     "react-native-safari-view": "2.1.0",
     "react-native-search-bar": "3.4.2",
     "react-native-sentry": "0.38.1",
+    "react-native-vector-icons": "4.6.0",
     "react-native-version-number": "0.3.4"
   },
   "devDependencies": {

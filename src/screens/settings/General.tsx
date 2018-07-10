@@ -8,7 +8,7 @@ import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import UI from 'stores/UI';
 import { theme, applyThemeOptions } from 'styles';
-import { DefaultBrowserValues, formatDefaultBrowser } from 'stores/models/DefaultBrowser';
+import { DefaultBrowserValues, formatDefaultBrowser } from 'stores/enums/DefaultBrowser';
 import openActionSheet from 'utils/openActionSheet';
 const styles = theme(require('./Settings.styl'));
 
@@ -67,7 +67,7 @@ export default class SettingsGeneralScreen extends React.Component<Props> {
       title,
       titleTextAlignment: 0,
     }));
-    openActionSheet({ options }, this.onOpenLinksInChange);
+    openActionSheet({ options, title: 'Open Links in', selectedId: UI.settings.general.browserOpenIn }, this.onOpenLinksInChange);
   }
 
   @autobind

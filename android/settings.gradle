@@ -16,6 +16,18 @@ project(':react-native-custom-tabs').projectDir = new File(rootProject.projectDi
 include ':react-native-version-number'
 project(':react-native-version-number').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-version-number/android')
 
+include ':react-native-dialogs'
+project(':react-native-dialogs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-dialogs/android')
+
+include ':autocompletetextview'
+project(':autocompletetextview').projectDir = new File(rootProject.projectDir, '../node_modules/autocompletetextview/android')
+
+include ':react-native-bottom-action-sheet'
+project(':react-native-bottom-action-sheet').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bottom-action-sheet/android')
+
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
+
 include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
 

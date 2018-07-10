@@ -24,6 +24,9 @@ import com.github.droibit.android.reactnative.customtabs.CustomTabsPackage;
 import com.RNRate.RNRatePackage;
 import com.dooboolab.RNIap.RNIapPackage;
 import com.apsl.versionnumber.RNVersionNumberPackage;
+import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
+import ui.bottomactionsheet.RNBottomActionSheetPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactApplication;
@@ -74,6 +77,9 @@ public class MainApplication extends NavigationApplication {
           new RNRatePackage(),
           new RNIapPackage(),
           new RNVersionNumberPackage(),
+          new ReactNativeDialogsPackage(),
+          new RNBottomActionSheetPackage(),
+          new VectorIconsPackage(),
           new RNFirebasePackage(),
           new RNFirebaseAnalyticsPackage(),
           new RNFirebaseDatabasePackage(),

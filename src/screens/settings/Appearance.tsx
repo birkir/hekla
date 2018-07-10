@@ -1,25 +1,23 @@
 import * as React from 'react';
-import { ScrollView, Switch, LayoutAnimation } from 'react-native';
+import { ScrollView, Switch } from 'react-native';
 import { observer } from 'mobx-react';
+import { autobind } from 'core-decorators';
+import { storySize, formatStorySize } from 'stores/enums/StorySize';
+import { formatCompactThumbnail, compactThumbnail } from 'stores/enums/CompactThumbnail';
+import { formatCompactVoteButton, compactVoteButton } from 'stores/enums/CompactVoteButton';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import SliderFontSize from 'components/slider-font-size/SliderFontSize';
-import { autobind } from 'core-decorators';
+import openActionSheet from 'utils/openActionSheet';
 import UI from 'stores/UI';
 import { Navigation } from 'react-native-navigation';
 import { theme, applyThemeOptions } from 'styles';
-import openActionSheet from 'utils/openActionSheet';
 const styles = theme(require('./Settings.styl'));
 
 interface Props {
   componentId?: string;
   testID?: string;
 }
-
-const StorySizeLabel = {
-  large: 'Large',
-  compact: 'Compact',
-};
 
 @observer
 export default class SettingsAppearanceScreen extends React.Component<Props> {
@@ -52,21 +50,47 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
   }
 
   onStorySizePress() {
-    const options = [{
-      id: 'large',
-      title: 'Large',
-    }, {
-      id: 'compact',
-      title: 'Compact',
-    }];
+    const options = (Object as any).entries(storySize).map(([id, title]) => ({ id, title }));
 
-    openActionSheet({ options }, ({ id }) => {
+    openActionSheet({ options, title: 'Story Size', selectedId: UI.settings.appearance.storySize }, ({ id }) => {
       UI.settings.setValue('appearance.storySize', id);
     });
   }
 
   onShowPageEndingsChange(flag: boolean) {
     UI.settings.setValue('appearance.showPageEndings', flag);
+  }
+
+  onLargeShowVoteButtonChange(flag: boolean) {
+    UI.settings.setValue('appearance.largeShowVoteButton', flag);
+  }
+
+  onLargeShowDownloadButtonChange(flag: boolean) {
+    UI.settings.setValue('appearance.largeShowDownloadButton', flag);
+  }
+
+  onCompactThumbnailPress() {
+    const options = (Object as any).entries(compactThumbnail).map(([id, title]) => ({ id, title }));
+
+    openActionSheet({ options, title: 'Compact Thumbnail', selectedId: UI.settings.appearance.compactThumbnail }, ({ id }) => {
+      UI.settings.setValue('appearance.compactThumbnail', id);
+    });
+  }
+
+  onCompactVoteButtonPress() {
+    const options = (Object as any).entries(compactVoteButton).map(([id, title]) => ({ id, title }));
+
+    openActionSheet({ options, title: 'Compact Vote Button', selectedId: UI.settings.appearance.compactVoteButton }, ({ id }) => {
+      UI.settings.setValue('appearance.compactVoteButton', id);
+    });
+  }
+
+  onCommentsUseColorSchemeChange(flag: boolean) {
+    UI.settings.setValue('appearance.commentsUseColorScheme', flag);
+  }
+
+  onCommentsShowMetaLinksChange(flag: boolean) {
+    UI.settings.setValue('appearance.commentsShowMetaLinks', flag);
   }
 
   render() {
@@ -97,7 +121,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
         <CellGroup header="Stories">
           <Cell
             title="Story Size"
-            value={StorySizeLabel[UI.settings.appearance.storySize]}
+            value={formatStorySize(UI.settings.appearance.storySize)}
             onPress={this.onStorySizePress}
           />
           <Cell
@@ -106,16 +130,36 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
           />
         </CellGroup>
         <CellGroup header="Large Stories">
-          <Cell title="Show Vote button" value={true} />
-          <Cell title="Show Download button" value={true} />
+          <Cell
+            title="Show Vote button"
+            value={<Switch value={UI.settings.appearance.largeShowVoteButton} onValueChange={this.onLargeShowVoteButtonChange} />}
+          />
+          <Cell
+            title="Show Download button"
+            value={<Switch value={UI.settings.appearance.largeShowDownloadButton} onValueChange={this.onLargeShowDownloadButtonChange} />}
+          />
         </CellGroup>
         <CellGroup header="Compact Stories">
-          <Cell title="Thumbnails" />
-          <Cell title="Vote Button" />
+          <Cell
+            title="Thumbnails"
+            value={formatCompactThumbnail(UI.settings.appearance.compactThumbnail)}
+            onPress={this.onCompactThumbnailPress}
+          />
+          <Cell
+            title="Vote Button"
+            value={formatCompactVoteButton(UI.settings.appearance.compactVoteButton)}
+            onPress={this.onCompactVoteButtonPress}
+          />
         </CellGroup>
         <CellGroup header="Comments">
-          <Cell title="Comments theme" />
-          <Cell title="Rich Media Headers" />
+          <Cell
+            title="Use Color Scheme"
+            value={<Switch value={UI.settings.appearance.commentsUseColorScheme} onValueChange={this.onCommentsUseColorSchemeChange} />}
+          />
+          <Cell
+            title="Rich Meta Links"
+            value={<Switch value={UI.settings.appearance.commentsShowMetaLinks} onValueChange={this.onCommentsShowMetaLinksChange} />}
+          />
         </CellGroup>
       </ScrollView>
     );
