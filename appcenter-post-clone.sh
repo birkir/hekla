@@ -25,12 +25,11 @@ HOMEBREW_NO_AUTO_UPDATE=1 brew install nvm
 source $(brew --prefix nvm)/nvm.sh
 
 # Install node (Latest LTS: Carbon)
-nvm install v8.11.3
-nvm use --delete-prefix v8.11.3
-nvm alias default v8.11.3
+nvm install v10.6.0
+nvm use --delete-prefix v10.6.0
+nvm alias default v10.6.0
 
 echo "Identifying selected node version..."
 node --version
 
-# Enforce npm
-mv yarn.lock yarn.lock.tmp
+which node
