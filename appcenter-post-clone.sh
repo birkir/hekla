@@ -21,7 +21,7 @@ else
 fi
 
 # Install NVM
-brew install nvm
+HOMEBREW_NO_AUTO_UPDATE=1 brew install nvm
 source $(brew --prefix nvm)/nvm.sh
 
 # Install node (Latest LTS: Carbon)
@@ -31,3 +31,6 @@ nvm alias default v8.11.3
 
 echo "Identifying selected node version..."
 node --version
+
+# Enforce npm
+mv yarn.lock yarn.lock.tmp
