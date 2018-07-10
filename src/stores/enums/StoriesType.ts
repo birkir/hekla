@@ -3,7 +3,6 @@ import { types } from 'mobx-state-tree';
 export const storiesType = {
   topstories: 'Top Stories',
   newstories: 'New Stories',
-  beststories: 'Best Stories',
   askstories: 'Ask HN',
   showstories: 'Show HN',
   jobstories: 'Jobs',
