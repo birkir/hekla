@@ -20,14 +20,12 @@ else
   echo "SKIP_CI = false"
 fi
 
-# Install NVM
-HOMEBREW_NO_AUTO_UPDATE=1 brew install nvm
-source $(brew --prefix nvm)/nvm.sh
 
-# Install node (Latest LTS: Carbon)
-nvm install v10.6.0
-nvm use --delete-prefix v10.6.0
-nvm alias default v10.6.0
+set -ex
+brew uninstall node@6
+NODE_VERSION="8.11.3"
+curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HOME/Downloads/node-installer.pkg"
+sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
 
 echo "Identifying selected node version..."
 node --version
