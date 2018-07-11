@@ -1,3 +1,5 @@
+fastlane_require 'dotenv'
+
 fastlane_version "2.69.2"
 
 default_platform :ios
@@ -72,6 +74,17 @@ platform :ios do
       tags: true,
       force: true
     )
+  end
+
+  desc "Upload latest Debug Symbols to Sentry"
+  lane :upload_dsym do
+    download_dsyms
+    sentry_upload_dsym(
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
+      org_slug: ENV['SENTRY_ORG'],
+      project_slug: ENV['SENTRY_PROJECT']
+    )
+    sh "rm -rf *.dSYM.zip"
   end
 
   after_all do |lane|

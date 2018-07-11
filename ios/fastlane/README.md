@@ -36,6 +36,11 @@ Bump version number
 fastlane ios tag_version
 ```
 Tag current version and push to GitHub
+### ios upload_dsym
+```
+fastlane ios upload_dsym
+```
+Upload latest Debug Symbols to Sentry
 
 ----
 
