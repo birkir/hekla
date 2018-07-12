@@ -1,4 +1,28 @@
 patch-package
+--- a/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.h
++++ b/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.h
+@@ -11,6 +11,7 @@
+ 
+ @property (nonatomic, strong) NSNumber* tabColor;
+ @property (nonatomic, strong) NSNumber* selectedTabColor;
++@property (nonatomic, strong) NSString* barStyle;
+ @property (nonatomic, strong) NSNumber* translucent;
+ @property (nonatomic, strong) NSNumber* hideShadow;
+ @property (nonatomic, strong) NSNumber* backgroundColor;
+--- a/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.m
++++ b/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.m
+@@ -38,6 +38,11 @@ - (void)applyOn:(UIViewController *)viewController {
+ 	} else {
+ 		viewController.tabBarController.tabBar.barTintColor = nil;
+ 	}
++	if (self.barStyle) {
++		viewController.tabBarController.tabBar.barStyle = [RCTConvert UIBarStyle:self.barStyle];
++	} else {
++		viewController.tabBarController.tabBar.barStyle = UIBarStyleDefault;
++	}
+ 	
+ 	if (self.translucent) {
+ 		viewController.tabBarController.tabBar.translucent = [self.translucent boolValue];
 --- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
 @@ -1,6 +1,7 @@
@@ -137,6 +161,30 @@ patch-package
  }
  
  - (void)onActionPress:(NSString *)id {
+--- a/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.h
++++ b/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.h
+@@ -13,6 +13,7 @@
+ @property (nonatomic, strong) NSNumber* visible;
+ @property (nonatomic, strong) NSNumber* hideOnScroll;
+ @property (nonatomic, strong) NSNumber* buttonColor;
++@property (nonatomic, strong) NSString* barStyle;
+ @property (nonatomic, strong) NSNumber* translucent;
+ @property (nonatomic, strong) NSNumber* transparent;
+ @property (nonatomic, strong) NSNumber* drawBehind;
+--- a/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.m
++++ b/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.m
+@@ -116,6 +116,11 @@ - (void)applyOn:(UIViewController*)viewController {
+ 	} else {
+ 		disableTopBarTransparent();
+ 	}
++	if (self.barStyle) {
++		viewController.navigationController.navigationBar.barStyle = [RCTConvert UIBarStyle:self.barStyle];
++	} else {
++		viewController.navigationController.navigationBar.barStyle = UIBarStyleDefault;
++	}
+ 	
+ 	if (self.translucent) {
+ 		viewController.navigationController.navigationBar.translucent = [self.translucent boolValue];
 --- a/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.h
 +++ b/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.h
 @@ -15,4 +15,6 @@ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBri

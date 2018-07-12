@@ -30,6 +30,7 @@ interface State {
     url: string;
     width?: number;
     height?: number;
+    isError?: boolean;
   };
 }
 
@@ -61,7 +62,7 @@ export default class MetaLink extends React.Component<Props, State> {
     this.setState({ loading: true });
     const { title, image } = await fetchMetadata(url);
     if (this.dead) return;
-    if (image) {
+    if (image && typeof image.url === 'string') {
       const res = await FastImage.preload([{ uri: image.url }]);
     }
     if (this.dead) return;
