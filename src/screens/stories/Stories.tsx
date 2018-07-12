@@ -34,6 +34,7 @@ type Layout = {
 export default class StoriesScreen extends React.Component<Props> {
 
   private listRef = React.createRef() as any;
+  private dispose;
 
   @observable
   isRefreshing = false;
@@ -86,10 +87,22 @@ export default class StoriesScreen extends React.Component<Props> {
         this.updateOptions();
       }
     });
+
+    console.log(this);
+
+    this.dispose = Navigation.events().registerNativeEventListener((name, params) => {
+      if (name === 'bottomTabSelected') {
+        const { selectedTabIndex, unselectedTabIndex } = params;
+        if (selectedTabIndex === unselectedTabIndex && UI.componentId === this.props.componentId) {
+          this.scrollToTop();
+        }
+      }
+    });
   }
 
   componentWillUnmount() {
     Stories.dispose();
+    this.dispose();
   }
 
   onNavigationButtonPressed(buttonId) {

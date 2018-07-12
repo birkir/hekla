@@ -6,7 +6,7 @@ patch-package
    s.platform     = :ios, "7.0"
    s.source       = { :git => "https://github.com/author/RNRate.git", :tag => "master" }
 -  s.source_files  = "RNRate/**/*.{h,m}"
-+  s.source_files  = "**/*.{h,m}"
++  s.source_files  = "*.{h,m}"
    s.requires_arc = true
 
 

@@ -1,6 +1,7 @@
 import { flow, types } from 'mobx-state-tree';
 import { AsyncStorage, Platform } from 'react-native';
-import CookieManager from 'react-native-cookies'; // tslint:disable-line import-name
+import { Sentry } from 'react-native-sentry';
+import CookieManager from 'react-native-cookies';
 import * as Keychain from 'react-native-keychain';
 import Hackernews, { API_URL, LOGIN_INCORRECT, LOGIN_ERROR, LOGIN_EXISTS } from './services/Hackernews';
 import User from './models/User';
@@ -112,6 +113,7 @@ const Account = types
       return false;
     }
   } catch (err) {
+    Sentry.captureException(err);
     Account.setIsChecking(false);
     return false;
   }
@@ -132,7 +134,9 @@ const Account = types
 
   try {
     await Account.login(username, password);
-  } catch (err) {}
+  } catch (err) {
+    Sentry.captureException(err);
+  }
 
   username = null;
   password = null;

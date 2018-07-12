@@ -1,5 +1,6 @@
 // import cheerio from 'react-native-cheerio'; // tslint:disable-line import-name
 import { AsyncStorage } from 'react-native';
+import { Sentry } from 'react-native-sentry';
 import firebase from 'react-native-firebase';
 import config from 'config';
 
@@ -36,8 +37,10 @@ export default async (url: string) => {
     const doc = docs.docs[0];
     if (doc.exists) {
       const obj = doc.data();
-      AsyncStorage.setItem(key, JSON.stringify(obj));
-      return obj;
+      if (obj.image) {
+        AsyncStorage.setItem(key, JSON.stringify(obj));
+        return obj;
+      }
     }
   }
 
@@ -56,8 +59,14 @@ export default async (url: string) => {
       try {
         const { image } = await fetch(`https://graph.facebook.com/${og_object.id}?fields=image&access_token=${token}`).then(r => r.json());
         obj.image = image.shift();
+        obj.image.error = false;
       } catch (err) {
+        Sentry.captureException(err);
         token = null;
+        obj.image = {
+          url: null,
+          error: true,
+        };
       }
     }
   } catch (err) {

@@ -17,6 +17,8 @@ interface Props {
 
 export default class ReplyScreen extends React.Component<Props> {
 
+  private keyboardWillChangeFrameHandler;
+
   static get options() {
     return applyThemeOptions({
       topBar: {
@@ -56,9 +58,13 @@ export default class ReplyScreen extends React.Component<Props> {
   }
 
   componentWillMount() {
-    Keyboard.addListener('keyboardWillChangeFrame', this.onKeyboardWillChangeFrame);
+    this.keyboardWillChangeFrameHandler = Keyboard.addListener('keyboardWillChangeFrame', this.onKeyboardWillChangeFrame);
     Items.fetchItem(this.props.itemId)
       .then(item => this.setState({ item }));
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillChangeFrameHandler.remove();
   }
 
   @autobind

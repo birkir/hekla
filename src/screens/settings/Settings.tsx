@@ -11,7 +11,7 @@ import CellGroup from 'components/cell/CellGroup';
 import CellIcon from 'components/cell/CellIcon';
 import UI from 'stores/UI';
 import codePushConfig from 'utils/codePushConfig';
-import { SETTINGS_GENERAL_SCREEN, SETTINGS_APPEARANCE_SCREEN, SETTINGS_THEME_SCREEN, SETTINGS_ABOUT_SCREEN } from 'screens';
+import { SETTINGS_GENERAL_SCREEN, SETTINGS_APPEARANCE_SCREEN, SETTINGS_THEME_SCREEN, SETTINGS_DONATE_SCREEN, SETTINGS_ABOUT_SCREEN } from 'screens';
 import { theme, applyThemeOptions } from 'styles';
 import config from 'config';
 const styles = theme(require('./Settings.styl'));
@@ -98,6 +98,14 @@ export default class SettingsScreen extends React.Component<Props> {
     Rate.rate(options, () => null);
   }
 
+  onDonatePress() {
+    Navigation.push(UI.componentId, {
+      component: {
+        name: SETTINGS_DONATE_SCREEN,
+      },
+    });
+  }
+
   render() {
     const { testID } = this.props;
 
@@ -153,6 +161,8 @@ export default class SettingsScreen extends React.Component<Props> {
               backgroundColor="#42d855"
               size={22}
             />}
+            onPress={this.onDonatePress}
+            more={true}
           />
           <Cell
             title="Rate"

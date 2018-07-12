@@ -5,7 +5,6 @@ target 'Hekla' do
   pod 'Firebase/Core'
   pod 'Firebase/Database'
   pod 'Firebase/Firestore'
-
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
   pod 'Interactable', :path => '../node_modules/react-native-interactable'
   pod 'react-native-config', :path => '../node_modules/react-native-config'

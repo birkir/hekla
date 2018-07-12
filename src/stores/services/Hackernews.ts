@@ -1,3 +1,5 @@
+import { Sentry } from 'react-native-sentry';
+
 export const API_URL = 'https://news.ycombinator.com';
 export const LOGIN_EXISTS = 1;
 export const LOGIN_INCORRECT = 2;
@@ -53,6 +55,7 @@ class Hackernews {
         }
       }
     } catch (err) {
+      Sentry.captureException(err);
       return LOGIN_ERROR;
     }
 
