@@ -11,9 +11,21 @@ const Account = types
     isLoggedIn: types.optional(types.boolean, false),
     isLoading: types.optional(types.boolean, false),
     isChecking: types.optional(types.boolean, true),
+    voted: types.optional(types.map(types.boolean), {}),
     user: types.maybe(types.reference(User)),
   })
   .actions((self) => {
+
+    const populate = flow(function* () {
+      self.voted.clear();
+      let page = 1;
+      while (page < 10) {
+        const items = yield Hackernews.voted('submissions', self.user.id, page);
+        if (items.length === 0) break;
+        items.forEach(({ id }) => self.voted.set(id, true));
+        page += 1;
+      }
+    });
 
     const login = flow(function* (username, password) {
       self.isLoading = true;
@@ -49,6 +61,8 @@ const Account = types
       self.isLoading = false;
       self.isLoggedIn = true;
 
+      populate();
+
       return true;
     });
 
@@ -68,6 +82,10 @@ const Account = types
     return {
       login,
       logout,
+      toggleVote(id: string, flag?: boolean) {
+        const isCurrentlyVoted = self.voted.get(id);
+        self.voted.set(id, typeof flag === 'undefined' ? !isCurrentlyVoted : flag);
+      },
       setIsChecking(flag: boolean) {
         self.isChecking = flag;
       },
@@ -80,6 +98,7 @@ const Account = types
  */
 (async () => {
   Account.setIsChecking(true);
+
   let username;
   let password;
 
@@ -110,9 +129,13 @@ const Account = types
       expiration: (new Date(addOneYear)).toISOString(),
     });
   }
+
   try {
     await Account.login(username, password);
   } catch (err) {}
+
+  username = null;
+  password = null;
 
   Account.setIsChecking(false);
 })();

@@ -31,6 +31,8 @@ const Item = types.model('Item', {
   metadata: types.maybe(Metadata),
   belongsTo: types.optional(types.array(types.string), []),
   comments: types.optional(types.array(types.late(() => ItemReference)), []),
+  isPending: types.optional(types.boolean, false),
+  isError: types.optional(types.boolean, false),
 
   // User fields
   isUserVote: types.optional(types.boolean, false),
@@ -51,9 +53,20 @@ const Item = types.model('Item', {
     return `https://news.ycombinator.com/item?id=${self.id}`;
   },
 
+  get isVoted() {
+    return !!Account.voted.get(self.id);
+  },
+
+  // get isFlag() {
+  //   return !!Account.flags.get(self.id);
+  // },
+
+  // get isHidden() {
+  //   return !!Account.hidden.get(self.id);
+  // },
+
   /**
    * Print date in short format like `10h` or `6w`
-   * @return {string}
    */
   get ago() {
     return age(new Date(self.time * 1000));
@@ -80,137 +93,191 @@ const Item = types.model('Item', {
     ]);
   },
 }))
-.actions((self) => {
+.actions(self => ({
 
-  const fetchParent = async () => {
-    if (self.parent) {
-      const parent = await Items.fetchItem(self.parent);
-      return parent;
-    }
-    return null;
-  };
-
-  const fetchComments = flow(function* () {
-
-    const commentIds = self.kids.map(String);
-
-    yield Promise.all(
-      commentIds.map(async (id, index) => {
-        // Fetch comment from backend (or cache)
-        let comment;
-
-        try {
-          comment = await Items.fetchItem(id) as any;
-        } catch (err) {}
-
-        if (!comment) {
-          commentIds.splice(commentIds.indexOf(id), 1);
-          return;
-        }
-
-        // Update belongsTo list with parents
-        comment.setBelongsTo([self.id, ...self.belongsTo]);
-
-        // Fetch nested comments
-        await comment.fetchComments();
-      }),
-    );
-
-    // Push commentIds to comments list
-    self.comments.replace(commentIds);
-
-    return self.comments;
-  });
-
-  return {
-    fetchComments,
-    fetchParent,
-
-    setMetadata(metadata: any) {
-      self.metadata = metadata;
-    },
-
-    setBelongsTo(belongsTo: any) {
-      self.belongsTo = belongsTo;
-    },
-
-    vote() {
-      self.isUserVote = !self.isUserVote;
-      const completed = Hackernews.vote(self.id, self.isUserVote);
-      if (completed) {
-        Account.user.setVote(self.id, self.isUserVote);
+  /**
+   * Fetch a single comment by id
+   * @param id Item ID
+   */
+  async fetchComment(id: string) {
+    try {
+      // Fetch comment from backend (or cache)
+      const comment = await Items.fetchItem(id) as any;
+      if (!comment) {
+        return null;
       }
-      return completed;
-    },
+      // Update belongsTo list with parents
+      comment.setBelongsTo([self.id, ...self.belongsTo]);
+      // Fetch nested comments
+      await comment.fetchComments();
+      return comment;
+    } catch (err) {}
+    return null;
+  },
 
-    flag() {
-      self.isUserFlag = !self.isUserFlag;
-      return Hackernews.flag(self.id, self.isUserFlag);
-    },
+  /**
+   * Fetch kids as comments
+   */
+  fetchComments() {
+    return flow(function* () {
+      // Get list of comments to fetch
+      const commentIds = self.kids.map(String);
+      // Fetch them
+      const comments = yield Promise.all(commentIds.map(id => (self as any).fetchComment(id)));
+      // Push their id's
+      self.comments.replace(comments.filter(n => n && n.id).map(n => n.id));
+      // Return comments
+      return self.comments;
+    })();
+  },
 
-    hide() {
-      self.isUserHidden = !self.isUserHidden;
-      return Hackernews.hide(self.id, self.isUserHidden);
-    },
+  fetchParent() {
+    return flow(function* () {
+      if (self.parent) {
+        const parent = yield Items.fetchItem(self.parent);
+        return parent;
+      }
+      return null;
+    })();
+  },
 
-    favorite() {
-      self.isUserFavorite = !self.isUserFavorite;
-      return Hackernews.favorite(self.id, self.isUserFavorite);
-    },
+  refetch() {
+    flow(function* () {
+      const ref = db.ref(`v0/item/${self.id}`);
+      ref.keepSynced(true);
 
-    delete() {
-      return new Promise((resolve, reject) => {
-        const ref = db.ref(`v0/item/${self.id}`);
-        ref.on('value', async (s) => {
-          ref.off('value');
+      const data = yield new Promise((resolve) => {
+        ref.once('value').then(s => resolve(s.val()));
+        setTimeout(() => ref.off('value') && resolve(null), 2500);
+      });
+
+      // Update model
+      if (data) {
+        self.by = data.by;
+        self.descendants = data.descendants;
+        self.kids = self.kids;
+        self.score = self.score;
+        self.time = data.time;
+        self.title = data.title;
+        self.text = data.text;
+        self.url = data.url;
+      }
+    })();
+  },
+
+  setMetadata(metadata: any) {
+    self.metadata = metadata;
+  },
+
+  setBelongsTo(belongsTo: any) {
+    self.belongsTo = belongsTo;
+  },
+
+  setIsError(flag: boolean) {
+    self.isError = flag;
+  },
+
+  vote() {
+    // Represent the correct UI action.
+    Account.toggleVote(self.id);
+
+    // Vote on Hacker News service
+    Hackernews.vote(self.id, self.isVoted).then((flag: boolean) =>
+      // Sync the result (may end up conflicting the user action).
+      Account.toggleVote(self.id, flag),
+    );
+  },
+
+  flag() {
+    self.isUserFlag = !self.isUserFlag;
+    return Hackernews.flag(self.id, self.isUserFlag);
+  },
+
+  hide() {
+    self.isUserHidden = !self.isUserHidden;
+    return Hackernews.hide(self.id, self.isUserHidden);
+  },
+
+  favorite() {
+    self.isUserFavorite = !self.isUserFavorite;
+    return Hackernews.favorite(self.id, self.isUserFavorite);
+  },
+
+  delete() {
+    return new Promise((resolve, reject) => {
+      const ref = db.ref(`v0/item/${self.id}`);
+      ref.on('value', async (s) => {
+        ref.off('value');
+        resolve(true);
+      });
+      try {
+        const isDeleted = Hackernews.delete(self.id);
+        if (!isDeleted) {
+          reject('Could not delete');
+        } else {
+          self.text = null;
+          self.by = null;
           resolve(true);
-        });
-        try {
-          const isDeleted = Hackernews.delete(self.id);
-          if (!isDeleted) {
-            reject('Could not delete');
-          } else {
-            self.text = null;
-            self.by = null;
-            resolve(true);
-          }
-        } catch (err) {
-          reject(err.message);
         }
+      } catch (err) {
+        reject(err.message);
+      }
+    });
+  },
+
+  /**
+   * Reply to a story or a comment.
+   * Will create a placeholder comment for display
+   * and update it when changes are available in the backend.
+   *
+   * @param text Text to reply
+   */
+  reply(text: string) {
+    return flow(function* () {
+
+      // Create placeholder comment
+      const comment = Item.create({
+        text,
+        type: 'comment',
+        id: `Placeholder_${Date.now()}`,
+        by: Account.user.id,
+        time: Math.floor(Date.now() / 1000),
+        belongsTo: [self.id, ...self.belongsTo],
+        isPending: true,
+        isError: false,
       });
-    },
 
-    reply(text: string) {
-      return new Promise(async (resolve, reject) => {
-        const ref = db.ref(`v0/item/${self.id}/kids`);
+      // Add to bottom
+      self.comments.push(comment);
 
-        ref.on('value', async (s) => {
-          const ids = (Object as any).values(s.val());
-          const items = await Promise.all(ids.map(Items.fetchItem));
-          const item = items
-            .filter((item: any) => item.by === Account.user.id)
-            .sort((a: any, b: any) => b.time - a.time)
-            .shift();
-
-          if (item) {
-            resolve(item);
-          }
-        });
-
+      flow(function* () {
         try {
-          const isReply = await Hackernews.reply(this.props.itemId, this.state.text);
-          if (!isReply) {
-            ref.off('value');
-            reject('Could not reply.');
-          }
+          // Make comment on Hacker News service
+          const itemId = yield Hackernews.reply(self.type, self.id, Account.user.id, text);
+          // Run function when item will be created in Firebase
+          const ref = db.ref(`v0/item/${itemId}`);
+          ref.keepSynced(true);
+          ref.on('value', (s) => {
+            if (s.val() !== null) {
+              const item = (self as any).fetchComment(itemId);
+              if (item) {
+                const index = self.comments.findIndex(item => item.id === comment.id);
+                self.comments.splice(index, 1, itemId);
+              } else {
+                comment.setIsError(true);
+                ref.off('value');
+              }
+            }
+          });
         } catch (err) {
-          ref.off('value');
-          reject(err.message);
+          comment.setIsError(true);
         }
-      });
-    },
-  };
-});
+      })();
+
+      return comment;
+    })();
+  },
+}));
 
 /**
  * Getter and setter for item references

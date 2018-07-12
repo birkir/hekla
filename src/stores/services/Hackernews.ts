@@ -13,11 +13,11 @@ class Hackernews {
   async fetch(url = '', options = { headers: {} } as any) {
     return fetch(`${API_URL}/${url}`, {
       ...options,
+      mode: 'cors',
+      credentials: 'include',
+      cache: 'no-cache',
+      referrerPolicy: 'origin',
       headers: {
-        authority: 'news.ycombinator.com',
-        origin: API_URL,
-        referer: `${API_URL}/`,
-        'user-agent': 'Piper_1.0',
         ...(options.headers || {}),
       },
     })
@@ -35,9 +35,9 @@ class Hackernews {
       }
 
       const loginMarkup = await this.fetch('login', {
-        method: 'post',
+        method: 'POST',
         headers: {
-          'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          'content-type': 'application/x-www-form-urlencoded',
         },
         body: `goto=news&acct=${encodeURIComponent(username)}&pw=${encodeURIComponent(password)}`,
       });
@@ -147,40 +147,49 @@ class Hackernews {
     const auths = await this.fetchAuthsForItem(id);
     const { auth = null } = auths.find(item => item.action === 'vote' && item.id === id) || {};
     if (auth) {
-      const output = await this.fetch(`vote?id=${id}&how=${how}&auth=${auth}`);
-      // TODO: How can we make sure it's flagged?
-      return true;
+      const result = await this.fetch(`vote?id=${id}&how=${how}&auth=${auth}&goto=${encodeURIComponent(`item?id=${id}`)}`);
+      return result.replace(/\n/g, '').indexOf(`'un_${id}'`) >= 0;
     }
 
-    return false;
+    return up;
   }
 
-  async reply(id: string, text: string, forceHmac?: string) {
-    const hmac = await this.fetchHmacForItem(id, 'reply');
+  async reply(type: string = 'comment', id: string, userId: string, text: string, enforceHmac?: string) {
+
+    const hmac = enforceHmac || await this.fetchHmacForItem(id, type === 'story' ? 'item' : 'reply');
+
     if (!hmac) {
       return false;
     }
 
+    const goto = encodeURIComponent(`threads?id=${userId}`);
+
     const data = await this.fetch('comment', {
-      method: 'post',
+      method: 'POST',
       headers: {
-        'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'content-type': 'application/x-www-form-urlencoded',
       },
-      body: `parent=${id}&hmac=${hmac}&text=${text}`,
+      body: `parent=${id}&goto=${goto}&hmac=${hmac}&text=${encodeURIComponent(text)}`,
     });
 
-    if (data.match(/Please confirm that this is your comment by submitting it one more time/)) {
-      throw new Error('Please confirm that this is your comment by submitting it one more time');
-      return false;
+    if (data.match(/Please confirm that this is your comment/)) {
+      if (!enforceHmac) {
+        const hmac = data.match(/name="hmac" value="([a-f0-9]*)"/);
+        if (hmac && hmac[1]) {
+          return this.reply(type, id, userId, text, hmac[1]);
+        }
+      }
+      throw new Error('Server Error');
     }
 
     if (data.match(/<td>Please try again.<br>/)) {
       return false;
     }
 
-    // TODO: How can we make sure it was submitted?
+    const comments = await this.comments(userId, undefined, data);
+    const comment = comments.find(({ parentId }) => parentId === id);
 
-    return true;
+    return comment && comment.id;
   }
 
   async edit(id: string, text: string) {
@@ -257,8 +266,8 @@ class Hackernews {
     return ids.map(id => ({ id })).filter(n => n.id);
   }
 
-  async comments(id: string, fromId?: string) {
-    const data = await this.fetch(`threads?id=${id}&next=${fromId}`);
+  async comments(id: string, fromId?: string, fromData?: string) {
+    const data = fromData || await this.fetch(`threads?id=${id}&next=${fromId}`);
     const rows = data.replace(/\n/g, '').match(/<tr class=['"]athing.*?<\/table><\/td><\/tr>/g);
     return rows.map((row) => {
       const id = row.match(/id=["'](\d+)['"]/);

@@ -9,6 +9,11 @@ const Items = types
   })
   .actions((self) => {
     return {
+      addItem(item) {
+        self.items.set(item.id, item);
+        return self.items.get(item.id);
+      },
+
       /**
        * Fetch item by id (from cache or network)
        * @param {string} id Hackernews item id

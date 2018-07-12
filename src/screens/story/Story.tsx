@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, Platform } from 'react-native';
+import { View, FlatList, LayoutAnimation } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import { observable } from 'mobx';
@@ -86,12 +86,14 @@ export default class StoryScreen extends React.Component<Props> {
   onCollapse(comment: any) {
     this.collapsedInView.set(comment.id, true);
     this.updateComments();
+    LayoutAnimation.easeInEaseOut();
   }
 
   @autobind
   onExpand(comment: any) {
     this.collapsedInView.set(comment.id, false);
     this.updateComments();
+    LayoutAnimation.easeInEaseOut();
   }
 
   @autobind

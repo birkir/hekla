@@ -50,7 +50,7 @@ export default ({ options, title = undefined, message = undefined, selectedId = 
           ...options.map((item) => {
             const icon = typeof item.icon === 'number' ? resolveAssetSource(item.icon) : item.icon;
             const title = item.title;
-            const titleTextAlignment = item.titleTextAlignment || undefined;
+            const titleTextAlignment = item.titleTextAlignment;
             return { title, titleTextAlignment, icon };
           }),
           ...(cancel ? [{ title: cancel }] : []),

@@ -85,7 +85,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
   }
 
   componentWillUpdate() {
-    LayoutAnimation.easeInEaseOut();
+    // LayoutAnimation.easeInEaseOut();
   }
 
   render() {

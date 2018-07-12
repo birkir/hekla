@@ -69,6 +69,7 @@ export default class ReplyScreen extends React.Component<Props> {
   @autobind
   async post() {
     this.state.item.reply(this.state.text);
+    this.dismiss();
   }
 
   @autobind

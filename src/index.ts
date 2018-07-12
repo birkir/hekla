@@ -16,8 +16,11 @@ YellowBox.ignoreWarnings([
 ]);
 
 // Devtool network request support
-// (global as any).sourceXMLHttpRequest = XMLHttpRequest;
-// XMLHttpRequest = (global as any).originalXMLHttpRequest || (global as any).XMLHttpRequest;
+if (__DEV__) {
+  const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
+  (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
+  (global as any).FormData = originalFormData ? originalFormData : FormData;
+}
 
 // Register screens
 Screens.forEach((ScreenComponent, key) =>

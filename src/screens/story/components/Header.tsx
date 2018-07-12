@@ -133,7 +133,7 @@ export default class StoryHeader extends React.Component<Props> {
           <TouchableOpacity style={styles.actions__item} onPress={this.onVotePress}>
             <Image
               source={require('assets/icons/100/vote.png')}
-              style={[styles.icon, item.isUserVote && styles.icon__active]}
+              style={[styles.icon, item.isVoted && styles.icon__active]}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actions__item} onPress={this.onFlagPress}>
