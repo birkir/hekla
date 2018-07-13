@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { View, Text, Image, TouchableHighlight, findNodeHandle, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import Element from 'components/element/Element';
-import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import UI from 'stores/UI';
-import { theme } from 'styles';
+import { theme, getVar } from 'styles';
 import fetchMetadata from 'utils/fetchMetadata';
 import { observer } from 'mobx-react';
 const styles = theme(require('./MetaLink.styl'));
@@ -164,6 +162,7 @@ export default class MetaLink extends React.Component<Props, State> {
       styles.content,
       image && styles.content__image,
       underlay && styles.content__underlay,
+      { borderColor: getVar('--meta-border-color') },
     ];
 
     const displayTitle = String(title || '').trim();
@@ -204,10 +203,10 @@ export default class MetaLink extends React.Component<Props, State> {
         onShowUnderlay={this.onShowUnderlay}
       >
         <View onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onTouchMove={this.onTouchMove}>
-          {large && image && !error && (
+          {large && image && image.url && !error && (
             <FastImage
               source={{ uri: image.url }}
-              style={styles.image}
+              style={[styles.image, { borderColor: getVar('--meta-border-color') }]}
               onError={this.onImageError}
               resizeMode="cover"
             />

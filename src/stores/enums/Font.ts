@@ -12,6 +12,10 @@ if (Platform.OS === 'android') {
 if (Platform.OS === 'ios') {
   font['American Typewriter'] = 'American Typewriter';
   font['Avenir Next'] = 'Avenir Next';
+  font['Georgia'] = 'Georgia';
+  font['Iowan Old Style'] = 'Iowan';
+  font['Palatino'] = 'Palatino';
+  font['Times New Roman'] = 'Times New Roman';
 }
 
 export const formatFont = (key: string) => {

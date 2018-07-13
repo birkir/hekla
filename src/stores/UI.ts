@@ -106,8 +106,9 @@ const UI = types
       return flow(function* () {
         try {
           const data = yield AsyncStorage.getItem('UI.settings');
-          const state = JSON.parse(data);
-          applySnapshot(UI.settings, state);
+          if (data) {
+            applySnapshot(UI.settings, JSON.parse(data));
+          }
           (self as any).apply();
         } catch (err) {}
         return;

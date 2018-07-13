@@ -62,14 +62,17 @@ export default class StoryScreen extends React.Component<Props> {
   }
 
   @autobind
-  async fetch() {
+  async fetch({ force } = { force: false }) {
     const start = new Date().getTime();
     this.setState({ loading: 1 });
-    this.story = await Items.fetchItem(this.props.id, { timeout: 1000 }) as IItemType;
+    this.story = await Items.fetchItem(this.props.id, { force }) as IItemType;
     this.updateOptions();
     this.setState({ loading: 2 });
     if (this.story) {
-      await this.story.fetchComments();
+      if (!UI.preview.active || (UI.preview.active && UI.settings.general.markReadOn3dTouch)) {
+        this.story.read(true);
+      }
+      await this.story.fetchComments({ force });
     }
 
     // Wait at least 990ms for new data to make loading
@@ -100,7 +103,7 @@ export default class StoryScreen extends React.Component<Props> {
   async onRefresh() {
     ReactNativeHapticFeedback.trigger('impactLight', true);
     this.isRefreshing = true;
-    await this.fetch();
+    await this.fetch({ force: true });
     this.isRefreshing = false;
   }
 

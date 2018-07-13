@@ -3,7 +3,7 @@ import { View, Image, Text, TouchableHighlight, TouchableOpacity, findNodeHandle
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
 import FormatText from 'components/format-text/FormatText';
-import Element from 'components/element/Element';
+import StoryRow from 'components/story-row/StoryRow';
 import MetaLink from 'components/meta-link/MetaLink';
 import { observer } from 'mobx-react';
 import { theme, getVar } from 'styles';
@@ -38,14 +38,9 @@ export default class StoryCard extends React.Component<Props> {
     return;
   }
 
-  @autobind
-  onVotePress() {
-    this.props.item.vote();
-  }
-
   render() {
     const { item, testID } = this.props;
-    const { title, text, prettyText, url, metadata = {}, ago, by, descendants, score } = item;
+    const { title, text, prettyText, url, metadata = {} } = item;
 
     return (
       <TouchableHighlight
@@ -59,14 +54,14 @@ export default class StoryCard extends React.Component<Props> {
         underlayColor={getVar('--content-bg-active-color', 'gray')}
       >
         <View>
-          {!!title && <Text style={styles.title}>{title}</Text>}
+          {!!title && <Text style={[styles.title, item.isRead && styles.read]}>{title}</Text>}
           <MetaLink
             {...metadata}
             url={url}
             large={true}
           />
           {!!text && (
-            <View style={{ marginBottom: 8 }}>
+            <View style={[styles.text, item.isRead && styles.read]}>
               <FormatText
                 noLinks={true}
                 noFormat={true}
@@ -77,23 +72,8 @@ export default class StoryCard extends React.Component<Props> {
               </FormatText>
             </View>
           )}
-          <View style={styles.row}>
-            <View style={styles.row__left}>
-              <Text style={styles.row__author}>{by}</Text>
-              <View style={styles.row}>
-                <Image style={[styles.row__icon, item.isVoted && styles.row__icon__active]} source={require('assets/icons/16/arrow-up.png')} />
-                <Text style={[styles.row__text, item.isVoted && styles.row__text__active]}>{score}</Text>
-                <Image style={styles.row__icon} source={require('assets/icons/16/comments.png')} />
-                <Text style={styles.row__text}>{descendants}</Text>
-                <Image style={styles.row__icon} source={require('assets/icons/16/clock.png')} />
-                <Text style={styles.row__text}>{ago}</Text>
-              </View>
-            </View>
-            <View style={styles.row__actions}>
-              <TouchableOpacity onPress={this.onVotePress} style={styles.row__action}>
-                <Image style={[styles.row__action__icon, item.isVoted && styles.row__action__active]} source={require('assets/icons/32/arrow-up.png')} />
-              </TouchableOpacity>
-            </View>
+          <View style={item.isRead && styles.read}>
+            <StoryRow item={item} />
           </View>
         </View>
       </TouchableHighlight>

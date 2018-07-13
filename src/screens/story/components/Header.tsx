@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Share, Alert } from 'react-native';
 import FormatText from 'components/format-text/FormatText';
 import MetaLink from 'components/meta-link/MetaLink';
+import StoryRow from 'components/story-row/StoryRow';
 import Item from 'stores/models/Item';
 import openActionSheet from 'utils/openActionSheet';
 import { observer } from 'mobx-react';
@@ -118,17 +119,8 @@ export default class StoryHeader extends React.Component<Props> {
               {prettyText}
             </FormatText>
           )}
-          <Text style={styles.author}>by <Text style={styles.author__bold}>{by}</Text></Text>
-
-          <View style={styles.row}>
-            <Image style={styles.row__icon} source={require('assets/icons/16/arrow-up.png')} />
-            <Text style={styles.row__text}>{score}</Text>
-            <Image style={styles.row__icon} source={require('assets/icons/16/comments.png')} />
-            <Text style={styles.row__text}>{descendants}</Text>
-            <Image style={styles.row__icon} source={require('assets/icons/16/clock.png')} />
-            <Text style={styles.row__text}>{ago}</Text>
-          </View>
         </View>
+        <StoryRow item={item} />
         <View style={[styles.actions, { borderTopWidth: StyleSheet.hairlineWidth }]}>
           <TouchableOpacity style={styles.actions__item} onPress={this.onVotePress}>
             <Image

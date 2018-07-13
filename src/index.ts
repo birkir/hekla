@@ -5,6 +5,7 @@ import { Screens, startApp } from 'screens';
 import UI from 'stores/UI';
 import { db } from 'utils/firebase';
 import { onSnapshot } from 'mobx-state-tree';
+import Account from 'stores/Account';
 
 // Ignore yellow box
 YellowBox.ignoreWarnings([
@@ -17,9 +18,9 @@ YellowBox.ignoreWarnings([
 
 // Devtool network request support
 if (__DEV__) {
-  const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
-  (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
-  (global as any).FormData = originalFormData ? originalFormData : FormData;
+  // const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
+  // (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
+  // (global as any).FormData = originalFormData ? originalFormData : FormData;
 }
 
 // Register screens
@@ -86,4 +87,8 @@ NetInfo.getConnectionInfo().then(({ type }) => {
 // Persist Settings!
 onSnapshot(UI.settings, (snapshot) => {
   AsyncStorage.setItem('UI.settings', JSON.stringify(snapshot));
+});
+
+onSnapshot(Account.read, (snapshot) => {
+  AsyncStorage.setItem('Account.read', JSON.stringify(snapshot));
 });

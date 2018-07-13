@@ -6,7 +6,9 @@ import Item from 'stores/models/Item';
 import { replyScreen, userScreen, storyScreen } from 'screens';
 import FormatText from 'components/format-text/FormatText';
 import Account from 'stores/Account';
+import UI from 'stores/UI';
 import { theme, getVar } from 'styles';
+import { observer } from 'mobx-react';
 const styles = theme(require('./Comment.styl'));
 
 type IItemType = typeof Item.Type;
@@ -25,16 +27,18 @@ interface Props {
   testID?: string;
 }
 
-export default class Comment extends React.PureComponent<Props> {
+@observer
+export default class Comment extends React.Component<Props> {
 
   @autobind
   onMorePress() {
-    const { isUserVote, isUserFavorite, isUserHidden } = this.props.item;
+    const { item } = this.props;
+    const { isUserVote, isUserFavorite, isUserHidden } = item;
     const options = [{
       id: 'vote',
       icon: require('assets/icons/32/arrow-up.png'),
       materialIcon: 'arrow-up',
-      title: isUserVote ? 'Unvote' : 'Vote',
+      title: item.isVoted ? 'Unvote' : 'Vote',
       titleTextAlignment: 0,
     }, {
       id: 'favorite',
@@ -68,7 +72,7 @@ export default class Comment extends React.PureComponent<Props> {
       titleTextAlignment: 0,
     }];
 
-    if (Account.isLoggedIn && this.props.item.by === Account.user.id) {
+    if (this.props.item.isOwn) {
       options.push({
         id: 'edit',
         title: 'Edit',
@@ -86,6 +90,7 @@ export default class Comment extends React.PureComponent<Props> {
     openActionSheet({ options, title, sheet: true, cancel: 'Cancel' }, this.onActionSelect);
   }
 
+  @autobind
   onActionSelect({ id }) {
     if (id === 'vote') {
       this.props.item.vote();
@@ -148,7 +153,8 @@ export default class Comment extends React.PureComponent<Props> {
 
   @autobind
   async onDelete() {
-    this.props.item.delete();
+    await this.props.item.delete();
+    this.forceUpdate();
   }
 
   renderParent() {
@@ -186,7 +192,8 @@ export default class Comment extends React.PureComponent<Props> {
       numberOfLines,
       item,
     } = this.props;
-    const { ago, by, isUserVote } = item;
+
+    const { ago, by } = item;
 
     if (!by || hidden) {
       return null;
@@ -203,9 +210,9 @@ export default class Comment extends React.PureComponent<Props> {
         <View style={[styles.container, styles[`level${depth}`]]}>
           <View style={[styles.row, !collapsed && styles.row__expanded]}>
             <TouchableOpacity onPress={this.onUserPress}>
-              <Text style={styles.author}>{by}</Text>
+              <Text style={[styles.author, item.isOwn && styles.author__me]}>{by}</Text>
             </TouchableOpacity>
-            {isUserVote && <Image style={styles.icon__arrow} source={require('assets/icons/16/arrow-up.png')} />}
+            {item.isVoted && <Image style={styles.icon__arrow} source={require('assets/icons/16/arrow-up.png')} />}
             <View style={styles.flex} />
             {!collapsed && (
               <TouchableWithoutFeedback onPress={this.onMorePress}>
@@ -217,7 +224,7 @@ export default class Comment extends React.PureComponent<Props> {
           </View>
           {!collapsed && (
             <FormatText
-              style={styles.text}
+              style={[styles.text, UI.font(15)]}
               numberOfLines={numberOfLines}
               noLinks={!metalinks}
             >

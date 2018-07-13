@@ -1,4 +1,4 @@
-import { flow, types } from 'mobx-state-tree';
+import { flow, types, applySnapshot } from 'mobx-state-tree';
 import { AsyncStorage, Platform } from 'react-native';
 import { Sentry } from 'react-native-sentry';
 import CookieManager from 'react-native-cookies';
@@ -13,8 +13,14 @@ const Account = types
     isLoading: types.optional(types.boolean, false),
     isChecking: types.optional(types.boolean, true),
     voted: types.optional(types.map(types.boolean), {}),
+    read: types.optional(types.map(types.boolean), {}),
     user: types.maybe(types.reference(User)),
   })
+  .views(self => ({
+    get userId() {
+      return self.user && self.user.id;
+    },
+  }))
   .actions((self) => {
 
     const populate = flow(function* () {
@@ -87,6 +93,9 @@ const Account = types
         const isCurrentlyVoted = self.voted.get(id);
         self.voted.set(id, typeof flag === 'undefined' ? !isCurrentlyVoted : flag);
       },
+      setIsRead(id: string, flag = true) {
+        self.read.set(id, flag);
+      },
       setIsChecking(flag: boolean) {
         self.isChecking = flag;
       },
@@ -99,6 +108,11 @@ const Account = types
  */
 (async () => {
   Account.setIsChecking(true);
+
+  const data = await AsyncStorage.getItem('Account.read');
+  if (data) {
+    applySnapshot(Account.read, JSON.parse(data));
+  }
 
   let username;
   let password;

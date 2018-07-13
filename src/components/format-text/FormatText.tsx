@@ -7,7 +7,7 @@ const styles = require('./FormatText.styl');
 interface Props {
   key?: string;
   children?: React.ReactNode;
-  style?: TextStyle;
+  style?: TextStyle | TextStyle[];
   noLinks?: boolean;
   noFormat?: boolean;
   numberOfLines?: number;

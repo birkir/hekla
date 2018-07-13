@@ -20,7 +20,7 @@ const Items = types
        * @param {number} index Index of item in list
        * @return {Promise}
        */
-      fetchItem(id: string, { metadata = false } = {}) {
+      fetchItem(id: string, { force = false, metadata = false } = {}) {
         return flow(function* () {
           const key = String(id);
 
@@ -61,6 +61,9 @@ const Items = types
             if (!self.items.has(key)) {
               self.items.put(item);
             }
+          } else if (force) {
+            const item = self.items.get(key);
+            yield item.refetch();
           }
 
           return self.items.get(key);

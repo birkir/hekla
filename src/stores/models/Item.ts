@@ -57,6 +57,14 @@ const Item = types.model('Item', {
     return !!Account.voted.get(self.id);
   },
 
+  get isOwn() {
+    return self.by === Account.userId;
+  },
+
+  get isRead() {
+    return Account.read.get(self.id);
+  },
+
   // get isFlag() {
   //   return !!Account.flags.get(self.id);
   // },
@@ -99,17 +107,17 @@ const Item = types.model('Item', {
    * Fetch a single comment by id
    * @param id Item ID
    */
-  async fetchComment(id: string) {
+  async fetchComment(id: string, force = false) {
     try {
       // Fetch comment from backend (or cache)
-      const comment = await Items.fetchItem(id) as any;
+      const comment = await Items.fetchItem(id, { force }) as any;
       if (!comment) {
         return null;
       }
       // Update belongsTo list with parents
       comment.setBelongsTo([self.id, ...self.belongsTo]);
       // Fetch nested comments
-      await comment.fetchComments();
+      await comment.fetchComments({ force });
       return comment;
     } catch (err) {}
     return null;
@@ -118,17 +126,21 @@ const Item = types.model('Item', {
   /**
    * Fetch kids as comments
    */
-  fetchComments() {
+  fetchComments({ force } = { force: false }) {
     return flow(function* () {
       // Get list of comments to fetch
       const commentIds = self.kids.map(String);
       // Fetch them
-      const comments = yield Promise.all(commentIds.map(id => (self as any).fetchComment(id)));
+      const comments = yield Promise.all(commentIds.map(id => (self as any).fetchComment(id, force)));
       // Push their id's
       self.comments.replace(comments.filter(n => n && n.id).map(n => n.id));
       // Return comments
       return self.comments;
     })();
+  },
+
+  read() {
+    Account.setIsRead(self.id);
   },
 
   fetchParent() {
@@ -142,7 +154,7 @@ const Item = types.model('Item', {
   },
 
   refetch() {
-    flow(function* () {
+    return flow(function* () {
       const ref = db.ref(`v0/item/${self.id}`);
       ref.keepSynced(true);
 
