@@ -1,5 +1,5 @@
 import './utils/sentry';
-import { YellowBox, NetInfo, AsyncStorage } from 'react-native';
+import { YellowBox, NetInfo, AsyncStorage, UIManager, Platform } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens, startApp } from 'screens';
 import UI from 'stores/UI';
@@ -21,6 +21,11 @@ if (__DEV__) {
   // const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
   // (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
   // (global as any).FormData = originalFormData ? originalFormData : FormData;
+}
+
+// Enable LayoutAnimation on android
+if (Platform.OS === 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 // Register screens
