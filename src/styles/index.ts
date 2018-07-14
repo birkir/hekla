@@ -8,7 +8,7 @@ export const getVar = (name: string, fallback: string = undefined) => {
 };
 
 export const applyThemeOptions = (settings: any) => {
-  const { theme, isDarkTheme } = UI.settings.appearance;
+  const { isDarkTheme } = UI.settings.appearance;
 
   if (Platform.OS === 'ios') {
     set(settings, 'topBar.drawBehind', true);
@@ -42,6 +42,11 @@ export const applyThemeOptions = (settings: any) => {
         set(settings, 'bottomTab.textColor', '#808080');
       }
     }
+
+    // TODO: Read from theme: --navbar-background-color
+    //
+    // set(settings, 'topBar.background.color', getVar('--backdrop-color'));
+    // set(settings, 'bottomTabs.backgroundColor', getVar('--backdrop-color'));
 
     if (settings.bottomTab) {
       set(settings, 'bottomTab.selectedTextColor', getVar('--primary-color'));

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, LayoutAnimation } from 'react-native';
+import { View, FlatList, Text, LayoutAnimation, TouchableOpacity } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import { observable } from 'mobx';
@@ -11,6 +11,7 @@ import prettyNumber from 'utils/prettyNumber';
 import Header from './components/Header';
 import Empty from 'components/empty/Empty';
 import Loading from 'components/loading/Loading';
+import LoadMoreComments from 'components/load-more-comments/LoadMoreComments';
 import { theme, applyThemeOptions } from 'styles';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import CommentThread from 'components/comment-thread/CommentThread';
@@ -72,7 +73,7 @@ export default class StoryScreen extends React.Component<Props> {
       if (!UI.preview.active || (UI.preview.active && UI.settings.general.markReadOn3dTouch)) {
         this.story.read(true);
       }
-      await this.story.fetchComments({ force });
+      await this.story.fetchComments({ force, offset: 0 });
     }
 
     // Wait at least 990ms for new data to make loading
@@ -97,6 +98,12 @@ export default class StoryScreen extends React.Component<Props> {
     this.collapsedInView.set(comment.id, false);
     this.updateComments();
     LayoutAnimation.easeInEaseOut();
+  }
+
+  @autobind
+  async onMorePress({ item }: { item: IItemType }) {
+    await item.fetchComments({ count: 20 });
+    this.forceUpdate();
   }
 
   @autobind
@@ -136,6 +143,16 @@ export default class StoryScreen extends React.Component<Props> {
   renderItem({ item }: { item: any }) {
     if (!item) {
       return null;
+    }
+
+    if (item.type === 'more') {
+      return (
+        <LoadMoreComments
+          item={item.comment}
+          onPress={this.onMorePress}
+          hidden={this.collapsedInView.get(item.comment.id)}
+        />
+      );
     }
 
     if (item.type === 'comment') {

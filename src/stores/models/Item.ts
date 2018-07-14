@@ -10,6 +10,9 @@ import Account from '../Account';
 
 const entities = new XmlEntities();
 
+const MAX_LEVELS = 5;
+const ITEMS_PER_LEVEL = 5;
+
 /**
  * Item model
  */
@@ -31,6 +34,7 @@ const Item = types.model('Item', {
   metadata: types.maybe(Metadata),
   belongsTo: types.optional(types.array(types.string), []),
   comments: types.optional(types.array(types.late(() => ItemReference)), []),
+  offset: types.optional(types.number, 0),
   isPending: types.optional(types.boolean, false),
   isError: types.optional(types.boolean, false),
 
@@ -63,6 +67,10 @@ const Item = types.model('Item', {
 
   get isRead() {
     return Account.read.get(self.id);
+  },
+
+  get unfetched() {
+    return Math.max(0, self.kids.length - self.offset);
   },
 
   // get isFlag() {
@@ -98,6 +106,7 @@ const Item = types.model('Item', {
           ...comment.flatComments,
         ];
       }),
+      ...((self as any).unfetched > 0 ? [{ comment: self, id: `More_${self.id}`, type: 'more' }] : []),
     ]);
   },
 }))
@@ -107,17 +116,19 @@ const Item = types.model('Item', {
    * Fetch a single comment by id
    * @param id Item ID
    */
-  async fetchComment(id: string, force = false) {
+  async fetchComment(id: string, opts = { force: undefined, index: 0 }) {
     try {
       // Fetch comment from backend (or cache)
-      const comment = await Items.fetchItem(id, { force }) as any;
+      const comment = await Items.fetchItem(id, { force: opts.force }) as any;
       if (!comment) {
         return null;
       }
       // Update belongsTo list with parents
       comment.setBelongsTo([self.id, ...self.belongsTo]);
       // Fetch nested comments
-      await comment.fetchComments({ force });
+      if (opts.index < (MAX_LEVELS - 1 - self.level)) {
+        await comment.fetchComments(opts);
+      }
       return comment;
     } catch (err) {}
     return null;
@@ -126,14 +137,23 @@ const Item = types.model('Item', {
   /**
    * Fetch kids as comments
    */
-  fetchComments({ force } = { force: false }) {
+  fetchComments({ force = false, offset = self.offset } = {}) {
     return flow(function* () {
+      const end = offset > 0 ? 20 : (MAX_LEVELS - 1 - self.level) * ITEMS_PER_LEVEL;
+      const limit = Math.min(20, Math.max(1, end));
       // Get list of comments to fetch
-      const commentIds = self.kids.map(String);
+      const commentIds = self.kids.slice(offset, offset + limit).map(String);
       // Fetch them
-      const comments = yield Promise.all(commentIds.map(id => (self as any).fetchComment(id, force)));
+      const comments = yield Promise.all(commentIds.map((id, index) =>
+        (self as any).fetchComment(id, { force, offset, index })));
+      const addIds = comments.filter(n => n && n.id).map(n => n.id);
       // Push their id's
-      self.comments.replace(comments.filter(n => n && n.id).map(n => n.id));
+      if (offset === 0) {
+        self.comments.replace(addIds);
+      } else {
+        self.comments.push(...addIds.filter(id => self.comments.indexOf(id) === -1));
+      }
+      self.offset = (offset + limit);
       // Return comments
       return self.comments;
     })();

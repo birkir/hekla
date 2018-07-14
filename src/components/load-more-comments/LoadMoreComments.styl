@@ -1,18 +1,60 @@
-@import '../comment/Comment.styl';
+$gutter = 8px;
+$colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
+
+.host {
+  position: relative;
+
+  background-color: var(--content-bg-color);
+}
+
+.border {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 48px;
+}
 
 .text {
   flex: 1;
 
+  padding-left: 16px;
+
   font-family: 'System';
   font-size: 14px;
   font-style: italic;
-  color: rgb(0, 122, 255);
+  color: var(--primary-color);
 }
 
 .container {
   flex-direction: row;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .icon__more {
   margin-right: 0px;
+}
+
+for color, i in $colors {
+  .level{i} {
+    margin-left: i * 16px;
+
+    border-left-width: 2px;
+    border-left-color: color;
+  }
+
+  .divider{i} {
+    position: absolute;
+    top: 0px;
+    left: i * 16px;
+    right: 0px;
+    height: var(--hairline-width);
+    background-color: var(--content-divider-color);
+  }
+ }
+
+.level0 {
+  border-left-color: transparent;
 }

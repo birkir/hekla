@@ -43,6 +43,9 @@ const Appearance = types
   })
   .views(self => ({
     get isDarkTheme() {
+      if (self.theme === 'solarizedDark') {
+        return true;
+      }
       if (self.theme === 'dark') {
         return true;
       }

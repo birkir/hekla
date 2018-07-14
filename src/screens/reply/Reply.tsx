@@ -18,6 +18,7 @@ interface Props {
 export default class ReplyScreen extends React.Component<Props> {
 
   private keyboardWillChangeFrameHandler;
+  private timer;
 
   static get options() {
     return applyThemeOptions({
@@ -51,6 +52,7 @@ export default class ReplyScreen extends React.Component<Props> {
     commentHeight: 0,
     screenHeight: Dimensions.get('window').height,
     isLoading: false,
+    isEmpty: true,
   };
 
   componentDidAppear() {
@@ -69,7 +71,9 @@ export default class ReplyScreen extends React.Component<Props> {
 
   @autobind
   updateOptions() {
-    Navigation.mergeOptions(this.props.componentId, ReplyScreen.options);
+    const opts = ReplyScreen.options;
+    opts.topBar.rightButtons[0].color = this.state.text.length > 0 ? undefined : '#ccc';
+    Navigation.mergeOptions(this.props.componentId, opts);
   }
 
   @autobind
@@ -114,7 +118,7 @@ export default class ReplyScreen extends React.Component<Props> {
     });
     this.setState({
       keyboardOpen: height > 0,
-      keyboardHeight: Math.max(0, height),
+      keyboardHeight: Math.max(0, height + 48), // Make room for undetectable keyboard attachments
     });
   }
 
@@ -132,34 +136,21 @@ export default class ReplyScreen extends React.Component<Props> {
   @autobind
   onTextInputSizeChange(e) {
     this.setState({
-      textHeight: e.nativeEvent.contentSize.height + 20,
+      textHeight: e.nativeEvent.contentSize.height + 33,
     });
   }
 
   @autobind
   onTextChange(text) {
-    if (this.state.text === '' || text === '') {
-      const active = text !== '';
-      Navigation.mergeOptions(this.props.componentId, {
-        topBar: {
-          rightButtons: [{
-            id: 'post',
-            title: 'Post',
-            fontFamily: 'Helvetica-Bold',
-            color: active ? undefined : '#CCC',
-          }],
-        },
-      });
-    }
-
-    this.setState({
-      text,
+    clearTimeout(this.timer);
+    this.setState({ text }, () => {
+      this.timer = setTimeout(this.updateOptions, text.length < 2 ? 0 : 2000);
     });
   }
 
   render() {
     const { item } = this.state;
-    const { children, testID } = this.props;
+    const { testID } = this.props;
     const { screenHeight, commentHeight, keyboardHeight, textHeight } = this.state;
     const minHeight = Math.max(125, screenHeight - commentHeight - keyboardHeight);
 
@@ -172,7 +163,7 @@ export default class ReplyScreen extends React.Component<Props> {
     }
 
     return (
-      <View style={styles.flex} onLayout={this.onHostLayout}>
+      <View style={styles.flex} onLayout={this.onHostLayout} testID={testID}>
         <ScrollView style={styles.flex}>
           <TextInput
             style={[styles.input, { minHeight, height: textHeight }]}

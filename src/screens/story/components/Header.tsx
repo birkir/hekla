@@ -66,7 +66,7 @@ export default class StoryHeader extends React.Component<Props> {
 
     const options = [{
       id: 'hackernews',
-      icon: require('assets/icons/32/safari-line.png'),
+      icon: require('assets/icons/32/hacker-news.png'),
       title: 'Hackernews Link',
       titleTextAlignment: 0,
     }, {

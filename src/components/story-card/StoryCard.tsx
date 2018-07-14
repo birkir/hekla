@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Image, Text, TouchableHighlight, TouchableOpacity, findNodeHandle, Platform } from 'react-native';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
+import UI from 'stores/UI';
 import FormatText from 'components/format-text/FormatText';
 import StoryRow from 'components/story-row/StoryRow';
 import MetaLink from 'components/meta-link/MetaLink';
@@ -54,7 +55,7 @@ export default class StoryCard extends React.Component<Props> {
         underlayColor={getVar('--content-bg-active-color', 'gray')}
       >
         <View>
-          {!!title && <Text style={[styles.title, item.isRead && styles.read]}>{title}</Text>}
+          {!!title && <Text style={[styles.title, UI.font(17), item.isRead && styles.read]}>{title}</Text>}
           <MetaLink
             {...metadata}
             url={url}
