@@ -79,9 +79,14 @@ for color, i in $colors {
 
 .icon {
   &__more {
-    tint-color: #AAA;
+    tint-color: var(--content-divider-color);
 
+    margin-top: 2px;
     margin-right: 8px;
+  }
+
+  &__expand {
+    tint-color: var(--content-text-lighter-color);
   }
 }
 

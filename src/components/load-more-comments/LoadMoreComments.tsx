@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, LayoutAnimation, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableHighlight } from 'react-native';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
-import { theme } from 'styles';
+import UI from 'stores/UI';
+import { theme, getVar } from 'styles';
+import { observer } from 'mobx-react';
 const styles = theme(require('./LoadMoreComments.styl'));
 
 type IItemType = typeof Item.Type;
@@ -15,7 +17,8 @@ interface Props {
   testID?: string;
 }
 
-export default class LoadMoreComments extends React.PureComponent<Props> {
+@observer
+export default class LoadMoreComments extends React.Component<Props> {
 
   @autobind
   onPress() {
@@ -35,11 +38,11 @@ export default class LoadMoreComments extends React.PureComponent<Props> {
         <TouchableHighlight
           onPress={this.onPress}
           activeOpacity={1}
-          underlayColor="#F2F1F6"
+          underlayColor={getVar('--content-bg-active-color')}
           style={styles.content}
         >
           <View style={[styles.container, styles[`level${item.level}`]]}>
-            <Text style={styles.text}>{total} more {total === 1 ? 'reply' : 'replies'} {item.by}</Text>
+            <Text style={[styles.text, UI.font(14)]}>{total} more {total === 1 ? 'reply' : 'replies'}</Text>
             <Image source={require('assets/icons/16/chevron-down.png')} style={styles.icon__more} />
           </View>
         </TouchableHighlight>

@@ -1,5 +1,5 @@
 import { types, flow, applySnapshot } from 'mobx-state-tree';
-import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage } from 'react-native';
+import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage, Linking } from 'react-native';
 import { CustomTabs } from 'react-native-custom-tabs';
 import Settings from './models/Settings';
 import prettyNumber from 'utils/prettyNumber';
@@ -80,12 +80,24 @@ const UI = types
     },
 
     openURL(url: string, reactTag: number = -1) {
+      const { browserOpenIn, browserUseReaderMode } = UI.settings.general;
       if (Platform.OS === 'ios') {
-        return NativeModules.RNUeno.openSafari(
-          self.componentId,
-          url,
-          reactTag,
-        );
+        if (browserOpenIn === 'inApp') {
+          return NativeModules.RNHekla.openSafari(
+            self.componentId,
+            url,
+            browserUseReaderMode,
+            reactTag,
+          );
+        }
+
+        if (browserOpenIn === 'chrome') {
+          return CustomTabs.openURL(url);
+        }
+
+        return Linking.openURL(url)
+          .then(() => null)
+          .catch(() => null);
       }
       if (Platform.OS === 'android' && reactTag === -1) {
         CustomTabs.openURL(url, {

@@ -46,7 +46,9 @@ export default class StoriesScreen extends React.Component<Props> {
   limit = 25;
 
   @observable
-  layout = {} as Layout;
+  layout = {
+    bottomTabsHeight: -200,
+  } as Layout;
 
   static get options() {
     return applyThemeOptions({
@@ -54,6 +56,7 @@ export default class StoriesScreen extends React.Component<Props> {
         title: {
           text: String(Stories.prettyType),
         },
+        hideOnScroll: UI.settings.general.hideBarsOnScroll,
         rightButtons: [{
           id: 'change',
           title: 'Change',
@@ -146,7 +149,7 @@ export default class StoriesScreen extends React.Component<Props> {
     };
 
     if (Platform.OS === 'ios') {
-      bars = await NativeModules.RNUeno.getHeights(this.props.componentId);
+      bars = await NativeModules.RNHekla.getHeights(this.props.componentId);
     }
 
     const { width, height } = Dimensions.get('window');

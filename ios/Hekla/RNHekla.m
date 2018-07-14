@@ -3,7 +3,7 @@
 #import "RNNElementFinder.h"
 #import "RNNElementView.h"
 #import "RNNAVPlayer.h"
-#import "RNUeno.h"
+#import "RNHekla.h"
 
 @import SafariServices;
 
@@ -15,7 +15,7 @@
   #endif
 #endif
 
-@implementation RNUeno
+@implementation RNHekla
 
 - (dispatch_queue_t) methodQueue
 {
@@ -72,9 +72,9 @@ RCT_EXPORT_METHOD(openVideoPlayer:(NSString *)componentId url:(NSString *)url el
  }
 }
 
-RCT_EXPORT_METHOD(openSafari:(NSString *)componentId url:(NSString *)url reactTag:(nonnull NSNumber *)reactTag) {
+RCT_EXPORT_METHOD(openSafari:(NSString *)componentId url:(NSString *)url readerMode:(nonnull NSNumber *)readerMode reactTag:(nonnull NSNumber *)reactTag) {
  UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
- SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:[[NSURL alloc] initWithString:url]];
+  SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:[[NSURL alloc] initWithString:url] entersReaderIfAvailable:[readerMode boolValue]];
  (void)safariViewController.view;
  if ([reactTag intValue] >= 0) {
    if ([vc isKindOfClass:[RNNRootViewController class]]) {

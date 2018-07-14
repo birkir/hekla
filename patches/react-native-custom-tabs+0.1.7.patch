@@ -21,6 +21,6 @@ new file mode 100644
 +  s.header_dir          = 'ios'
 +  s.preserve_paths      = "ios/**"
 +  s.dependency      'React'
-+  s.source_files  = "ios/**/*.{h,m}"
++  s.source_files  = "ReactNativeCustomTabs/*.{h,m}"
 +  s.libraries     = "stdc++"
 +end

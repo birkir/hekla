@@ -34,8 +34,11 @@ export default class StoryScreen extends React.Component<Props> {
 
   static get options() {
     return applyThemeOptions({
-      title: {
-        text: '0 Comments',
+      topBar: {
+        title: {
+          text: '0 Comments',
+        },
+        hideOnScroll: UI.settings.general.hideBarsOnScroll,
       },
     });
   }
@@ -150,7 +153,7 @@ export default class StoryScreen extends React.Component<Props> {
         <LoadMoreComments
           item={item.comment}
           onPress={this.onMorePress}
-          hidden={this.collapsedInView.get(item.comment.id)}
+          hidden={this.collapsedInView.get(item.comment.id) || this.hiddenInView.has(item.comment)}
         />
       );
     }

@@ -75,6 +75,7 @@ export default class AccountScreen extends React.Component<Props> {
 
   onLogout() {
     Account.logout();
+    this.updateOptions();
   }
 
   @autobind

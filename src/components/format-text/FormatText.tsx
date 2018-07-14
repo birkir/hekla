@@ -2,7 +2,10 @@ import * as React from 'react';
 import { View, Text, TextStyle } from 'react-native';
 import { autobind } from 'core-decorators';
 import MetaLink from 'components/meta-link/MetaLink';
-const styles = require('./FormatText.styl');
+import Link from './Link';
+import { theme } from 'styles';
+import { observer } from 'mobx-react';
+const styles = theme(require('./FormatText.styl'));
 
 interface Props {
   key?: string;
@@ -14,7 +17,8 @@ interface Props {
   testID?: string;
 }
 
-export default class FormatText extends React.PureComponent<Props> {
+@observer
+export default class FormatText extends React.Component<Props> {
 
   @autobind
   mapTextLine(line: string, index: number, lines: string[]) {
@@ -110,7 +114,7 @@ export default class FormatText extends React.PureComponent<Props> {
       }
 
       return (
-        <Text style={styles.link} key={index}>{isLink[2]}{' '}</Text>
+        <Link key={index}>{isLink[2]}{' '}</Link>
       );
     }
 

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, TextInput, ReturnKeyTypeOptions } from 'react-native';
-const styles = require('./Input.styl');
+import { theme, getVar } from 'styles';
+import { observer } from 'mobx-react';
+const styles = theme(require('./Input.styl'));
 
 interface Props {
   icon?: any;
@@ -13,7 +15,8 @@ interface Props {
   innerRef?: (ref: any) => void;
 }
 
-export default class Input extends React.PureComponent<Props> {
+@observer
+export default class Input extends React.Component<Props> {
 
   render() {
     const { placeholder, returnKeyType, innerRef, ...rest } = this.props;
@@ -25,6 +28,7 @@ export default class Input extends React.PureComponent<Props> {
           placeholder={placeholder}
           returnKeyType={returnKeyType}
           underlineColorAndroid="transparent"
+          placeholderTextColor={getVar('--content-text-lighter-color', 'black')}
           blurOnSubmit={false}
           autoFocus={false}
           autoCorrect={false}

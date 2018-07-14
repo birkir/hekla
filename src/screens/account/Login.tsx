@@ -6,7 +6,8 @@ import Button from 'components/button/Button';
 import { autobind } from 'core-decorators';
 import Account from 'stores/Account';
 import UI from 'stores/UI';
-const styles = require('./Login.styl');
+import { theme, getVar } from 'styles';
+const styles = theme(require('./Login.styl'));
 
 interface Props {
   testID?: string;

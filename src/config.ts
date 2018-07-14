@@ -6,7 +6,7 @@ import configEnvJs from './config.env.js'; // Generated module
 export default {
   ...config,
   ...configEnvJs,
-  ...NativeModules.RNUeno,
+  ...NativeModules.RNHekla,
   __native: config,
   __js: configEnvJs,
 };

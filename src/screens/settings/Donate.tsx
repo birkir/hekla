@@ -18,11 +18,16 @@ interface Props {
 
 const SKUs = Platform.select({
   ios: [
-    '1001',
+    'tip01',
+    'tip02',
+    'tip03',
+    'tip04',
   ],
   android: [
-    'android.test.purchased',
-    'android.test.canceled',
+    'tip01',
+    'tip02',
+    'tip03',
+    'tip04',
   ],
 });
 

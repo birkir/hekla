@@ -40,6 +40,7 @@ export default class Button extends React.Component<Props> {
     }
 
     const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+    console.log(styles);
 
     return (
       <Touchable
