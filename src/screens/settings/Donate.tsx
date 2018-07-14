@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, Platform, Text } from 'react-native';
+import { ScrollView, Platform, Text, Alert } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { autobind } from 'core-decorators';
@@ -73,12 +73,26 @@ export default class SettingsDonateScreen extends React.Component<Props> {
     }
   }
 
+  async onProductPress({ item }) {
+    try {
+      const success = await RNIap.buyProduct(item.productId);
+      if (success) {
+        Alert.alert('Thank you', 'Your support is greatly appreciated');
+      } else {
+        Alert.alert('Could not complete transaction');
+      }
+    } catch (err) {
+      Alert.alert('Something went wrong', err.message);
+    }
+  }
+
   renderProduct(product) {
     return (
       <Cell
-        title={`${product.productId} - ${product.title}`}
-        subtitle={product.description}
+        item={product}
+        title={`${product.title.replace('(Hekla)', '')}`}
         value={product.localizedPrice}
+        onPress={this.onProductPress}
       />
     );
   }

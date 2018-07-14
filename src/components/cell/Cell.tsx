@@ -28,6 +28,7 @@ interface Props {
   disabled?: boolean;
 
   testID?: string;
+  item?: any;
 }
 
 const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableHighlight;
