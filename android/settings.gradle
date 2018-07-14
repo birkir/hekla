@@ -1,7 +1,5 @@
 rootProject.name = 'Hekla'
 
-// Ensure build
-
 include ':app'
 
 include ':react-native-rate'
