@@ -115,7 +115,12 @@ export default class StoryHeader extends React.Component<Props> {
             large={true}
           />
           {!!text && (
-            <FormatText>
+            <FormatText
+              noLinks={true}
+              noFormat={true}
+              numberOfLines={10}
+              style={styles.summary}
+            >
               {prettyText}
             </FormatText>
           )}

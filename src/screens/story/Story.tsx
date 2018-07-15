@@ -4,6 +4,7 @@ import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
+import set from 'lodash/set';
 import Item from 'stores/models/Item';
 import Items from 'stores/Items';
 import UI from 'stores/UI';
@@ -35,9 +36,6 @@ export default class StoryScreen extends React.Component<Props> {
   static get options() {
     return applyThemeOptions({
       topBar: {
-        title: {
-          text: '0 Comments',
-        },
         hideOnScroll: UI.settings.general.hideBarsOnScroll,
       },
     });
@@ -132,7 +130,7 @@ export default class StoryScreen extends React.Component<Props> {
   async updateOptions() {
     const opts = StoryScreen.options;
     if (this.story) {
-      opts.title.text = prettyNumber(this.story.descendants || 0, 'Comments');
+      set(opts, 'topBar.title.text', prettyNumber(this.story.descendants || 0, 'Comments'));
     }
     Navigation.mergeOptions(this.props.componentId, opts);
   }

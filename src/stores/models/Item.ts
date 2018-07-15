@@ -209,15 +209,20 @@ const Item = types.model('Item', {
     self.isError = flag;
   },
 
+  incrementScore(value) {
+    self.score += value;
+  },
+
   vote() {
     // Represent the correct UI action.
     Account.toggleVote(self.id);
 
     // Vote on Hacker News service
-    Hackernews.vote(self.id, self.isVoted).then((flag: boolean) =>
+    Hackernews.vote(self.id, self.isVoted).then((flag: boolean) => {
       // Sync the result (may end up conflicting the user action).
       Account.toggleVote(self.id, flag),
-    );
+      (self as any).incrementScore((flag ? 1 : -1));
+    });
   },
 
   flag() {
