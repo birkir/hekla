@@ -91,8 +91,6 @@ export default class StoriesScreen extends React.Component<Props> {
       }
     });
 
-    console.log(this);
-
     this.dispose = Navigation.events().registerNativeEventListener((name, params) => {
       if (name === 'bottomTabSelected') {
         const { selectedTabIndex, unselectedTabIndex } = params;
@@ -105,7 +103,7 @@ export default class StoriesScreen extends React.Component<Props> {
 
   componentWillUnmount() {
     Stories.dispose();
-    this.dispose();
+    this.dispose.remove();
   }
 
   onNavigationButtonPressed(buttonId) {
