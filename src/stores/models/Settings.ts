@@ -40,6 +40,7 @@ const Appearance = types
     compactVoteButton: types.optional(CompactVoteButton, 'left'),
     commentsUseColorScheme: types.optional(types.boolean, true),
     commentsShowMetaLinks: types.optional(types.boolean, true),
+    iPadSidebarEnabled: types.optional(types.boolean, true),
   })
   .views(self => ({
     get isDarkTheme() {

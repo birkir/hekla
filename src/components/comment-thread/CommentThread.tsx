@@ -84,16 +84,11 @@ export default class CommentThread extends React.PureComponent<Props, State> {
     setTimeout(() => replyScreen(this.props.item.id), 225);
   }
 
-  componentWillUpdate() {
-    // LayoutAnimation.easeInEaseOut();
-  }
-
   render() {
     const { isActionLeftActive, isActionRightActive } = this.state;
     const { hidden, collapsed, depth, item } = this.props;
-    const { ago, by, isUserVote } = item;
 
-    if (!by || hidden) {
+    if (!item.by || hidden) {
       return null;
     }
 
@@ -109,6 +104,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
             styles.action,
             styles.action__left,
             isActionLeftActive && styles.action__left__active,
+            hidden ? { opacity: 0, backgroundColor: 'transparent' } : {},
             {
               width: UI.width,
               paddingLeft: dragDistance + actionWidth,
@@ -129,7 +125,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
             styles.action,
             styles.action__right,
             isActionRightActive && styles.action__right__active,
-            hidden ? { opacity: 0 } : {},
+            hidden ? { opacity: 0, backgroundColor: 'transparent' } : {},
             {
               width: UI.width,
               paddingRight: actionWidth,

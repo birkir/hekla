@@ -18,6 +18,7 @@ import User from './user/User';
 import UserSubmissions from './user/Submissions';
 import UserComments from './user/Comments';
 import UserFavorites from './user/Favorites';
+import IPad from './misc/IPad';
 import UI from '../stores/UI';
 import Item from '../stores/models/Item';
 import prettyNumber from 'utils/prettyNumber';
@@ -41,6 +42,7 @@ export const USER_SCREEN = 'hekla.UserScreen';
 export const USER_SUBMISSIONS_SCREEN = 'hekla.UserSubmissionsScreen';
 export const USER_COMMENTS_SCREEN = 'hekla.UserCommentsScreen';
 export const USER_FAVORITES_SCREEN = 'hekla.UserFavoritesScreen';
+export const IPAD_SCREEN = 'hekla.IPadScreen';
 export const TOP_BAR_SEARCH = 'hekla.TopBarSearch';
 
 export const Screens = new Map();
@@ -61,15 +63,22 @@ Screens.set(USER_SCREEN, User);
 Screens.set(USER_SUBMISSIONS_SCREEN, UserSubmissions);
 Screens.set(USER_COMMENTS_SCREEN, UserComments);
 Screens.set(USER_FAVORITES_SCREEN, UserFavorites);
+Screens.set(IPAD_SCREEN, IPad);
 Screens.set(TOP_BAR_SEARCH, TopBarSearch);
 
 export const startApp = () => {
   StatusBar.setBarStyle('dark-content', true);
+  const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
 
   const tabs = [
     {
       stack: {
-        children: [{
+        id: 'STORY_SCREEN',
+        children: isSplitView ? [{
+          component: {
+            name: IPAD_SCREEN,
+          },
+        }] : [{
           component: {
             name: STORIES_SCREEN,
           },
@@ -79,6 +88,8 @@ export const startApp = () => {
             text: 'Stories',
             testID: 'STORIES_TAB',
             icon: require('assets/icons/25/stories.png'),
+            selectedIconColor: 'red',
+            selectedTextColor: 'red',
           },
         },
       },
@@ -131,7 +142,7 @@ export const startApp = () => {
     },
   ];
 
-  if (UI.isIpad) {
+  if (isSplitView) {
     return Navigation.setRoot({
       root: {
         splitView: {
@@ -150,7 +161,7 @@ export const startApp = () => {
           },
           detail: {
             bottomTabs: {
-              children: tabs.slice(1),
+              children: tabs,
             },
           },
         },
@@ -242,11 +253,11 @@ export const accountVotedScreen = (userId: string) => Navigation.push(UI.compone
   },
 });
 
-export const storyScreen = (story: IItemType | string, reactTag?: number) => {
+export const storyScreen = async (story: IItemType | string, reactTag?: number) => {
+  const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
   const id = typeof story === 'object' ? story.id : story;
   const comments = typeof story === 'object' ? story.descendants || 0 : null;
-
-  return Navigation.push(UI.componentId, {
+  const opts = {
     component: {
       name: STORY_SCREEN,
       passProps: {
@@ -264,5 +275,14 @@ export const storyScreen = (story: IItemType | string, reactTag?: number) => {
         } : undefined,
       },
     },
-  });
+  } as any;
+
+  if (isSplitView) {
+    opts.component.options.animate = false;
+    await Navigation.popToRoot(UI.iPadComponentId);
+    await setTimeout(() => null, 100);
+    return Navigation.push(UI.iPadComponentId, opts);
+  }
+
+  return Navigation.push(UI.componentId, opts);
 };

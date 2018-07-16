@@ -38,6 +38,13 @@ export default class StoryScreen extends React.Component<Props> {
       topBar: {
         hideOnScroll: UI.settings.general.hideBarsOnScroll,
       },
+      // bottomTab: {
+      //   text: 'Stories',
+      //   testID: 'STORIES_TAB',
+      //   icon: require('assets/icons/25/stories.png'),
+      //   selectedIconColor: 'red',
+      //   selectedTextColor: 'red',
+      // },
     });
   }
 
@@ -56,7 +63,7 @@ export default class StoryScreen extends React.Component<Props> {
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
-    this.updateOptions();
+    // this.updateOptions();
   }
 
   componentDidMount() {

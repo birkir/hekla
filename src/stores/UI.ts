@@ -1,15 +1,18 @@
 import { types, flow, applySnapshot } from 'mobx-state-tree';
 import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage, Linking } from 'react-native';
 import { CustomTabs } from 'react-native-custom-tabs';
+import CodePush from 'react-native-code-push';
 import Settings from './models/Settings';
 import prettyNumber from 'utils/prettyNumber';
 import Stories from './Stories';
+import { IPAD_SCREEN } from 'screens';
 
 const { width, height } = Dimensions.get('window');
 
 const UI = types
   .model('UI', {
     componentId: types.maybe(types.string),
+    iPadComponentId: types.maybe(types.string),
     settings: types.optional(Settings, {}),
     width: types.optional(types.number, width),
     height: types.optional(types.number, height),
@@ -44,8 +47,11 @@ const UI = types
   }))
   .actions(self => ({
 
-    setComponentId(componentId: string) {
+    setComponentId(componentId: string, componentName?: string) {
       self.componentId = componentId;
+      if (componentName === IPAD_SCREEN) {
+        self.iPadComponentId = componentId;
+      }
     },
 
     setPreview(preview) {
@@ -107,6 +113,10 @@ const UI = types
           enableDefaultShare: true,
         });
       }
+    },
+
+    restartApp() {
+      return CodePush.restartApp(false);
     },
 
     // Apply current settings to all their counter-parts
