@@ -28,7 +28,6 @@
 
   if ([[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"]] objectForKey:@"GOOGLE_APP_ID"]) {
     [FIRApp configure];
-    [FIRConfiguration.sharedInstance setLoggerLevel:FIRLoggerLevelMax];
     [FIRDatabase database].persistenceEnabled = YES;
     NSLog(@"Firebase initialized");
   } else {

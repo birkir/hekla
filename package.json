@@ -32,8 +32,6 @@
     "prop-types": "15.6.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
-    "react-native-bottom-action-sheet": "0.0.16",
-    "react-native-cheerio": "1.0.0-rc.4",
     "react-native-code-push": "5.3.5",
     "react-native-config": "0.11.5",
     "react-native-cookies": "^3.3.0",
@@ -48,10 +46,7 @@
     "react-native-navigation": "2.0.2394",
     "react-native-progress": "3.5.0",
     "react-native-rate": "1.0.9",
-    "react-native-safari-view": "2.1.0",
-    "react-native-search-bar": "3.4.2",
     "react-native-sentry": "0.38.1",
-    "react-native-vector-icons": "4.6.0",
     "react-native-version-number": "0.3.4"
   },
   "devDependencies": {

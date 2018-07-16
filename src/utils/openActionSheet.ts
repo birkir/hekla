@@ -1,28 +1,10 @@
 import { ActionSheetIOS, Platform } from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
-import RNBottomActionSheet from 'react-native-bottom-action-sheet';
 import DialogAndroid from 'react-native-dialogs';
 
 export default ({ options, title = undefined, message = undefined, selectedId = undefined, sheet = false, cancel = null }, callback) => {
 
   if (Platform.OS === 'android') {
-    if (sheet) {
-      return RNBottomActionSheet.SheetView.Show({
-        title,
-        items: options.map((item: any) => {
-          return {
-            value: item.id,
-            title: item.title,
-            subTitle: item.subtitle,
-            icon: item.materialIcon ? { props: { family: 'MaterialCommunityIcons', name: item.materialIcon, color: '#000000', size: 24 } } : undefined,
-          };
-        }),
-        theme: 'light',
-        selection: options.findIndex(item => item.id === selectedId),
-        onSelection: (index, value) => callback({ id: value }),
-      });
-    }
-
     return DialogAndroid.showPicker(title, null, {
       selectedId,
       // positiveText: null,

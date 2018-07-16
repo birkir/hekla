@@ -1,7 +1,7 @@
 import './utils/sentry';
 import { YellowBox, NetInfo, AsyncStorage, UIManager, Platform } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { Screens, startApp, STORIES_SCREEN } from 'screens';
+import { Screens, startApp } from 'screens';
 import UI from 'stores/UI';
 import { db } from 'utils/firebase';
 import { onSnapshot } from 'mobx-state-tree';

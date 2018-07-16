@@ -1,6 +1,5 @@
 import { Navigation } from 'react-native-navigation';
 import { StatusBar } from 'react-native';
-import TopBarSearch from '../components/top-bar-search/TopBarSearch';
 import Stories from './stories/Stories';
 import Story from './story/Story';
 import Search from './search/Search';
@@ -45,7 +44,6 @@ export const USER_SUBMISSIONS_SCREEN = 'hekla.UserSubmissionsScreen';
 export const USER_COMMENTS_SCREEN = 'hekla.UserCommentsScreen';
 export const USER_FAVORITES_SCREEN = 'hekla.UserFavoritesScreen';
 export const IPAD_SCREEN = 'hekla.IPadScreen';
-export const TOP_BAR_SEARCH = 'hekla.TopBarSearch';
 
 export const Screens = new Map();
 Screens.set(STORIES_SCREEN, Stories);
@@ -67,7 +65,6 @@ Screens.set(USER_SUBMISSIONS_SCREEN, UserSubmissions);
 Screens.set(USER_COMMENTS_SCREEN, UserComments);
 Screens.set(USER_FAVORITES_SCREEN, UserFavorites);
 Screens.set(IPAD_SCREEN, IPad);
-Screens.set(TOP_BAR_SEARCH, TopBarSearch);
 
 export const startApp = () => {
   StatusBar.setBarStyle('dark-content', true);

@@ -8,17 +8,18 @@ target 'Hekla' do
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
   pod 'Interactable', :path => '../node_modules/react-native-interactable'
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
-  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies/ios'
-  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
-  pod 'ReactNativeNavigation', :path => '../node_modules/react-native-navigation'
-  pod 'ReactNativeSearchBar', :path => '../node_modules/react-native-search-bar'
+
+  pod 'RNIap', :path => '../node_modules/react-native-iap'
+  pod 'RNRate', :path => '../node_modules/react-native-rate/ios'
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios/RNFirebase.podspec'
   pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
   pod 'RNReactNativeHapticFeedback', :path => '../node_modules/react-native-haptic-feedback'
+  pod 'ReactNativeNavigation', :path => '../node_modules/react-native-navigation'
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
-  pod 'RNIap', :path => '../node_modules/react-native-iap'
-  pod 'RNRate', :path => '../node_modules/react-native-rate/ios'
+
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies/ios'
+  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
   pod 'react-native-custom-tabs', :path => '../node_modules/react-native-custom-tabs/ios'
   pod 'react-native-version-number', :path => '../node_modules/react-native-version-number'
 
