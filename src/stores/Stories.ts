@@ -24,7 +24,7 @@ const Stories = types
     // Keep ref available for disposal
     let ref;
 
-    const uniqById = (id: string) => !self.stories.find((s: any) => s.id === id);
+    const uniqById = (id: string) => !self.stories.find((s: any) => !!s && s.id === id);
 
     return {
       /**

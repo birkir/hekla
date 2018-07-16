@@ -38,13 +38,6 @@ export default class StoryScreen extends React.Component<Props> {
       topBar: {
         hideOnScroll: UI.settings.general.hideBarsOnScroll,
       },
-      // bottomTab: {
-      //   text: 'Stories',
-      //   testID: 'STORIES_TAB',
-      //   icon: require('assets/icons/25/stories.png'),
-      //   selectedIconColor: 'red',
-      //   selectedTextColor: 'red',
-      // },
     });
   }
 
@@ -63,7 +56,7 @@ export default class StoryScreen extends React.Component<Props> {
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
-    // this.updateOptions();
+    this.updateOptions();
   }
 
   componentDidMount() {
@@ -72,9 +65,11 @@ export default class StoryScreen extends React.Component<Props> {
 
   @autobind
   async fetch({ force } = { force: false }) {
+    console.log(this.props);
     const start = new Date().getTime();
     this.setState({ loading: 1 });
     this.story = await Items.fetchItem(this.props.id, { force }) as IItemType;
+    console.log(this.story);
     this.updateOptions();
     this.setState({ loading: 2 });
     if (this.story) {

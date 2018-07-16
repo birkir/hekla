@@ -41,7 +41,7 @@ const UI = types
     font(size: number, heading: boolean = false) {
       return {
         fontFamily: heading ? self.settings.appearance.fontFamilyHeading : self.settings.appearance.fontFamilyBody,
-        fontSize: size + self.settings.appearance.fontSize - 3,
+        fontSize: UI.settings.appearance.useSystemFontSize ? size : size + self.settings.appearance.fontSize - 3,
       };
     },
   }))

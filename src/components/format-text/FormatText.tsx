@@ -10,6 +10,7 @@ const styles = theme(require('./FormatText.styl'));
 interface Props {
   key?: string;
   children?: React.ReactNode;
+  allowFontScaling?: boolean;
   style?: TextStyle | TextStyle[];
   noLinks?: boolean;
   noFormat?: boolean;
@@ -119,7 +120,7 @@ export default class FormatText extends React.Component<Props> {
     }
 
     return (
-      <Text style={this.props.style} key={index}>
+      <Text style={this.props.style} key={index} allowFontScaling={this.props.allowFontScaling}>
         {part.trim()}{' '}
       </Text>
     );

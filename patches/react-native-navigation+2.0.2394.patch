@@ -52,7 +52,7 @@ patch-package
  
 --- a/node_modules/react-native-navigation/lib/ios/RNNCommandsHandler.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNCommandsHandler.m
-@@ -101,16 +101,12 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
+@@ -101,16 +101,28 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
  	RNNRootViewController *newVc = (RNNRootViewController *)[_controllerFactory createLayoutAndSaveToStore:layout];
  	UIViewController *fromVC = [_store findComponentForId:componentId];
  	
@@ -67,10 +67,26 @@ patch-package
 -			RNNElementFinder* elementFinder = [[RNNElementFinder alloc] initWithFromVC:vc];
 -			RNNElementView* elementView = [elementFinder findElementForId:newVc.options.preview.elementId];
 -
++            rootVc.previewCallback = ^(UIViewController *vcc) {
++                RNNRootViewController* rvc  = (RNNRootViewController*)vcc;
++                NSDictionary * params = @{ @"previewComponentId": newVc.componentId, @"componentId": rvc.componentId };
++                if (newVc.options.preview.commit) {
++                    [self->_eventEmitter sendOnNavigationEvent:@"previewCommit" params:params];
++                    [CATransaction begin];
++                    [CATransaction setCompletionBlock:^{
++                        [self->_eventEmitter sendOnNavigationCommandCompletion:push params:@{@"componentId": componentId}];
++                        completion();
++                    }];
++                    [rvc.navigationController pushViewController:newVc animated:YES];
++                    [CATransaction commit];
++                } else {
++                    [self->_eventEmitter sendOnNavigationEvent:@"previewDismissed" params:params];
++                }
++            };
  			CGSize size = CGSizeMake(rootVc.view.frame.size.width, rootVc.view.frame.size.height);
  			
  			if (newVc.options.preview.width) {
-@@ -125,7 +121,10 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
+@@ -125,7 +137,10 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
  				newVc.preferredContentSize = size;
  			}
  

@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text, Switch } from 'react-native';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import { Navigation } from 'react-native-navigation';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
+import SliderFontSize from 'components/slider-font-size/SliderFontSize';
 import UI from 'stores/UI';
 import { themes } from 'stores/enums/Theme';
 import { theme, applyThemeOptions } from 'styles';
@@ -44,14 +45,6 @@ export default class SettingsThemeScreen extends React.Component<Props> {
     UI.settings.setValue('appearance.theme', id);
   }
 
-  onFontFamilyHeadingPress() {
-    const options = (Object as any).entries(font).map(([id, title]) => ({ id, title }));
-
-    openActionSheet({ options, title: 'Headings Font', selectedId: UI.settings.appearance.fontFamilyHeading }, ({ id }) => {
-      UI.settings.setValue('appearance.fontFamilyHeading', id);
-    });
-  }
-
   onFontFamilyBodyPress() {
     const options = (Object as any).entries(font).map(([id, title]) => ({ id, title }));
 
@@ -60,20 +53,43 @@ export default class SettingsThemeScreen extends React.Component<Props> {
     });
   }
 
+  onSystemTextSizeChange(flag: boolean) {
+    UI.settings.setValue('appearance.useSystemFontSize', flag);
+  }
+
+  onFontSizeChange(size) {
+    UI.settings.setValue('appearance.fontSize', size);
+  }
+
   render() {
     const { testID } = this.props;
     return (
       <ScrollView style={styles.host} contentContainerStyle={styles.host__container} testID={testID}>
-        <CellGroup header="Font family">
+        <CellGroup header="Typography">
           <Cell
-            title="Headings"
-            value={formatFont(UI.settings.appearance.fontFamilyHeading)}
-            onPress={this.onFontFamilyHeadingPress}
+            title="Font family"
+            value={(
+              <Text style={UI.font(17)}>{formatFont(UI.settings.appearance.fontFamilyBody)}</Text>
+            )}
+            onPress={this.onFontFamilyBodyPress}
           />
           <Cell
-            title="Body"
-            value={formatFont(UI.settings.appearance.fontFamilyBody)}
-            onPress={this.onFontFamilyBodyPress}
+            title="Use System Text Size"
+            value={(
+              <Switch
+                value={UI.settings.appearance.useSystemFontSize}
+                onValueChange={this.onSystemTextSizeChange}
+              />
+            )}
+          />
+          <Cell
+            value={(
+              <SliderFontSize
+                value={UI.settings.appearance.fontSize}
+                onValueChange={this.onFontSizeChange}
+                disabled={UI.settings.appearance.useSystemFontSize}
+              />
+            )}
           />
         </CellGroup>
         <CellGroup header="Theme">

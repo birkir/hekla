@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, ScrollView, Alert } from 'react-native';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
+import CellIcon from 'components/cell/CellIcon';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import Loading from 'components/loading/Loading';
@@ -9,7 +10,7 @@ import Account from 'stores/Account';
 import { Navigation } from 'react-native-navigation';
 import prettyNumber from 'utils/prettyNumber';
 import { when } from 'mobx';
-import { theme, applyThemeOptions } from 'styles';
+import { theme, applyThemeOptions, getVar } from 'styles';
 import { userSubmissionsScreen, userCommentsScreen, userFavoritesScreen, accountVotedScreen, accountHiddenScreen } from 'screens';
 import Login from './Login';
 const styles = theme(require('./Account.styl'));
@@ -139,26 +140,61 @@ export default class AccountScreen extends React.Component<Props> {
         <CellGroup header={true}>
           <Cell
             title="Submissions"
+            left={
+              <CellIcon
+                source={require('assets/icons/32/submissions.png')}
+                tintColor={getVar('--primary-color')}
+                size={21}
+              />
+            }
             onPress={this.onSubmissionsPress}
             more={true}
           />
           <Cell
             title="Comments"
+            left={
+              <CellIcon
+                source={require('assets/icons/32/comments.png')}
+                tintColor={getVar('--primary-color')}
+                size={21}
+              />
+            }
             onPress={this.onCommentsPress}
             more={true}
           />
           <Cell
             title="Hidden"
+            left={
+              <CellIcon
+                source={require('assets/icons/32/hide.png')}
+                tintColor={getVar('--primary-color')}
+                size={24}
+              />
+            }
             onPress={this.onHiddenPress}
             more={true}
           />
           <Cell
             title="Voted"
+            left={
+              <CellIcon
+                source={require('assets/icons/32/arrow-up.png')}
+                tintColor={getVar('--primary-color')}
+                size={24}
+              />
+            }
             onPress={this.onVotedPress}
             more={true}
           />
           <Cell
             title="Favorites"
+            left={
+              <CellIcon
+                source={require('assets/icons/32/star.png')}
+                tintColor={getVar('--primary-color')}
+                size={21}
+              />
+            }
             onPress={this.onFavoritesPress}
             more={true}
           />

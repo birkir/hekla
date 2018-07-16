@@ -1,36 +1,35 @@
 import * as React from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { ScrollView, View, Text, Platform } from 'react-native';
 import { autobind } from 'core-decorators';
-import StoryCard from 'components/story-card/StoryCard';
-import Search from 'stores/Search';
-import Item from 'stores/models/Item';
-import Loading from 'components/loading/Loading';
 import { Navigation } from 'react-native-navigation';
 import UI from 'stores/UI';
+import Cell from 'components/cell/Cell';
+import CellIcon from 'components/cell/CellIcon';
+import CellGroup from 'components/cell/CellGroup';
+import Search from 'stores/Search';
+import SearchInput from 'components/search-input/SearchInput';
 import { observer } from 'mobx-react';
 import { theme, applyThemeOptions } from 'styles';
+import { storyScreen, userScreen, RESULT_SCREEN } from 'screens';
+import { observable } from 'mobx';
 const styles = theme(require('./Search.styl'));
 
 interface Props {
   componentId: string;
 }
 
-type IItemType = typeof Item.Type;
-
 @observer
 export default class SearchScreen extends React.Component<Props> {
-
-  private navigationHandler;
-  private listRef = React.createRef() as any;
-
-  static TAB_INDEX = 2;
 
   static get options() {
     return applyThemeOptions({
       topBar: {
-        component: {
-          name: 'hekla.TopBarSearch',
+        title: {
+          text: 'Search',
         },
+        searchBar: true,
+        searchBarHiddenWhenScrolling: false,
+        searchBarPlaceholder: 'Search Hacker News...',
       },
       bottomTab: {
         text: 'Search',
@@ -40,31 +39,49 @@ export default class SearchScreen extends React.Component<Props> {
     });
   }
 
-  state = {
-    query: null,
-    page: 0,
-    isKeyboardOpen: false,
-    isSearchFocused: false,
-  };
+  @observable
+  query = '';
+
+  @observable
+  isFocused = false;
+
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    Search.fetchTrending();
+  }
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
     this.updateOptions();
   }
 
-  componentWillMount() {
-    this.navigationHandler = Navigation.events().registerNativeEventListener((name, params) => {
-      if (name === 'bottomTabSelected') {
-        const { selectedTabIndex, unselectedTabIndex } = params;
-        if (selectedTabIndex === SearchScreen.TAB_INDEX && unselectedTabIndex === SearchScreen.TAB_INDEX) {
-          this.scrollToTop();
-        }
-      }
-    });
+  @autobind
+  onSearchBarUpdated(query: string, isFocused: boolean) {
+    this.query = query;
+    this.isFocused = isFocused;
   }
 
-  componentWillUnmount() {
-    this.navigationHandler.remove();
+  @autobind
+  onSearchChange(text: string) {
+    this.query = text;
+  }
+
+  @autobind
+  onSearchFocus() {
+    this.isFocused = true;
+  }
+
+  @autobind
+  onSearchBlur() {
+    this.isFocused = false;
+  }
+
+  @autobind
+  onSearchBarCancelPressed() {
+    this.isFocused = false;
   }
 
   @autobind
@@ -72,64 +89,122 @@ export default class SearchScreen extends React.Component<Props> {
     Navigation.mergeOptions(this.props.componentId, SearchScreen.options);
   }
 
-  scrollToTop() {
-    this.listRef.current.scrollToOffset({ offset: -100, animated: true });
+  @autobind
+  onSearchStoriesPress() {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: RESULT_SCREEN,
+        passProps: {
+          type: 'stories',
+          query: this.query,
+        },
+      },
+    });
   }
 
   @autobind
-  onEndReached(e) {
-    if (!Search.isLoading) {
-      Search.nextPage();
-    }
+  onSearchCommentsPress() {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: RESULT_SCREEN,
+        passProps: {
+          type: 'comments',
+          query: this.query,
+        },
+      },
+    });
   }
 
   @autobind
-  keyExtractor(item: IItemType, index: number) {
-    return `Item_${item.id}`;
+  onSearchAllPress() {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: RESULT_SCREEN,
+        passProps: {
+          query: this.query,
+        },
+      },
+    });
   }
 
   @autobind
-  renderStory({ item }: { item: IItemType }) {
-    if (item.type === 'story') {
-      return (
-        <StoryCard
-          key={item.id}
-          item={item}
-        />
-      );
-    }
+  onTrendingPress(e, { item }) {
+    return storyScreen(item.id);
+  }
 
-    if (item.type === 'comment') {
-      return null;
-      return (
-        <View>
-          <Text>Comment by {item.by}</Text>
-        </View>
-      );
-    }
+  @autobind
+  onUserPress() {
+    // TODO: Check if user exists
+    return userScreen(this.query.toLowerCase());
+  }
 
-    return null;
+  @autobind
+  renderTrending(item, index) {
+    return (
+      <Cell
+        key={item.id}
+        item={item}
+        left={<Text style={styles.number}>{index + 1}.</Text>}
+        title={item.title}
+        numberOfLines={2}
+        onPress={this.onTrendingPress}
+      />
+    );
   }
 
   render() {
+    const query = this.query;
+
     return (
-      <View
+      <ScrollView
         style={styles.host}
         testID="SEARCH_SCREEN"
+        keyboardShouldPersistTaps="always"
       >
-        <FlatList
-          ref={this.listRef}
-          style={styles.list}
-          data={Search.items}
-          ListFooterComponent={Search.isLoading && <Loading />}
-          extraData={Search.items.length}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderStory}
-          onEndReachedThreshold={0.75}
-          onEndReached={this.onEndReached}
-          contentInset={{ top: 15 }}
-        />
-      </View>
+        {Platform.OS === 'android' && (
+          <SearchInput
+            onChangeText={this.onSearchChange}
+            onFocus={this.onSearchFocus}
+            onBlur={this.onSearchBlur}
+          />
+        )}
+        {this.isFocused && query !== '' ? (
+          <View>
+            <CellGroup header={false} footer={true}>
+              <Cell
+                left={<CellIcon source={require('assets/icons/25/search.png')} tintColor="#444" size={16} />}
+                title={`Stories with "${query}"`}
+                onPress={this.onSearchStoriesPress}
+                more={true}
+              />
+              <Cell
+                left={<CellIcon source={require('assets/icons/25/search.png')} tintColor="#444" size={16} />}
+                title={`Comments with "${query}"`}
+                onPress={this.onSearchCommentsPress}
+                more={true}
+              />
+              <Cell
+                left={<CellIcon source={require('assets/icons/25/search.png')} tintColor="#444" size={16} />}
+                title={`All items with "${query}"`}
+                onPress={this.onSearchAllPress}
+                more={true}
+              />
+              <Cell
+                left={<CellIcon source={require('assets/icons/25/user.png')} tintColor="#444" size={16} />}
+                title={`Go to user "${query}"`}
+                onPress={this.onUserPress}
+                more={true}
+              />
+            </CellGroup>
+          </View>
+        ) : (
+          <View style={styles.trending}>
+            <CellGroup header="Trending today" footer={true}>
+              {Search.trending.map(this.renderTrending)}
+            </CellGroup>
+          </View>
+        )}
+      </ScrollView>
     );
   }
 }

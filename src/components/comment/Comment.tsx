@@ -170,6 +170,7 @@ export default class Comment extends React.Component<Props> {
             noLinks={true}
             noFormat={true}
             numberOfLines={5}
+            allowFontScaling={UI.settings.appearance.useSystemFontSize}
             style={styles.parent__text}
           >
             {prettyText}

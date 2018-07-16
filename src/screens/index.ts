@@ -4,6 +4,7 @@ import TopBarSearch from '../components/top-bar-search/TopBarSearch';
 import Stories from './stories/Stories';
 import Story from './story/Story';
 import Search from './search/Search';
+import Result from './search/Result';
 import Account from './account/Account';
 import AccountHidden from './account/Hidden';
 import AccountVoted from './account/Voted';
@@ -28,6 +29,7 @@ type IItemType = typeof Item.Type;
 export const STORIES_SCREEN = 'hekla.StoriesScreen';
 export const STORY_SCREEN = 'hekla.StoryScreen';
 export const SEARCH_SCREEN = 'hekla.SearchScreen';
+export const RESULT_SCREEN = 'hekla.ResultScreen';
 export const ACCOUNT_SCREEN = 'hekla.AccountScreen';
 export const ACCOUNT_HIDDEN_SCREEN = 'hekla.AccountHiddenScreen';
 export const ACCOUNT_VOTED_SCREEN = 'hekla.AccountVotedScreen';
@@ -49,6 +51,7 @@ export const Screens = new Map();
 Screens.set(STORIES_SCREEN, Stories);
 Screens.set(STORY_SCREEN, Story);
 Screens.set(SEARCH_SCREEN, Search);
+Screens.set(RESULT_SCREEN, Result);
 Screens.set(ACCOUNT_SCREEN, Account);
 Screens.set(ACCOUNT_HIDDEN_SCREEN, AccountHidden);
 Screens.set(ACCOUNT_VOTED_SCREEN, AccountVoted);
@@ -257,16 +260,17 @@ export const storyScreen = async (story: IItemType | string, reactTag?: number) 
   const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
   const id = typeof story === 'object' ? story.id : story;
   const comments = typeof story === 'object' ? story.descendants || 0 : null;
+
   const opts = {
     component: {
       name: STORY_SCREEN,
       passProps: {
-        id: story.id,
+        id,
       },
       options: {
         topBar: {
           title: {
-            text: comments ? prettyNumber(comments, 'Comments') : undefined,
+            text: comments ? prettyNumber(comments, 'Comments') : '0 Comments',
           },
         },
         preview: reactTag ? {

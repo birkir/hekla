@@ -4,6 +4,7 @@ import FormatText from 'components/format-text/FormatText';
 import MetaLink from 'components/meta-link/MetaLink';
 import StoryRow from 'components/story-row/StoryRow';
 import Item from 'stores/models/Item';
+import UI from 'stores/UI';
 import openActionSheet from 'utils/openActionSheet';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
@@ -115,12 +116,7 @@ export default class StoryHeader extends React.Component<Props> {
             large={true}
           />
           {!!text && (
-            <FormatText
-              noLinks={true}
-              noFormat={true}
-              numberOfLines={10}
-              style={styles.summary}
-            >
+            <FormatText style={[styles.summary, UI.font(15)]}>
               {prettyText}
             </FormatText>
           )}

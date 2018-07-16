@@ -1,7 +1,7 @@
 import { Platform, StyleSheet, StatusBar } from 'react-native';
 import set from 'lodash/set';
 import UI from 'stores/UI';
-import themes from 'styles/themes';
+import themes from './themes';
 
 export const getVar = (name: string, fallback: string = undefined) => {
   return themes[UI.settings.appearance.theme][name] || fallback;

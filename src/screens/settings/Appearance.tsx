@@ -42,14 +42,6 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
     Navigation.mergeOptions(this.props.componentId, SettingsAppearanceScreen.options);
   }
 
-  onSystemTextSizeChange(flag: boolean) {
-    UI.settings.setValue('appearance.useSystemFontSize', flag);
-  }
-
-  onFontSizeChange(size) {
-    UI.settings.setValue('appearance.fontSize', size);
-  }
-
   onStorySizePress() {
     const options = (Object as any).entries(storySize).map(([id, title]) => ({ id, title }));
 
@@ -111,26 +103,6 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
               <Switch
                 value={UI.settings.appearance.iPadSidebarEnabled}
                 onValueChange={this.oniPadSidebarChange}
-              />
-            )}
-          />
-        </CellGroup>
-        <CellGroup header="Text Size" footer={true}>
-          <Cell
-            title="Use System Text Size"
-            value={(
-              <Switch
-                value={UI.settings.appearance.useSystemFontSize}
-                onValueChange={this.onSystemTextSizeChange}
-              />
-            )}
-          />
-          <Cell
-            value={(
-              <SliderFontSize
-                value={UI.settings.appearance.fontSize}
-                onValueChange={this.onFontSizeChange}
-                disabled={UI.settings.appearance.useSystemFontSize}
               />
             )}
           />

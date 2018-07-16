@@ -26,6 +26,7 @@ interface Props {
   onPressIn?: (GestureResponderEvent, Props) => void;
   onLongPress?: (GestureResponderEvent, Props) => void;
   disabled?: boolean;
+  numberOfLines?: number;
 
   testID?: string;
   item?: any;
@@ -65,7 +66,7 @@ export default class Cell extends React.Component<Props, any> {
   }
 
   renderTitle() {
-    const { title } = this.props;
+    const { title, numberOfLines = 1 } = this.props;
 
     if (!title) return null;
 
@@ -75,7 +76,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.title}>
-        <Text style={[styles.title__text, UI.font(17)]} numberOfLines={1} allowFontScaling={UI.settings.appearance.useSystemFontSize}>{String(title)}</Text>
+        <Text style={styles.title__text} numberOfLines={numberOfLines}>{String(title)}</Text>
       </View>
     );
   }
@@ -91,7 +92,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.subtitle}>
-        <Text style={[styles.subtitle__text, UI.font(12)]} allowFontScaling={UI.settings.appearance.useSystemFontSize}>{String(subtitle)}</Text>
+        <Text style={styles.subtitle__text}>{String(subtitle)}</Text>
       </View>
     );
   }
@@ -108,7 +109,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.value}>
-        <Text style={[styles.value__text, UI.font(17)]} allowFontScaling={UI.settings.appearance.useSystemFontSize}>{String(value)}</Text>
+        <Text style={[styles.value__text, UI.font(17)]}>{String(value)}</Text>
       </View>
     );
   }
