@@ -4,13 +4,39 @@
 
 # Hekla for Hacker News
 
+![Logo](./assets/android/mipmap-xxxhdpi/ic_launcher.png)
+
 iOS and Android client for Hacker News. Inspired by the Apollo client for Reddit.
 
-- firebase
-- cocoapods
-- typescript
-- mobx-state-tree
-- react-native-navigation@2
+##### App features:
+
+ - Tabbed interface for easy navigating
+ - Browse top stories, newest, show HN, ask HN and jobs
+ - Login with your Hacker News account to vote, reply and flag stories
+ - Large or compact posts depending on your preference
+ - 3D Touch support
+ - iPad support
+ - Multiple themes, adjustable font & text size
+ - Colour-coded, collapsible comments thread
+ - Readability mode/external browser options
+
+##### Beta Screenshots
+
+![iPhone X screenshot of Stories](./assets/screenshots/iphone-x/stories-320w.png) ![iPhone X screenshot of Dark theme](./assets/screenshots/iphone-x/theme-black-320w.png) ![Pixel screenshot of Comments](./assets/screenshots/pixel/comments-320w.png)
+
+
+## Development features
+ - TypeScript
+ - Gradle 4
+ - Cocoapods
+ - CodePush
+ - mobx and mobx-state-tree
+ - react-native-navigation v2
+ - react-native-config
+ - JavaScriptCore on Android
+ - Keychain to store sensitive data
+ - CSS Modules with Stylus
+ - patch-package for custom native code
 
 ## Contributing
 
