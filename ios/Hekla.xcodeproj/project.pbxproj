@@ -5,7 +5,9 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
+		274D552420FD8861001D7912 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 274D552320FD8861001D7912 /* StoreKit.framework */; };
 		B0739A8F5C9048E9AC93D045 /* libPods-Hekla.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3988A5A05ABF10E5A9B33ED5 /* libPods-Hekla.a */; };
 		E31CF5D020CEFCE40036B5B7 /* RNNAVPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E31CF5CF20CEFCE40036B5B7 /* RNNAVPlayer.m */; };
 		E33FD0F41FFBDBD900EB627A /* RNHekla.m in Sources */ = {isa = PBXBuildFile; fileRef = E33FD0F31FFBDBD900EB627A /* RNHekla.m */; };
@@ -18,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* Hekla.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hekla.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		274D552320FD8861001D7912 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		3988A5A05ABF10E5A9B33ED5 /* libPods-Hekla.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hekla.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		53031DDE923D9778D106F497 /* Pods-UenoNativeStarter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UenoNativeStarter.release.xcconfig"; path = "Pods/Target Support Files/Pods-UenoNativeStarter/Pods-UenoNativeStarter.release.xcconfig"; sourceTree = "<group>"; };
 		7B642519012E49C28F333EDB /* Pods-UenoNativeStarterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UenoNativeStarterTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UenoNativeStarterTests/Pods-UenoNativeStarterTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -47,6 +50,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B0739A8F5C9048E9AC93D045 /* libPods-Hekla.a in Frameworks */,
+				274D552420FD8861001D7912 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +60,7 @@
 		4CE6C5BA572EF6078027A293 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				274D552320FD8861001D7912 /* StoreKit.framework */,
 				DF6B3032214A4831BACEAB38 /* libPods-UenoNativeStarter.a */,
 				C6D9CAC761C0BC40C9E6DED5 /* libPods-UenoNativeStarterTests.a */,
 				3988A5A05ABF10E5A9B33ED5 /* libPods-Hekla.a */,
@@ -176,6 +181,9 @@
 						DevelopmentTeam = 5PD7JU2FJC;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
 							com.apple.SafariKeychain = {
 								enabled = 1;
 							};
@@ -341,7 +349,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Birkir Rafn Gudjonsson (5PD7JU2FJC)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 39;
-				DEVELOPMENT_TEAM = "5PD7JU2FJC";
+				DEVELOPMENT_TEAM = 5PD7JU2FJC;
 				INFOPLIST_FILE = Hekla/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
