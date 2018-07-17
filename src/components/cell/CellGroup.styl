@@ -1,9 +1,19 @@
-.items {
-  border-top-width: var(--hairline-width);
-  border-top-color: var(--content-divider-color);
+.host {
+  &__android {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--content-divider-color);
+    background-color: var(--content-bg-color);
+  }
+}
 
-  border-bottom-width: var(--hairline-width);
-  border-bottom-color: var(--content-divider-color);
+.items {
+  &__ios {
+    border-top-width: var(--hairline-width);
+    border-top-color: var(--content-divider-color);
+
+    border-bottom-width: var(--hairline-width);
+    border-bottom-color: var(--content-divider-color);
+  }
 }
 
 .header {
@@ -17,6 +27,10 @@
     font-size: 13px;
     color: var(--content-text-light-color);
     letter-spacing: -0.05px;
+
+    &__android {
+      color: var(--primary-color);
+    }
   }
 }
 

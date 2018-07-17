@@ -271,7 +271,7 @@ class Hackernews {
 
   async comments(id: string, fromId?: string, fromData?: string) {
     const data = fromData || await this.fetch(`threads?id=${id}&next=${fromId}`);
-    const rows = data.replace(/\n/g, '').match(/<tr class=['"]athing.*?<\/table><\/td><\/tr>/g);
+    const rows = data.replace(/\n/g, '').match(/<tr class=['"]athing.*?<\/table><\/td><\/tr>/g) || [];
     return rows.map((row) => {
       const id = row.match(/id=["'](\d+)['"]/);
       const parentId = row.match(/id=(\d+)["']>parent/);

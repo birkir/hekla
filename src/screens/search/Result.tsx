@@ -9,6 +9,7 @@ import Loading from 'components/loading/Loading';
 import Comment from 'components/comment/Comment';
 import { Navigation } from 'react-native-navigation';
 import UI from 'stores/UI';
+import set from 'lodash/set';
 import { observer } from 'mobx-react';
 import { theme, applyThemeOptions } from 'styles';
 import { observable } from 'mobx';
@@ -32,7 +33,7 @@ export default class ResultScreen extends React.Component<Props> {
     return applyThemeOptions({
       topBar: {
         title: {
-          text: 'Results for "query"',
+          text: 'Results',
         },
         rightButtons: [
           {
@@ -101,6 +102,8 @@ export default class ResultScreen extends React.Component<Props> {
 
   @autobind
   updateOptions() {
+    const opts = ResultScreen.options;
+    set(opts, 'topBar.title.text', `Results for "${this.props.query}"`);
     Navigation.mergeOptions(this.props.componentId, ResultScreen.options);
   }
 

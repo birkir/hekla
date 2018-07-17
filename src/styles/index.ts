@@ -43,11 +43,6 @@ export const applyThemeOptions = (settings: any) => {
       }
     }
 
-    // TODO: Read from theme: --navbar-background-color
-    //
-    // set(settings, 'topBar.background.color', getVar('--backdrop-color'));
-    // set(settings, 'bottomTabs.backgroundColor', getVar('--backdrop-color'));
-
     if (settings.bottomTab) {
       set(settings, 'bottomTab.selectedTextColor', getVar('--primary-color'));
       set(settings, 'bottomTab.selectedIconColor', getVar('--primary-color'));
@@ -59,6 +54,37 @@ export const applyThemeOptions = (settings: any) => {
 
   if (Platform.OS === 'android') {
     set(settings, 'bottomTabs.titleDisplayMode', 'alwaysShow');
+    set(settings, 'statusBar.backgroundColor', getVar('--primary-dark-color'));
+    set(settings, 'topBar.background.color', getVar('--primary-color'));
+    set(settings, 'topBar.buttonColor', 'white');
+    set(settings, 'topBar.title.color', 'white');
+    set(settings, 'topBar.backButton.color', 'white');
+
+    if (settings.topBar.rightButtons) {
+      set(settings, 'topBar.rightButtons', settings.topBar.rightButtons.map(button => ({
+        ...button,
+        color: 'white',
+      })));
+    }
+
+    if (isDarkTheme) {
+      set(settings, 'bottomTabs.backgroundColor', '#000000');
+      set(settings, 'bottomTabs.backgroundColor', '#000000');
+
+      if (settings.bottomTab) {
+        set(settings, 'bottomTab.iconColor', '#FFFFFF');
+        set(settings, 'bottomTab.textColor', '#FFFFFF');
+      }
+    } else {
+      set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
+      set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
+
+      if (settings.bottomTab) {
+        set(settings, 'bottomTab.iconColor', '#363636');
+        set(settings, 'bottomTab.textColor', '#363636');
+      }
+    }
+
   }
 
   return settings;

@@ -147,6 +147,7 @@ export default class MetaLink extends React.Component<Props, State> {
 
     const { url, large } = this.props;
     const { image, title, underlay, error } = this.state;
+    const isImage = image && image.url && !error;
 
     if (!url) {
       return null;
@@ -160,7 +161,7 @@ export default class MetaLink extends React.Component<Props, State> {
 
     const contentStyles = [
       styles.content,
-      image && styles.content__image,
+      isImage && styles.content__image,
       underlay && styles.content__underlay,
       { borderColor: getVar('--meta-border-color') },
     ];
@@ -203,7 +204,7 @@ export default class MetaLink extends React.Component<Props, State> {
         onShowUnderlay={this.onShowUnderlay}
       >
         <View onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onTouchMove={this.onTouchMove}>
-          {large && image && image.url && !error && (
+          {large && isImage && (
             <FastImage
               source={{ uri: image.url }}
               style={[styles.image, { borderColor: getVar('--meta-border-color') }]}

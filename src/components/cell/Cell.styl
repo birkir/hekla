@@ -3,10 +3,16 @@ gutter = 15px;
 .host {
   flex-direction: row;
 
-  background-color: var(--content-bg-color);
-
   &__underlay {
     background-color: var(--content-bg-active-color);
+  }
+
+  &__ios {
+    background-color: var(--content-bg-color);
+  }
+
+  &__android {
+    background-color: transparent;
   }
 }
 
@@ -46,6 +52,10 @@ gutter = 15px;
   padding-bottom: (gutter / 2);
 
   min-height 45px;
+
+  &__android {
+    min-height: 52px;
+  }
 
   &__border {
     position: absolute;

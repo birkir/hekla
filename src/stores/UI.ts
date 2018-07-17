@@ -1,18 +1,20 @@
 import { types, flow, applySnapshot } from 'mobx-state-tree';
 import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage, Linking } from 'react-native';
-import { CustomTabs } from 'react-native-custom-tabs';
+import { CustomTabs, ANIMATIONS_SLIDE } from 'react-native-custom-tabs';
 import CodePush from 'react-native-code-push';
 import Settings from './models/Settings';
 import prettyNumber from 'utils/prettyNumber';
 import Stories from './Stories';
-import { IPAD_SCREEN } from 'screens';
+import { IPAD_SCREEN, STORIES_SCREEN } from 'screens';
+import { getVar } from 'styles';
 
 const { width, height } = Dimensions.get('window');
 
 const UI = types
   .model('UI', {
     componentId: types.maybe(types.string),
-    iPadComponentId: types.maybe(types.string),
+    iPadMasterComponentId: types.maybe(types.string),
+    iPadDetailComponentId: types.maybe(types.string),
     settings: types.optional(Settings, {}),
     width: types.optional(types.number, width),
     height: types.optional(types.number, height),
@@ -48,10 +50,22 @@ const UI = types
   .actions(self => ({
 
     setComponentId(componentId: string, componentName?: string) {
-      self.componentId = componentId;
-      if (componentName === IPAD_SCREEN) {
-        self.iPadComponentId = componentId;
+
+      // STORIES_SCREEN = master
+      if (componentName === STORIES_SCREEN) {
+        self.iPadMasterComponentId = componentId;
+
+        if (self.isIpad && self.settings.appearance.iPadSidebarEnabled) {
+          return;
+        }
       }
+
+      // IPAD_SCREEN = detail
+      if (componentName === IPAD_SCREEN) {
+        self.iPadDetailComponentId = componentId;
+      }
+
+      self.componentId = componentId;
     },
 
     setPreview(preview) {
@@ -107,7 +121,8 @@ const UI = types
       }
       if (Platform.OS === 'android' && reactTag === -1) {
         CustomTabs.openURL(url, {
-          toolbarColor: '#607D8B',
+          toolbarColor: getVar('--primary-color'),
+          animations: ANIMATIONS_SLIDE,
           enableUrlBarHiding: true,
           showPageTitle: true,
           enableDefaultShare: true,

@@ -18,9 +18,9 @@ YellowBox.ignoreWarnings([
 
 // Devtool network request support
 if (__DEV__) {
-  // const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
-  // (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
-  // (global as any).FormData = originalFormData ? originalFormData : FormData;
+  const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
+  (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
+  (global as any).FormData = originalFormData ? originalFormData : FormData;
 }
 
 // Enable LayoutAnimation on android

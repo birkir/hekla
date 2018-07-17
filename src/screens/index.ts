@@ -22,8 +22,17 @@ import IPad from './misc/IPad';
 import UI from '../stores/UI';
 import Item from '../stores/models/Item';
 import prettyNumber from 'utils/prettyNumber';
+import { getVar } from 'styles';
+import { autorun, when } from 'mobx';
 
 type IItemType = typeof Item.Type;
+
+type StoryScreenProps = {
+  id: string | number;
+  descendants?: number;
+  isMasterView?: boolean;
+  reactTag?: number;
+};
 
 export const STORIES_SCREEN = 'hekla.StoriesScreen';
 export const STORY_SCREEN = 'hekla.StoryScreen';
@@ -70,6 +79,9 @@ export const startApp = () => {
   StatusBar.setBarStyle('dark-content', true);
   const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
 
+  const selectedIconColor = getVar('--primary-color');
+  const selectedTextColor = getVar('--primary-color');
+
   const tabs = [
     {
       stack: {
@@ -85,11 +97,11 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Stories',
             testID: 'STORIES_TAB',
             icon: require('assets/icons/25/stories.png'),
-            selectedIconColor: 'red',
-            selectedTextColor: 'red',
           },
         },
       },
@@ -103,6 +115,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Account',
             testID: 'ACCOUNT_TAB',
             icon: require('assets/icons/25/user.png'),
@@ -118,6 +132,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Search',
             testID: 'SEARCH_TAB',
             icon: require('assets/icons/25/search.png'),
@@ -133,6 +149,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Settings',
             testID: 'SETTINGS_TAB',
             icon: require('assets/icons/25/settings.png'),
@@ -253,21 +271,20 @@ export const accountVotedScreen = (userId: string) => Navigation.push(UI.compone
   },
 });
 
-export const storyScreen = async (story: IItemType | string, reactTag?: number) => {
+export const storyScreen = async (props: StoryScreenProps) => {
   const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
-  const id = typeof story === 'object' ? story.id : story;
-  const comments = typeof story === 'object' ? story.descendants || 0 : null;
+  const { id, descendants = 0, isMasterView = false, reactTag } = props;
 
   const opts = {
     component: {
       name: STORY_SCREEN,
       passProps: {
-        id,
+        id: String(id),
       },
       options: {
         topBar: {
           title: {
-            text: comments ? prettyNumber(comments, 'Comments') : '0 Comments',
+            text: prettyNumber(descendants, 'Comments'),
           },
         },
         preview: reactTag ? {
@@ -278,11 +295,17 @@ export const storyScreen = async (story: IItemType | string, reactTag?: number) 
     },
   } as any;
 
-  if (isSplitView) {
-    opts.component.options.animate = false;
-    await Navigation.popToRoot(UI.iPadComponentId);
-    await setTimeout(() => null, 100);
-    return Navigation.push(UI.iPadComponentId, opts);
+  if (isSplitView && isMasterView) {
+    // Pop to root
+    await Navigation.popToRoot(UI.iPadDetailComponentId);
+    // Switch to first tab
+    await Navigation.mergeOptions(UI.iPadDetailComponentId, { bottomTabs: { currentTabIndex: 0 } });
+    return when(
+      // Wait for detail view to appear
+      () => UI.componentId === UI.iPadDetailComponentId,
+      // Then push new controller
+      () => Navigation.push(UI.iPadDetailComponentId, opts),
+    );
   }
 
   return Navigation.push(UI.componentId, opts);

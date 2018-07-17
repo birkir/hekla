@@ -129,7 +129,7 @@ export default class SearchScreen extends React.Component<Props> {
 
   @autobind
   onTrendingPress(e, { item }) {
-    return storyScreen(item.id);
+    return storyScreen({ id: item.id });
   }
 
   @autobind
