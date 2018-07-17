@@ -22,6 +22,7 @@ import IPad from './misc/IPad';
 import UI from '../stores/UI';
 import Item from '../stores/models/Item';
 import prettyNumber from 'utils/prettyNumber';
+import { getVar } from 'styles';
 
 type IItemType = typeof Item.Type;
 
@@ -70,6 +71,9 @@ export const startApp = () => {
   StatusBar.setBarStyle('dark-content', true);
   const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
 
+  const selectedIconColor = getVar('--primary-color');
+  const selectedTextColor = getVar('--primary-color');
+
   const tabs = [
     {
       stack: {
@@ -85,11 +89,11 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Stories',
             testID: 'STORIES_TAB',
             icon: require('assets/icons/25/stories.png'),
-            selectedIconColor: 'red',
-            selectedTextColor: 'red',
           },
         },
       },
@@ -103,6 +107,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Account',
             testID: 'ACCOUNT_TAB',
             icon: require('assets/icons/25/user.png'),
@@ -118,6 +124,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Search',
             testID: 'SEARCH_TAB',
             icon: require('assets/icons/25/search.png'),
@@ -133,6 +141,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            selectedIconColor,
+            selectedTextColor,
             text: 'Settings',
             testID: 'SETTINGS_TAB',
             icon: require('assets/icons/25/settings.png'),

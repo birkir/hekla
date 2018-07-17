@@ -63,7 +63,7 @@ const Items = types
             }
           } else if (force) {
             const item = self.items.get(key);
-            yield item.refetch();
+            yield (item as any).refetch();
           }
 
           return self.items.get(key);

@@ -7,11 +7,9 @@ import { formatCompactThumbnail, compactThumbnail } from 'stores/enums/CompactTh
 import { formatCompactVoteButton, compactVoteButton } from 'stores/enums/CompactVoteButton';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
-import SliderFontSize from 'components/slider-font-size/SliderFontSize';
 import openActionSheet from 'utils/openActionSheet';
 import UI from 'stores/UI';
 import { Navigation } from 'react-native-navigation';
-import { startApp } from 'screens';
 import { theme, applyThemeOptions } from 'styles';
 const styles = theme(require('./Settings.styl'));
 
@@ -96,17 +94,19 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
 
     return (
       <ScrollView style={styles.host} contentContainerStyle={styles.host__container} testID={testID}>
-        <CellGroup header="iPad" footer={true}>
-          <Cell
-            title="Use sidebar on iPad"
-            value={(
-              <Switch
-                value={UI.settings.appearance.iPadSidebarEnabled}
-                onValueChange={this.oniPadSidebarChange}
-              />
-            )}
-          />
-        </CellGroup>
+        {UI.isIpad && (
+          <CellGroup header="iPad" footer={true}>
+            <Cell
+              title="Use sidebar on iPad"
+              value={(
+                <Switch
+                  value={UI.settings.appearance.iPadSidebarEnabled}
+                  onValueChange={this.oniPadSidebarChange}
+                />
+              )}
+            />
+          </CellGroup>
+        )}
         <CellGroup header="Stories">
           <Cell
             title="Story Size"

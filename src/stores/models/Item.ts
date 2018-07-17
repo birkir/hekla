@@ -298,7 +298,7 @@ const Item = types.model('Item', {
             if (s.val() !== null) {
               const item = (self as any).fetchComment(itemId);
               if (item) {
-                const index = self.comments.findIndex(item => item.id === comment.id);
+                const index = self.comments.findIndex((item: any) => item.id === comment.id);
                 self.comments.splice(index, 1, itemId);
               } else {
                 comment.setIsError(true);

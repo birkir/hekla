@@ -82,6 +82,7 @@ export default class SettingsDonateScreen extends React.Component<Props> {
         Alert.alert('Could not complete transaction');
       }
     } catch (err) {
+      Sentry.captureException(err);
       Alert.alert('Something went wrong', err.message);
     }
   }
