@@ -194,6 +194,7 @@ export default class StoriesScreen extends React.Component<Props> {
     if (!item) return null;
     return (
       <StoryCard
+        isMasterView={true}
         key={item.id}
         item={item}
       />

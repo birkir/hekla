@@ -142,8 +142,12 @@ export default class Comment extends React.Component<Props> {
     });
 
     const root = await getRoot(this.props.item) as IItemType;
+    const { id, descendants } = root;
 
-    return storyScreen(root);
+    return storyScreen({
+      id,
+      descendants,
+    });
   }
 
   @autobind

@@ -15,6 +15,7 @@ type IItemType = typeof Item.Type;
 
 interface Props {
   key: string;
+  isMasterView?: boolean;
   item: IItemType;
   testID?: string;
 }
@@ -26,15 +27,26 @@ export default class StoryCard extends React.Component<Props> {
 
   @autobind
   onPress() {
-    return storyScreen(this.props.item);
+    const { item, isMasterView } = this.props;
+    const { id, descendants } = item;
+    return storyScreen({
+      id,
+      descendants,
+      isMasterView,
+    });
   }
 
   @autobind
-  async onPressIn() {
+  onPressIn() {
     if (Platform.OS !== 'ios') return;
-
-    const reactTag = findNodeHandle(this.hostRef.current);
-    storyScreen(this.props.item, reactTag);
+    const { item, isMasterView } = this.props;
+    const { id, descendants } = item;
+    return storyScreen({
+      id,
+      descendants,
+      isMasterView,
+      reactTag: findNodeHandle(this.hostRef.current),
+    });
 
     return;
   }
