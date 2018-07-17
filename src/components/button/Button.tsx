@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity, TouchableNativeFeedback, GestureResponderEvent, Platform, AccessibilityTraits, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableNativeFeedback, GestureResponderEvent, Platform, AccessibilityTrait, ActivityIndicator } from 'react-native';
 import { theme } from 'styles';
 const styles = theme(require('./Button.styl'));
 
@@ -23,15 +23,7 @@ export default class Button extends React.Component<Props> {
     const buttonStyles = [styles.button, fill && styles.button__fill];
     const textStyles = [styles.text, fill && styles.text__fill];
 
-    if (color) {
-      if (fill) {
-        buttonStyles.push({ backgroundColor: color });
-      } else {
-        textStyles.push({ color });
-      }
-    }
-
-    const accessibilityTraits: AccessibilityTraits[] = ['button'];
+    const accessibilityTraits: AccessibilityTrait[] = ['button'];
 
     if (disabled) {
       buttonStyles.push(styles.button__disabled, fill && styles.button__fill__disabled);

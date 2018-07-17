@@ -27,7 +27,7 @@ export default class Input extends React.Component<Props> {
           style={styles.textinput}
           placeholder={placeholder}
           returnKeyType={returnKeyType}
-          underlineColorAndroid="transparent"
+          underlineColorAndroid={getVar('--primary-color')}
           placeholderTextColor={getVar('--content-text-lighter-color', 'black')}
           blurOnSubmit={false}
           autoFocus={false}

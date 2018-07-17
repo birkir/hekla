@@ -154,9 +154,15 @@ export default class Cell extends React.Component<Props, any> {
         disabled={disabled}
         testID={testID}
       >
-        <View style={[styles.host, this.isUnderlay && styles.host__underlay]}>
+        <View
+          style={[
+            styles.host,
+            styles[`host__${Platform.OS}`],
+            this.isUnderlay && styles.host__underlay,
+          ]}
+        >
           {this.renderLeft()}
-          <View style={styles.content}>
+          <View style={[styles.content, styles[`content__${Platform.OS}`]]}>
             {!this.isUnderlay && border && <View style={styles.content__border} />}
             <View style={styles.center}>
               {this.renderTitle()}

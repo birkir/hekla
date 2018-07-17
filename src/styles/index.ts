@@ -43,11 +43,6 @@ export const applyThemeOptions = (settings: any) => {
       }
     }
 
-    // TODO: Read from theme: --navbar-background-color
-    //
-    // set(settings, 'topBar.background.color', getVar('--backdrop-color'));
-    // set(settings, 'bottomTabs.backgroundColor', getVar('--backdrop-color'));
-
     if (settings.bottomTab) {
       set(settings, 'bottomTab.selectedTextColor', getVar('--primary-color'));
       set(settings, 'bottomTab.selectedIconColor', getVar('--primary-color'));
@@ -59,6 +54,18 @@ export const applyThemeOptions = (settings: any) => {
 
   if (Platform.OS === 'android') {
     set(settings, 'bottomTabs.titleDisplayMode', 'alwaysShow');
+    set(settings, 'statusBar.backgroundColor', getVar('--primary-dark-color'));
+    set(settings, 'topBar.background.color', getVar('--primary-color'));
+    set(settings, 'topBar.buttonColor', 'white');
+    set(settings, 'topBar.title.color', 'white');
+    set(settings, 'topBar.backButton.color', 'white');
+
+    if (settings.topBar.rightButtons) {
+      set(settings, 'topBar.rightButtons', settings.topBar.rightButtons.map(button => ({
+        ...button,
+        color: 'white',
+      })));
+    }
   }
 
   return settings;

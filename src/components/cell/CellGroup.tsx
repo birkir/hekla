@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { theme } from 'styles';
 const styles = theme(require('./CellGroup.styl'));
 
@@ -27,8 +27,8 @@ export default class CellGroup extends React.PureComponent<Props, any> {
     }
 
     return (
-      <View style={styles.header}>
-        <Text style={styles.header__text}>{String(header).toUpperCase()}</Text>
+      <View style={[styles.header, styles[`header__${Platform.OS}`]]}>
+        <Text style={[styles.header__text, styles[`header__text__${Platform.OS}`]]}>{String(header).toUpperCase()}</Text>
       </View>
     );
   }
@@ -54,8 +54,8 @@ export default class CellGroup extends React.PureComponent<Props, any> {
     }
 
     return (
-      <View style={styles.footer}>
-        <Text style={styles.footer__text}>{String(footer)}</Text>
+      <View style={[styles.footer, styles[`footer__${Platform.OS}`]]}>
+        <Text style={[styles.footer__text, styles[`footer__text__${Platform.OS}`]]}>{String(footer)}</Text>
       </View>
     );
   }
@@ -64,9 +64,9 @@ export default class CellGroup extends React.PureComponent<Props, any> {
     const { children } = this.props;
 
     return (
-      <View style={styles.host}>
+      <View style={[styles.host, styles[`host__${Platform.OS}`]]}>
         {this.renderHeader()}
-        <View style={styles.items}>
+        <View style={[styles.items, styles[`items__${Platform.OS}`]]}>
           {React.Children.map(children, this.renderItem)}
         </View>
         {this.renderFooter()}
