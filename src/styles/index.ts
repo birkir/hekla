@@ -66,6 +66,25 @@ export const applyThemeOptions = (settings: any) => {
         color: 'white',
       })));
     }
+
+    if (isDarkTheme) {
+      set(settings, 'bottomTabs.backgroundColor', '#000000');
+      set(settings, 'bottomTabs.backgroundColor', '#000000');
+
+      if (settings.bottomTab) {
+        set(settings, 'bottomTab.iconColor', '#FFFFFF');
+        set(settings, 'bottomTab.textColor', '#FFFFFF');
+      }
+    } else {
+      set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
+      set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
+
+      if (settings.bottomTab) {
+        set(settings, 'bottomTab.iconColor', '#363636');
+        set(settings, 'bottomTab.textColor', '#363636');
+      }
+    }
+
   }
 
   return settings;

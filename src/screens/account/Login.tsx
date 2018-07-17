@@ -130,7 +130,9 @@ export default class Login extends React.Component<Props> {
           <View style={styles.button}>
             <Button fill={true} onPress={this.onSignInPress} title="Sign In" loading={Account.isLoading} />
           </View>
-          <Button onPress={this.onCreateAccountPress} title="Create Account" />
+          <View style={styles.button}>
+            <Button onPress={this.onCreateAccountPress} title="Create Account" />
+          </View>
           <View style={{ height: this.state.height }} />
         </View>
       </ScrollView>

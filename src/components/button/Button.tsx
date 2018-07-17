@@ -20,8 +20,16 @@ export default class Button extends React.Component<Props> {
   render() {
     const { title, fill, loading, accessibilityLabel, color, disabled, onPress, hasTVPreferredFocus, testID } = this.props;
 
-    const buttonStyles = [styles.button, fill && styles.button__fill];
-    const textStyles = [styles.text, fill && styles.text__fill];
+    const buttonStyles = [
+      styles.button,
+      fill && styles.button__fill,
+      styles[`button__${Platform.OS}`],
+    ];
+    const textStyles = [
+      styles.text,
+      fill && styles.text__fill,
+      styles[`text__${Platform.OS}`],
+    ];
 
     const accessibilityTraits: AccessibilityTrait[] = ['button'];
 
@@ -32,7 +40,7 @@ export default class Button extends React.Component<Props> {
     }
 
     const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
-    console.log(styles);
+    const titleLabel = Platform.OS === 'android' ? title.toLocaleUpperCase() : title;
 
     return (
       <Touchable
@@ -44,12 +52,12 @@ export default class Button extends React.Component<Props> {
         onPress={onPress}
         {...Platform.OS === 'ios' ? { hasTVPreferredFocus } : {}}
       >
-        <View style={buttonStyles}>
+        <View style={buttonStyles} elevation={fill ? 3 : undefined}>
           {loading ? (
             <ActivityIndicator style={styles.loading} color="white" />
           ) : (
             <Text style={textStyles}>
-              {title}
+              {titleLabel}
             </Text>
           )}
         </View>

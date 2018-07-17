@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, Text, LayoutAnimation, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, LayoutAnimation, TouchableOpacity, Platform } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import { observable } from 'mobx';
@@ -92,15 +92,13 @@ export default class StoryScreen extends React.Component<Props> {
   @autobind
   onCollapse(comment: any) {
     this.collapsedInView.set(comment.id, true);
-    this.updateComments();
-    LayoutAnimation.easeInEaseOut();
+    this.updateComments(true);
   }
 
   @autobind
   onExpand(comment: any) {
     this.collapsedInView.set(comment.id, false);
-    this.updateComments();
-    LayoutAnimation.easeInEaseOut();
+    this.updateComments(true);
   }
 
   @autobind
@@ -117,7 +115,7 @@ export default class StoryScreen extends React.Component<Props> {
     this.isRefreshing = false;
   }
 
-  updateComments() {
+  updateComments(animated: boolean = false) {
     this.story.flatComments.forEach((item: any) => {
       if (!item.belongsTo) return;
       if (item.belongsTo.find((r: any) => this.collapsedInView.get(r))) {
@@ -126,7 +124,23 @@ export default class StoryScreen extends React.Component<Props> {
         this.hiddenInView.delete(item);
       }
     });
+
     this.forceUpdate();
+
+    if (animated) {
+      if (Platform.OS === 'android') {
+        LayoutAnimation.configureNext({
+          duration: 250,
+          update: {
+            type: LayoutAnimation.Types.spring,
+            springDamping: 100,
+          },
+        });
+      }
+      if (Platform.OS === 'ios') {
+        LayoutAnimation.easeInEaseOut();
+      }
+    }
   }
 
   async updateOptions() {

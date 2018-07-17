@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TextInput, ReturnKeyTypeOptions } from 'react-native';
+import { View, TextInput, ReturnKeyTypeOptions, Platform } from 'react-native';
 import { theme, getVar } from 'styles';
 import { observer } from 'mobx-react';
 const styles = theme(require('./Input.styl'));
@@ -22,9 +22,9 @@ export default class Input extends React.Component<Props> {
     const { placeholder, returnKeyType, innerRef, ...rest } = this.props;
 
     return (
-      <View style={styles.input}>
+      <View style={[styles.host, styles[`host__${Platform.OS}`]]}>
         <TextInput
-          style={styles.textinput}
+          style={[styles.input, styles[`input__${Platform.OS}`]]}
           placeholder={placeholder}
           returnKeyType={returnKeyType}
           underlineColorAndroid={getVar('--primary-color')}
