@@ -2,10 +2,14 @@ import './utils/sentry';
 import { YellowBox, NetInfo, AsyncStorage, UIManager, Platform } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens, startApp } from 'screens';
+import makeInspectable from 'mobx-devtools-mst';
 import UI from 'stores/UI';
+import Stories from 'stores/Stories';
+import Items from 'stores/Items';
 import { db } from 'utils/firebase';
 import { onSnapshot } from 'mobx-state-tree';
 import Account from 'stores/Account';
+import { connectToDevTools } from 'mobx-devtools/lib/mobxDevtoolsBackend';
 
 // Ignore yellow box
 YellowBox.ignoreWarnings([
@@ -18,9 +22,11 @@ YellowBox.ignoreWarnings([
 
 // Devtool network request support
 if (__DEV__) {
-  const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
-  (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
-  (global as any).FormData = originalFormData ? originalFormData : FormData;
+  // const { originalFormData, originalXMLHttpRequest, XMLHttpRequest, FormData } = (global as any);
+  // (global as any).XMLHttpRequest = originalXMLHttpRequest ? originalXMLHttpRequest : XMLHttpRequest;
+  // (global as any).FormData = originalFormData ? originalFormData : FormData;
+
+  connectToDevTools({ host: 'localhost', port: '8098' });
 }
 
 // Enable LayoutAnimation on android
@@ -39,6 +45,12 @@ Navigation.events().registerComponentDidAppearListener((componentId, componentNa
 
 // Start application
 Navigation.events().registerAppLaunchedListener(() => {
+  if (__DEV__) {
+    makeInspectable(UI);
+    makeInspectable(Stories);
+    makeInspectable(Items);
+  }
+
   UI.hydrate().then(startApp);
 });
 
