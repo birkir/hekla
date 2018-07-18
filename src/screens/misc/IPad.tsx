@@ -16,7 +16,7 @@ export default class IPadScreen extends React.Component<Props> {
 
     return (
       <View style={styles.host} testID={testID}>
-        <Text style={styles.text}>No story selected</Text>
+        <Text style={styles.text}>Select a story from the sidebar</Text>
       </View>
     );
   }
