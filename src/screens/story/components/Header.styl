@@ -1,40 +1,28 @@
 .host {
   padding: 16px;
   padding-bottom: 8px;
-  background-color: var(--content-bg-color);
+  background-color: var(--content-bg);
 
-  border-bottom-color: var(--content-divider-color);
+  border-bottom-color: var(--content-border);
 }
 
 .title {
   font-family: 'System';
   font-size: 17px;
-  color: var(--content-text-color);
+  color: var(--content-fg);
 
   margin-bottom: 16px;
 }
 
-.author {
-  font-family: 'System';
-  font-size: 15px;
-  margin-bottom: 8px;
-
-  color: var(--content-text-light-color);
-
-  &__bold {
-    font-weight: 600;
-  }
-}
-
 .summary {
-  color: var(--content-text-light-color);
+  color: var(--content-fg);
 }
 
 .actions {
   flex-direction: row;
   justify-content: space-between;
 
-  border-top-color: var(--content-divider-color);
+  border-top-color: var(--content-border);
 
   margin-top: 12px;
   margin-bottom 4px;
@@ -54,26 +42,9 @@
   width: 32px;
   height: 32px;
 
-  tint-color: var(--primary-color);
+  tint-color: var(--tint-bg);
 
   &__active {
     tint-color: var(--secondary-color);
-  }
-}
-
-.row {
-  flex-direction: row;
-  margin-left: -3px;
-
-  &__text {
-    font-family: 'System';
-    font-size: 14px;
-    padding-right: 8px;
-    color: var(--content-text-lighter-color);
-  }
-
-  &__icon {
-    tint-color: var(--content-text-lighter-color);
-    margin-right: 4px;
   }
 }

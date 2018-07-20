@@ -41,13 +41,11 @@ export default class SettingsScreen extends React.Component<Props> {
   }
 
   componentWillMount() {
-    if (Platform.OS === 'ios') {
-      autorun(() => {
-        if (UI.settings.appearance.theme) {
-          this.updateOptions();
-        }
-      });
-    }
+    UI.addScreen(this);
+  }
+
+  componentWillUnmount() {
+    UI.removeScreen(this);
   }
 
   @autobind

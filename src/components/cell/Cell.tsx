@@ -109,7 +109,7 @@ export default class Cell extends React.Component<Props, any> {
 
     return (
       <View style={styles.value}>
-        <Text style={[styles.value__text, UI.font(17)]}>{String(value)}</Text>
+        <Text style={styles.value__text}>{String(value)}</Text>
       </View>
     );
   }

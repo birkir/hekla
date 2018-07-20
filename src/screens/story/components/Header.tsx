@@ -109,7 +109,7 @@ export default class StoryHeader extends React.Component<Props> {
     return (
       <View style={[styles.host, { borderBottomWidth: StyleSheet.hairlineWidth, marginBottom: -StyleSheet.hairlineWidth }]}>
         <View>
-          {!!title && <Text style={styles.title}>{title}</Text>}
+          {!!title && <Text style={[styles.title, UI.font(17)]}>{title}</Text>}
           <MetaLink
             {...metadata}
             url={url}

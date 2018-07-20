@@ -13,8 +13,6 @@ for (const name in themes) {
   }
 }
 
-console.log(themes);
-
 // Import some calculated units and variables
 themes.default['--hairline-width'] = StyleSheet.hairlineWidth;
 

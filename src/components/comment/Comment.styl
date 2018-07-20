@@ -10,7 +10,7 @@ $colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
   padding-top: 10px;
   padding-bottom: 10px;
 
-  background-color: var(--content-bg-color);
+  background-color: var(--content-bg);
 
   &__card {
     margin-bottom: 8px;
@@ -47,26 +47,28 @@ for color, i in $colors {
   font-family: 'System';
   font-size: 14px;
   font-weight: 500;
-  color: var(--content-text-color);
+  color: var(--content-fg);
 
   flex: 1;
 
   &__me {
-    color: var(--primary-color);
+    color: var(--tint-bg);
   }
 }
 
 .ago {
   font-family: 'System';
   font-size: 14px;
-  color: var(--content-text-light-color);
+  color: var(--content-fg);
+  opacity: 0.7;
 }
 
 
 .text {
   font-family: 'System';
   font-size: 15px;
-  color: var(--content-text-color);
+  color: var(--content-fg);
+  opacity: 0.825;
 }
 
 .border {
@@ -79,33 +81,40 @@ for color, i in $colors {
 
 .icon {
   &__more {
-    tint-color: var(--content-divider-color);
+    tint-color: var(--content-border);
 
     margin-top: 2px;
     margin-right: 8px;
   }
 
   &__expand {
-    tint-color: var(--content-text-lighter-color);
+    tint-color: var(--content-fg);
+    opacity: 0.7;
   }
 }
 
 .parent {
-  background-color: var(--meta-bg-color);
+  background-color: var(--meta-bg);
   border-radius: 4px;
   padding: 16px;
 
-  &__text {
-    color: var(--meta-text-light-color);
-  }
+  // TODO: these text colors
 
-  &__title {
-    color: var(--meta-text-light-color);
+  &__text {
+    color: var(--meta-fg);
+    opacity: 0.825;
     margin-bottom: 8px;
   }
 
+  &__title {
+    color: var(--meta-fg);
+    margin-bottom: 8px;
+    opacity: 0.825;
+  }
+
   &__author {
-    font-weight: bold;
-    color: var(--meta-text-light-color);
+    font-weight: 500;
+    color: var(--meta-fg);
+    opacity: 0.825;
   }
 }

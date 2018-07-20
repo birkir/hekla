@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, Platform, Text, Alert } from 'react-native';
+import { ScrollView, Platform, Text, Alert, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { autobind } from 'core-decorators';
@@ -31,6 +31,13 @@ const SKUs = Platform.select({
   ],
 });
 
+const products = {
+  tip01: 'Nice Tip',
+  tip02: 'Generous Tip',
+  tip03: 'Awesome Tip',
+  tip04: 'Amazing Tip',
+};
+
 @observer
 export default class SettingsDonateScreen extends React.Component<Props> {
 
@@ -46,6 +53,9 @@ export default class SettingsDonateScreen extends React.Component<Props> {
 
   @observable
   products = [];
+
+  @observable
+  loading = false;
 
   componentWillMount() {
     this.fetchData();
@@ -65,15 +75,18 @@ export default class SettingsDonateScreen extends React.Component<Props> {
   }
 
   async fetchData() {
+    this.loading = true;
     try {
-      await RNIap.prepare();
+      const status = await RNIap.prepare();
       this.products = await RNIap.getProducts(SKUs);
     } catch (err) {
       Sentry.captureException(err);
     }
+    this.loading = false;
   }
 
-  async onProductPress({ item }) {
+  @autobind
+  async onProductPress(e, { item }) {
     try {
       const success = await RNIap.buyProduct(item.productId);
       if (success) {
@@ -87,11 +100,24 @@ export default class SettingsDonateScreen extends React.Component<Props> {
     }
   }
 
+  @autobind
+  renderTitle(product) {
+    if (product.title && product.title !== '') {
+      return product.title.replace('(Hekla)', '');
+    }
+    if (products[product.productId]) {
+      return products[product.productId];
+    }
+    return product.description;
+  }
+
+  @autobind
   renderProduct(product) {
     return (
       <Cell
+        key={product.productId}
         item={product}
-        title={`${product.title.replace('(Hekla)', '')}`}
+        title={this.renderTitle(product)}
         value={product.localizedPrice}
         onPress={this.onProductPress}
       />
@@ -107,6 +133,11 @@ export default class SettingsDonateScreen extends React.Component<Props> {
           <CellGroup>
             {this.products.map(this.renderProduct)}
           </CellGroup>
+        )}
+        {this.products.length === 0 && (
+          <React.Fragment>
+            {this.loading ? <ActivityIndicator /> : <Text style={styles.thankYou}>No products available</Text>}
+          </React.Fragment>
         )}
       </ScrollView>
     );

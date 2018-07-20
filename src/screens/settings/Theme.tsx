@@ -31,8 +31,12 @@ export default class SettingsThemeScreen extends React.Component<Props> {
     });
   }
 
-  componentDidAppear() {
-    this.updateOptions();
+  componentWillMount() {
+    UI.addScreen(this);
+  }
+
+  componentWillUnmount() {
+    UI.removeScreen(this);
   }
 
   @autobind
@@ -43,12 +47,13 @@ export default class SettingsThemeScreen extends React.Component<Props> {
   @autobind
   onThemeChange(e, { id }) {
     UI.settings.setValue('appearance.theme', id);
+    UI.updateScreens();
   }
 
   onFontFamilyBodyPress() {
     const options = (Object as any).entries(font).map(([id, title]) => ({ id, title }));
 
-    openActionSheet({ options, title: 'Body Font', selectedId: UI.settings.appearance.fontFamilyBody }, ({ id }) => {
+    openActionSheet({ options, title: 'Body Font', cancel: 'Cancel', selectedId: UI.settings.appearance.fontFamilyBody }, ({ id }) => {
       UI.settings.setValue('appearance.fontFamilyBody', id);
     });
   }
@@ -69,7 +74,7 @@ export default class SettingsThemeScreen extends React.Component<Props> {
           <Cell
             title="Font family"
             value={(
-              <Text style={UI.font(17)}>{formatFont(UI.settings.appearance.fontFamilyBody)}</Text>
+              <Text style={[{ fontFamily: UI.settings.appearance.fontFamilyBody }, styles.fontFamilyValue]}>{formatFont(UI.settings.appearance.fontFamilyBody)}</Text>
             )}
             onPress={this.onFontFamilyBodyPress}
           />

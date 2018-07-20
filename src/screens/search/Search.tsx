@@ -46,16 +46,23 @@ export default class SearchScreen extends React.Component<Props> {
   isFocused = false;
 
   componentWillMount() {
-    this.fetchData();
+    UI.addScreen(this);
   }
 
-  fetchData() {
-    Search.fetchTrending();
+  componentDidMount() {
+    this.fetchData();
   }
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
-    this.updateOptions();
+  }
+
+  componentWillUnmount() {
+    UI.removeScreen(this);
+  }
+
+  fetchData() {
+    Search.fetchTrending();
   }
 
   @autobind

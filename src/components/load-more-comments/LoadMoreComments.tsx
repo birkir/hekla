@@ -38,7 +38,7 @@ export default class LoadMoreComments extends React.Component<Props> {
         <TouchableHighlight
           onPress={this.onPress}
           activeOpacity={1}
-          underlayColor={getVar('--content-bg-active-color')}
+          underlayColor={getVar('--content-bg-highlight')}
           style={styles.content}
         >
           <View style={[styles.container, styles[`level${item.level}`]]}>

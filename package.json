@@ -46,7 +46,8 @@
     "react-native-progress": "3.5.0",
     "react-native-rate": "1.0.9",
     "react-native-sentry": "0.38.2",
-    "react-native-version-number": "0.3.4"
+    "react-native-version-number": "0.3.4",
+    "strip-indent": "2.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.54",

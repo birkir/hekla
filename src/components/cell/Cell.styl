@@ -4,11 +4,11 @@ gutter = 15px;
   flex-direction: row;
 
   &__underlay {
-    background-color: var(--content-bg-active-color);
+    background-color: var(--content-bg-highlight);
   }
 
   &__ios {
-    background-color: var(--content-bg-color);
+    background-color: var(--content-bg);
   }
 
   &__android {
@@ -63,7 +63,7 @@ gutter = 15px;
     left: 0px;
     right: 0px;
     height: var(--hairline-width);
-    background-color: var(--content-divider-color);
+    background-color: var(--content-border);
   }
 }
 
@@ -72,7 +72,7 @@ gutter = 15px;
     font-family: System;
     font-weight: 400;
     font-size: 17px;
-    color: var(--content-text-color);
+    color: var(--content-fg);
     letter-spacing: -0.37px;
   }
 }
@@ -80,7 +80,7 @@ gutter = 15px;
 .subtitle {
   &__text {
     font-size: 12px;
-    color: var(--content-text-color);
+    color: var(--content-fg);
   }
 }
 
@@ -88,7 +88,9 @@ gutter = 15px;
   &__text {
     text-align: right;
     font-size: 17px;
-    color: var(--content-text-light-color);
+    color: var(--content-fg);
+    // TODO: tune opacity
+    opacity: 0.7;
     letter-spacing: -0.37px;
   }
 }
@@ -97,12 +99,14 @@ gutter = 15px;
   &__more {
     margin-top: 2px;
     margin-left: 10px;
-    tint-color: var(--content-text-lighter-color);
+    tint-color: var(--content-fg);
+    // TODO: tune opacity
+    opacity: 0.65;
   }
 
   &__selected {
     margin-top: 2px;
     margin-left: 10px;
-    tint-color: var(--primary-color);
+    tint-color: var(--tint-bg);
   }
 }

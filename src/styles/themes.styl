@@ -12,120 +12,133 @@
   --secondary-text-color: #ffffff;
 }
 
+applyTheme() {
+  // Tint colors
+  --tint-bg: $statusBar-background;
+  --tint-fg: $editor-foreground;
+
+  // Navbar background color
+  --navbar-bg: $editor-background;
+  // Navbar text color
+  --navbar-fg: $editor-foreground;
+  // Navbar button colors
+  --navbar-tint: $statusBar-background;
+
+  // Tabbar background color
+  --tabbar-bg: $editor-background;
+  // Tabbar inactive text and icon color
+  --tabbar-fg: $editor-foreground;
+  // Tabbar active text and icon color
+  --tabbar-tint: $statusBar-background;
+
+  // Screen backdrop
+  --backdrop: $editorGutter-background;
+
+  // Content background color
+  --content-bg: $editor-background;
+  // Content underlay color (active / press)
+  --content-bg-highlight: $editorGutter-background;
+  // Content text color
+  --content-fg: $editor-foreground;
+  // --content-fg-65: rgba($editor-foreground, 65%);
+  // --content-fg-75: rgba($editor-foreground, 75%);
+  // --content-fg-85: rgba($editor-foreground, 85%);
+
+  // Content border color
+  --content-border: $editorIndentGuide-background;
+
+  // Metalink background color
+  --meta-bg: $sideBar-background;
+  // Metalink underlay color (press)
+  --meta-bg-highlight: $sideBarSectionHeader-background;
+  // Metalink text color
+  --meta-fg: $sideBar-foreground;
+  // Metalink border color
+  --meta-border: $sideBarSectionHeader-background;
+
+  // Text link color
+  --text-link-fg: $statusBar-background;
+  // Quote left border color
+  --text-quote-border: $editorIndentGuide-background;
+  // Blockquote background color
+  --text-code-bg: $sideBar-background;
+  // Blockquote text color
+  --text-code-fg: $sideBar-foreground;
+}
+
 .light {
-  --primary-color: #007aff;
-  --primary-light-color: lighten(#007aff, 10%);
-  --primary-dark-color: darken(#007aff, 10%);
+  $editor-background = #ffffff;
+  $editor-foreground = #000000;
+  $editorIndentGuide-background = #e3e3e3;
+  $statusBar-background = #007aff;
+  $sideBar-background = #f2f1f6;
+  $sideBar-foreground = #111111;
+  $sideBarSectionHeader-background = #e6e5ea;
+  $editorGutter-background = #f2f1f6;
 
-  --secondary-color: #ff6c00;
-  --secondary-light-color: lighten(#ff6c00, 10%);
-  --secondary-dark-color: darken(#ff6c00, 10%);
-
-  --backdrop-color: #f2f1f6;
-
-  --content-bg-active-color: #f2f1f6;
-  --content-bg-color: #ffffff;
-  --content-text-color: #000000;
-  --content-text-light-color: #686868;
-  --content-text-lighter-color: #b7b6bb;
-  --content-divider-color: #e3e3e3;
-
-  --meta-bg-color: #f2f1f6;
-  --meta-bg-active-color: #e6e5ea;
-  --meta-border-color: #d0d0d0;
-  --meta-text-color: #111111;
-  --meta-text-light-color: #656568;
-  --meta-text-lighter-color: #b7b6bb;
-  --meta-icon-tint-color: #909193;
-  --meta-divider-color: #d9d8dd;
-
-
-  // Android
-  --primary-color-android: #009688;
-  --primary-dark-color-android: #00796B;
+  applyTheme();
+  --content-fg-50: rgba($editor-foreground, 50%);
+  --navbar-bg: transparent;
+  --tabbar-bg: transparent;
+  --tabbar-fg: #A1A1A1;
 }
 
 .dark {
-  --primary-color: red;
-  --primary-light-color: lighten(red, 10%);
-  --primary-dark-color: darken(red, 10%);
+  $editor-background = #2a2626;
+  $editor-foreground = #ffffff;
+  $editorIndentGuide-background = #453e3e;
+  $statusBar-background = #ff2d55;
+  $sideBar-background = #373232;
+  $sideBar-foreground = #ffffff;
+  $sideBarSectionHeader-background = #3f3939;
+  $editorGutter-background = #252121;
 
-  --secondary-color: #ff6c00;
-  --secondary-light-color: lighten(#ff6c00, 10%);
-  --secondary-dark-color: darken(#ff6c00, 10%);
-
-  --backdrop-color: #111111;
-
-  --content-bg-active-color: #000000;
-  --content-bg-color: #151515;
-  --content-text-color: #ffffff;
-  --content-text-light-color: #b7b6bb;
-  --content-text-lighter-color: #686868;
-  --content-divider-color: #333333;
-
-  --meta-bg-color: #222222;
-  --meta-bg-active-color: #000000;
-  --meta-border-color: #252525;
-  --meta-text-color: #777777;
-  --meta-text-light-color: #888888;
-  --meta-text-lighter-color: #b7b6bb;
-  --meta-icon-tint-color: #909193;
-  --meta-divider-color: #444444;
+  applyTheme();
+  --content-fg-50: rgba($editor-foreground, 50%);
+  --navbar-style: dark;
+  --navbar-bg: transparent;
+  --tabbar-style: dark;
+  --tabbar-bg: transparent;
 }
 
+.piggy {
+  $editor-background = #3d2f34;
+  $editor-foreground = #edebe6;
+  $editorIndentGuide-background = #5a454d;
+  $statusBar-background = #f52e62;
+  $sideBar-background = #4b3a40;
+  $sideBar-foreground = #edebe6;
+  $sideBarSectionHeader-background = #544148;
+  $editorGutter-background = #372b2f;
 
-.solarizedLight {
-  --primary-color: #586E75;
-  --primary-active-color: lighten(#007aff, 10%);
-  --primary-text-color: #ffffff;
-
-  --secondary-color: #D33682;
-  --secondary-active-color: lighten(#ff6c00, 10%);
-  --secondary-text-color: #ffffff;
-
-  --backdrop-color: #FDF6E3;
-
-  --content-bg-active-color: #FDF6E3;
-  --content-bg-color: #EEE8D5;
-  --content-text-color: #657B82;
-  --content-text-light-color: #909193;
-  --content-text-lighter-color: #656568;
-  --content-divider-color: #656568;
-
-  --meta-bg-color: #f2f1f6;
-  --meta-bg-active-color: #e6e5ea;
-  --meta-border-color: #d0d0d0;
-  --meta-text-color: #111111;
-  --meta-text-light-color: #656568;
-  --meta-text-lighter-color: #b7b6bb;
-  --meta-icon-tint-color: #909193;
-  --meta-divider-color: #d9d8dd;
+  applyTheme();
+  --content-fg-50: rgba($editor-foreground, 50%);
 }
 
-.solarizedDark {
-  --primary-color: #fdf6e3;
-  --primary-active-color: lighten(#007aff, 10%);
-  --primary-text-color: #073642;
+.piggyLight {
+  $editor-background = #ffffff;
+  $editor-foreground = #222222;
+  $editorIndentGuide-background = #e3e3e3;
+  $statusBar-background = #f52e62;
+  $sideBar-background = #f2f2f2;
+  $sideBar-foreground = #444444;
+  $sideBarSectionHeader-background = #d9d9d9;
+  $editorGutter-background = #fafafa;
 
-  --secondary-color: #ff6c00;
-  --secondary-active-color: lighten(#ff6c00, 10%);
-  --secondary-text-color: #ffffff;
+  applyTheme();
+  --content-fg-50: rgba($editor-foreground, 50%);
+}
 
-  --backdrop-color: #073642;
+.glowfish {
+  $editor-background = #191f13;
+  $editor-foreground = #6ea240;
+  $editorIndentGuide-background = #323f26;
+  $statusBar-background = #95cc5e;
+  $sideBar-background = #262f1d;
+  $sideBar-foreground = #6ea240;
+  $sideBarSectionHeader-background = #2d3822;
+  $editorGutter-background = #14190f;
 
-  --content-bg-active-color: #073642;
-  --content-bg-color: #002b36;
-  --content-text-color: #93a1a1;
-  --content-text-light-color: #909193;
-  --content-text-lighter-color: #656568;
-  --content-divider-color: #656568;
-
-  --meta-bg-color: #073642;
-  --meta-bg-active-color: #002b36;
-  --meta-border-color: #073642;
-  --meta-text-color: #93a1a1;
-  --meta-text-light-color: #909193;
-  --meta-text-lighter-color: #656568;
-  --meta-icon-tint-color: #909193;
-  --meta-divider-color: #d9d8dd;
+  applyTheme();
+  --content-fg-50: rgba($editor-foreground, 50%);
 }

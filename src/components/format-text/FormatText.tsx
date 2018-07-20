@@ -5,6 +5,7 @@ import MetaLink from 'components/meta-link/MetaLink';
 import Link from './Link';
 import { theme } from 'styles';
 import { observer } from 'mobx-react';
+import stripIndent from 'strip-indent';
 const styles = theme(require('./FormatText.styl'));
 
 interface Props {
@@ -45,7 +46,7 @@ export default class FormatText extends React.Component<Props> {
     if (!noFormat && isQuote) {
       return (
         <View key={index} style={[styles.quote, !isLast && styles.line]}>
-          <Text style={styles.quote__text}>{reactLine}</Text>
+          <Text style={[styles.quote__text, this.props.style]}>{reactLine}</Text>
         </View>
       );
     }
@@ -56,9 +57,7 @@ export default class FormatText extends React.Component<Props> {
 
       return (
         <React.Fragment key={index}>
-          <View style={[styles.code, styles.line]}>
-            {codeLines}
-          </View>
+          <View style={[styles.code, styles.line]}>{codeLines}</View>
           <Text style={styles.line}>
             {otherLines}{noFormat ? '\n' : ''}
           </Text>
@@ -89,28 +88,28 @@ export default class FormatText extends React.Component<Props> {
 
     if (isCode) {
       return (
-        <Text style={!noFormat && styles.code__text} key={`${index}_CODE`}>
-          {isCode[1].replace(/\${NEWLINE}/g, '\n')}
+        <Text style={[this.props.style, !noFormat && styles.code__text]} key={`${index}_CODE`}>
+          {stripIndent(isCode[1].replace(/\${NEWLINE}/g, '\n'))}
         </Text>
       );
     }
 
     if (isItalic) {
       return (
-        <Text style={styles.italic} key={index}>{isItalic[1]}{' '}</Text>
+        <Text style={[styles.italic, this.props.style]} key={index}>{isItalic[1]}{' '}</Text>
       );
     }
 
     if (isBold) {
       return (
-        <Text style={styles.bold} key={index}>{isBold[1]}{' '}</Text>
+        <Text style={[styles.bold, this.props.style]} key={index}>{isBold[1]}{' '}</Text>
       );
     }
 
     if (isLink) {
       if (noFormat) {
         return (
-          <Text key={index}>{isLink[2]}{' '}</Text>
+          <Text key={index} style={this.props.style}>{isLink[2]}{' '}</Text>
         );
       }
 

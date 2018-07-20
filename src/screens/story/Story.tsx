@@ -56,11 +56,18 @@ export default class StoryScreen extends React.Component<Props> {
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
-    this.updateOptions();
+  }
+
+  componentWillMount() {
+    UI.addScreen(this);
   }
 
   componentDidMount() {
     this.fetch();
+  }
+
+  componentWillUnmount() {
+    UI.removeScreen(this);
   }
 
   @autobind

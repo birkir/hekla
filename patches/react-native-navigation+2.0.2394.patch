@@ -1,4 +1,18 @@
 patch-package
+--- a/node_modules/react-native-navigation/lib/ios/RNNBackgroundOptions.m
++++ b/node_modules/react-native-navigation/lib/ios/RNNBackgroundOptions.m
+@@ -3,9 +3,9 @@
+ @implementation RNNBackgroundOptions
+ 
+ - (void)applyOn:(UIViewController *)viewController {
+-	if (self.color) {
++	if (self.color && [self.color doubleValue] > 0) {
+ 		UIColor* backgroundColor = [RCTConvert UIColor:self.color];
+-		viewController.navigationController.navigationBar.barTintColor = backgroundColor;
++        viewController.navigationController.navigationBar.barTintColor = backgroundColor;
+ 	} else {
+ 		viewController.navigationController.navigationBar.barTintColor = nil;
+ 	}
 --- a/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.h
 @@ -11,6 +11,7 @@
@@ -11,7 +25,13 @@ patch-package
  @property (nonatomic, strong) NSNumber* backgroundColor;
 --- a/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.m
-@@ -38,6 +38,11 @@ - (void)applyOn:(UIViewController *)viewController {
+@@ -33,11 +33,16 @@ - (void)applyOn:(UIViewController *)viewController {
+ 		}
+ 	}
+ 	
+-	if (self.backgroundColor) {
++	if (self.backgroundColor && [self.backgroundColor doubleValue] > 0) {
+ 		viewController.tabBarController.tabBar.barTintColor = [RCTConvert UIColor:self.backgroundColor];
  	} else {
  		viewController.tabBarController.tabBar.barTintColor = nil;
  	}

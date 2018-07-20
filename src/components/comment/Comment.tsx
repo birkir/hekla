@@ -24,6 +24,7 @@ interface Props {
   numberOfLines?: number;
   onPress?: (Props) => void;
   card?: boolean;
+  divider?: boolean;
   testID?: string;
 }
 
@@ -209,7 +210,7 @@ export default class Comment extends React.Component<Props> {
         onPress={this.onPress}
         onLongPress={this.onMorePress}
         activeOpacity={1}
-        underlayColor={getVar('--content-bg-active-color')}
+        underlayColor={getVar('--content-bg-highlight')}
         style={[styles.host, card && styles.host__card]}
       >
         <View style={[styles.container, styles[`level${depth}`]]}>

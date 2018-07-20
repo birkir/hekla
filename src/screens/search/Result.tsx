@@ -52,12 +52,19 @@ export default class ResultScreen extends React.Component<Props> {
   isRefreshing = false;
 
   componentWillMount() {
+    UI.addScreen(this);
+  }
+
+  componentDidMount() {
     this.fetchData();
   }
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
-    this.updateOptions();
+  }
+
+  componentWillUnmount() {
+    UI.removeScreen(this);
   }
 
   onNavigationButtonPressed(buttonId) {

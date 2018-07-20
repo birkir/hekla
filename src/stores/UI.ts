@@ -1,5 +1,5 @@
 import { types, flow, applySnapshot } from 'mobx-state-tree';
-import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage, Linking } from 'react-native';
+import { Dimensions, Platform, PlatformIOSStatic, NativeModules, AsyncStorage, Linking, processColor } from 'react-native';
 import { CustomTabs, ANIMATIONS_SLIDE } from 'react-native-custom-tabs';
 import CodePush from 'react-native-code-push';
 import Settings from './models/Settings';
@@ -9,6 +9,8 @@ import { IPAD_SCREEN, STORIES_SCREEN } from 'screens';
 import { getVar } from 'styles';
 
 const { width, height } = Dimensions.get('window');
+
+const Screens = new Set();
 
 const UI = types
   .model('UI', {
@@ -48,6 +50,22 @@ const UI = types
     },
   }))
   .actions(self => ({
+
+    addScreen(screen) {
+      Screens.add(screen);
+    },
+
+    removeScreen(screen) {
+      Screens.delete(screen);
+    },
+
+    updateScreens() {
+      Screens.forEach((screen: any) => {
+        if (screen.updateOptions) {
+          screen.updateOptions();
+        }
+      });
+    },
 
     setComponentId(componentId: string, componentName?: string) {
 
@@ -103,12 +121,14 @@ const UI = types
       const { browserOpenIn, browserUseReaderMode } = UI.settings.general;
       if (Platform.OS === 'ios') {
         if (browserOpenIn === 'inApp') {
-          return NativeModules.RNHekla.openSafari(
-            self.componentId,
+          return NativeModules.RNHekla.openSafari(self.componentId, {
             url,
             browserUseReaderMode,
             reactTag,
-          );
+            preferredBarTintColor: processColor(getVar('--navbar-bg')),
+            preferredControlTintColor: processColor(getVar('--navbar-tint')),
+            dismissButtonStyle: 'done',
+          });
         }
 
         if (browserOpenIn === 'chrome') {
@@ -121,7 +141,7 @@ const UI = types
       }
       if (Platform.OS === 'android' && reactTag === -1) {
         CustomTabs.openURL(url, {
-          toolbarColor: getVar('--primary-color'),
+          toolbarColor: getVar('--tint-bg'),
           animations: ANIMATIONS_SLIDE,
           enableUrlBarHiding: true,
           showPageTitle: true,

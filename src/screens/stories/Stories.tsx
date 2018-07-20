@@ -76,11 +76,9 @@ export default class StoriesScreen extends React.Component<Props> {
     Navigation.mergeOptions(this.props.componentId, StoriesScreen.options);
   }
 
-  componentDidAppear() {
-    this.updateOptions();
-  }
-
   componentWillMount() {
+    UI.addScreen(this);
+
     // Fetch data needed to display screen
     this.fetchData();
 
@@ -104,6 +102,7 @@ export default class StoriesScreen extends React.Component<Props> {
   componentWillUnmount() {
     Stories.dispose();
     this.dispose.remove();
+    UI.removeScreen(this);
   }
 
   onNavigationButtonPressed(buttonId) {
@@ -147,7 +146,7 @@ export default class StoriesScreen extends React.Component<Props> {
     };
 
     if (Platform.OS === 'ios') {
-      bars = await NativeModules.RNHekla.getHeights(this.props.componentId);
+      bars = await Navigation.constants();
     }
 
     const { width, height } = Dimensions.get('window');

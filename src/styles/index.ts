@@ -7,55 +7,62 @@ export const getVar = (name: string, fallback: string = undefined) => {
   return themes[UI.settings.appearance.theme][name] || fallback;
 };
 
+const getStatusBarStyle = (backgroundColor) => {
+  const result = /^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.exec(backgroundColor);
+  if (!result) return 'light-content';
+  const [r, g, b] = result.slice(1, 4).map(n => parseInt(n.length === 1 ? `f${n}` : n, 16));
+  const shade = (r + g + b) / 3;
+  return shade > 128 ? 'dark-content' : 'light-content';
+};
+
 export const applyThemeOptions = (settings: any) => {
-  const { isDarkTheme } = UI.settings.appearance;
-
   if (Platform.OS === 'ios') {
-    set(settings, 'topBar.drawBehind', true);
-    set(settings, 'topBar.translucent', true);
-    set(settings, 'bottomTabs.drawBehind', true);
-    set(settings, 'bottomTabs.translucent', true);
 
-    set(settings, 'layout.backgroundColor', getVar('--backdrop-color'));
+    // NavBar
+    const navBarStyle = getVar('--navbar-style', 'light');
+    const navBarBg = getVar('--navbar-bg', 'transparent');
 
-    if (isDarkTheme) {
-      StatusBar.setBarStyle('light-content');
-
-      set(settings, 'topBar.barStyle', 'black');
-      set(settings, 'topBar.noBorder', true);
-      set(settings, 'bottomTabs.barStyle', 'black');
-
-      if (settings.bottomTab) {
-        set(settings, 'bottomTab.iconColor', '#808080');
-        set(settings, 'bottomTab.textColor', '#808080');
-      }
-
+    if (navBarBg && navBarBg !== 'transparent') {
+      StatusBar.setBarStyle(getStatusBarStyle(navBarBg));
     } else {
-      StatusBar.setBarStyle('dark-content');
-
-      set(settings, 'topBar.barStyle', 'default');
-      set(settings, 'topBar.noBorder', false);
-      set(settings, 'bottomTabs.barStyle', 'default');
-
-      if (settings.bottomTab) {
-        set(settings, 'bottomTab.iconColor', '#808080');
-        set(settings, 'bottomTab.textColor', '#808080');
-      }
+      StatusBar.setBarStyle(navBarStyle === 'dark' ? 'light-content' : 'dark-content');
     }
+
+    // NavBar
+    const tabBarStyle = getVar('--tabbar-style', 'light');
+    const tabBarBg = getVar('--tabbar-bg', 'transparent');
+
+    // Top Bar
+    set(settings, 'topBar.background.color', navBarBg);
+    set(settings, 'topBar.drawBehind', true);
+    set(settings, 'topBar.translucent', navBarStyle === 'dark' || navBarStyle === 'light');
+    set(settings, 'topBar.barStyle', navBarStyle === 'dark' ? 'black' : 'default');
+    set(settings, 'topBar.title.color', getVar('--navbar-fg'));
+    set(settings, 'topBar.buttonColor', getVar('--navbar-tint'));
+
+    // Bottom Tabs
+    set(settings, 'bottomTabs.backgroundColor', tabBarBg);
+    set(settings, 'bottomTabs.translucent', tabBarStyle === 'dark' || tabBarStyle === 'light');
+    set(settings, 'bottomTabs.barStyle', tabBarStyle === 'dark' ? 'black' : 'default');
+    set(settings, 'bottomTabs.drawBehind', true);
+    set(settings, 'bottomTabs.selectedTabColor', getVar('--tabbar-tint'));
 
     if (settings.bottomTab) {
-      set(settings, 'bottomTab.selectedTextColor', getVar('--primary-color'));
-      set(settings, 'bottomTab.selectedIconColor', getVar('--primary-color'));
+      set(settings, 'bottomTab.iconColor', getVar('--tabbar-fg'));
+      set(settings, 'bottomTab.textColor', getVar('--tabbar-fg'));
+      set(settings, 'bottomTab.selectedTextColor', getVar('--tabbar-tint'));
+      set(settings, 'bottomTab.selectedIconColor', getVar('--tabbar-tint'));
     }
 
-    set(settings, 'topBar.buttonColor', getVar('--primary-color'));
-    set(settings, 'bottomTabs.selectedTabColor', getVar('--primary-color'));
+    set(settings, 'layout.backgroundColor', getVar('--backdrop'));
+
+    console.log(settings.topBar);
   }
 
   if (Platform.OS === 'android') {
     set(settings, 'bottomTabs.titleDisplayMode', 'alwaysShow');
     set(settings, 'statusBar.backgroundColor', getVar('--primary-dark-color'));
-    set(settings, 'topBar.background.color', getVar('--primary-color'));
+    set(settings, 'topBar.background.color', getVar('--tint-bg'));
     set(settings, 'topBar.buttonColor', 'white');
     set(settings, 'topBar.title.color', 'white');
     set(settings, 'topBar.backButton.color', 'white');
@@ -67,23 +74,23 @@ export const applyThemeOptions = (settings: any) => {
       })));
     }
 
-    if (isDarkTheme) {
-      set(settings, 'bottomTabs.backgroundColor', '#000000');
-      set(settings, 'bottomTabs.backgroundColor', '#000000');
+    // if (isDarkTheme) {
+    //   set(settings, 'bottomTabs.backgroundColor', '#000000');
+    //   set(settings, 'bottomTabs.backgroundColor', '#000000');
 
-      if (settings.bottomTab) {
-        set(settings, 'bottomTab.iconColor', '#FFFFFF');
-        set(settings, 'bottomTab.textColor', '#FFFFFF');
-      }
-    } else {
-      set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
-      set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
+    //   if (settings.bottomTab) {
+    //     set(settings, 'bottomTab.iconColor', '#FFFFFF');
+    //     set(settings, 'bottomTab.textColor', '#FFFFFF');
+    //   }
+    // } else {
+    //   set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
+    //   set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
 
-      if (settings.bottomTab) {
-        set(settings, 'bottomTab.iconColor', '#363636');
-        set(settings, 'bottomTab.textColor', '#363636');
-      }
-    }
+    //   if (settings.bottomTab) {
+    //     set(settings, 'bottomTab.iconColor', '#363636');
+    //     set(settings, 'bottomTab.textColor', '#363636');
+    //   }
+    // }
 
   }
 

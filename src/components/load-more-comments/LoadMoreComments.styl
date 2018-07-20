@@ -4,7 +4,7 @@ $colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
 .host {
   position: relative;
 
-  background-color: var(--content-bg-color);
+  background-color: var(--content-bg);
 }
 
 .border {
@@ -22,7 +22,7 @@ $colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
 
   font-family: 'System';
   font-size: 14px;
-  color: var(--primary-color);
+  color: var(--tint-bg);
 }
 
 .container {
@@ -33,7 +33,7 @@ $colors = #0D61AB, #E48203, #7AC528, #842A7C, #9A012D, #0D61AB, #E48203, #7AC528
 }
 
 .icon__more {
-  tint-color: var(--primary-color);
+  tint-color: var(--tint-bg);
   margin-right: 16px;
 }
 
@@ -51,7 +51,7 @@ for color, i in $colors {
     left: i * 16px;
     right: 0px;
     height: var(--hairline-width);
-    background-color: var(--content-divider-color);
+    background-color: var(--content-border);
   }
  }
 

@@ -21,7 +21,7 @@
 
   aspect-ratio: 1.77;
 
-  background-color: var(--meta-bg-color);
+  background-color: var(--meta-bg);
 }
 
 .content {
@@ -30,7 +30,7 @@
 
   padding: 8px;
 
-  background-color: var(--meta-bg-color);
+  background-color: var(--meta-bg);
 
   border-top-width: var(--hairline-width);
   border-left-width: var(--hairline-width);
@@ -48,11 +48,11 @@
     border-top-right-radius: 0px;
 
     border-top-width: var(--hairline-width);
-    border-top-color: var(--meta-border-color);
+    border-top-color: var(--meta-border);
   }
 
   &__underlay {
-    background-color: var(--meta-bg-active-color);
+    background-color: var(--meta-bg-highlight);
   }
 }
 
@@ -60,7 +60,8 @@
   font-family: 'System';
   font-size: 14px;
   font-weight: 500;
-  color: var(--meta-text-color);
+  color: var(--meta-fg);
+  opacity: 0.85;
 
   margin-bottom: 2px;
 }
@@ -69,32 +70,44 @@
   &__host {
     font-family: 'System';
     font-size: 13px;
-    color: var(--meta-text-light-color);
+    color: var(--meta-fg);
+    // TODO: tune opacity
+    opacity: 0.75;
   }
+
   &__path {
     font-family: 'System';
     font-size: 13px;
-    color: var(--meta-text-lighter-color);
+    color: var(--meta-fg);
+    // TODO: tune opacity
+    opacity: 0.5;
   }
+}
+
+.divider {
+  width: var(--hairline-width);
+  background-color: var(--meta-fg);
+  height: 100%;
+  opacity: 0.3;
+
+  margin-left: 10px;
+  margin-right: 10px;
+
 }
 
 .icon {
   height: 100%;
 
-  padding-right: 10px;
-  margin-right: 10px;
-
-  border-right-width: var(--hairline-width);
-  border-right-color: var(--meta-divider-color);
-
   &__safari {
-    tint-color: var(--meta-icon-tint-color);
+    tint-color: var(--meta-fg);
     top: 50%;
     margin-top: -16px;
+    opacity: 0.5;
   }
 }
 
 .chevron {
   margin-left: 16px;
-  tint-color: var(--meta-icon-tint-color);
+  tint-color: var(--meta-fg);
+  opacity: 0.5;
 }

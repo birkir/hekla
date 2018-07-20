@@ -64,7 +64,7 @@ export default class StoryCard extends React.Component<Props> {
         onPressIn={this.onPressIn}
         style={styles.host}
         activeOpacity={1}
-        underlayColor={getVar('--content-bg-active-color', 'gray')}
+        underlayColor={getVar('--content-bg-highlight', 'gray')}
       >
         <View>
           {!!title && <Text style={[styles.title, UI.font(17), item.isRead && styles.read]}>{title}</Text>}
@@ -79,7 +79,7 @@ export default class StoryCard extends React.Component<Props> {
                 noLinks={true}
                 noFormat={true}
                 numberOfLines={10}
-                style={styles.summary}
+                style={[styles.summary, UI.font(15)]}
               >
                 {prettyText}
               </FormatText>

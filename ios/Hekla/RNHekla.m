@@ -37,47 +37,43 @@ RCT_EXPORT_MODULE()
   #endif
 }
 
-RCT_EXPORT_METHOD(getHeights:(NSString *)componentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(openSafari:(NSString *)componentId options:(NSDictionary *)options) {
+
+  NSString* url = [options valueForKey:@"url"];
+  NSNumber* readerMode = [options valueForKey:@"readerMode"];
+  NSNumber* reactTag = [options valueForKey:@"reactTag"];
+  NSNumber* preferredBarTintColor = [options valueForKey:@"preferredBarTintColor"];
+  NSNumber* preferredControlTintColor = [options valueForKey:@"preferredControlTintColor"];
+  NSString* dismissButtonStyle = [options valueForKey:@"dismissButtonStyle"];
+  
   UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
-  NSObject *constants = @{
-                          @"topBarHeight": @(vc.navigationController.navigationBar.frame.size.height),
-                          @"statusBarHeight": @([UIApplication sharedApplication].statusBarFrame.size.height),
-                          @"bottomTabsHeight": @(vc.tabBarController.tabBar.frame.size.height)
-                          };
-  resolve(constants);
-}
-
-RCT_EXPORT_METHOD(openVideoPlayer:(NSString *)componentId url:(NSString *)url elementId:(NSString *)elementId) {
- UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
- NSURL *videoURL = [NSURL URLWithString:url];
- AVPlayer *player = [AVPlayer playerWithURL:videoURL];
- RNNAVPlayer *playerViewController = [RNNAVPlayer new];
- playerViewController.player = player;
- playerViewController.componentId = @"RNNAVPlayer";
-
- if (elementId != nil) {
-   RNNElementFinder* elementFinder = [[RNNElementFinder alloc] initWithFromVC:vc];
-   RNNElementView* elementView = [elementFinder findElementForId:elementId];
-   if ([vc isKindOfClass:[RNNRootViewController class]]) {
-     RNNRootViewController* rootVc = (RNNRootViewController*)vc;
-     rootVc.previewController = playerViewController;
-     rootVc.previewCallback = ^(UIViewController *vc) {
-       [player play];
-       [vc.navigationController presentViewController:playerViewController animated:YES completion:nil];
-     };
-     [rootVc registerForPreviewingWithDelegate:(id)rootVc sourceView:elementView];
-   }
- } else {
-   [vc.navigationController presentViewController:playerViewController animated:YES completion:nil];
- }
-}
-
-RCT_EXPORT_METHOD(openSafari:(NSString *)componentId url:(NSString *)url readerMode:(nonnull NSNumber *)readerMode reactTag:(nonnull NSNumber *)reactTag) {
- UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
+  
   SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:[[NSURL alloc] initWithString:url] entersReaderIfAvailable:[readerMode boolValue]];
- (void)safariViewController.view;
- if ([reactTag intValue] >= 0) {
-   if ([vc isKindOfClass:[RNNRootViewController class]]) {
+  
+  if (preferredBarTintColor) {
+    safariViewController.preferredBarTintColor = [RCTConvert UIColor:preferredBarTintColor];
+  }
+  
+  if (preferredControlTintColor) {
+    safariViewController.preferredControlTintColor = [RCTConvert UIColor:preferredControlTintColor];
+  }
+  
+  if (@available(iOS 11.0, *)) {
+    if ([dismissButtonStyle isEqualToString:@"done"]) {
+      safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleDone;
+    }
+    if ([dismissButtonStyle isEqualToString:@"close"]) {
+      safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleClose;
+    }
+    if ([dismissButtonStyle isEqualToString:@"cancel"]) {
+      safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleCancel;
+    }
+  }
+  
+  (void)safariViewController.view;
+
+  if ([reactTag intValue] >= 0) {
+    if ([vc isKindOfClass:[RNNRootViewController class]]) {
      RNNRootViewController* rootVc = (RNNRootViewController*)vc;
      rootVc.previewController = safariViewController;
      rootVc.previewCallback = ^(UIViewController *vc) {

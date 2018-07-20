@@ -1,5 +1,6 @@
-import { Navigation } from 'react-native-navigation';
 import { StatusBar } from 'react-native';
+import { Navigation } from 'react-native-navigation';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import Stories from './stories/Stories';
 import Story from './story/Story';
 import Search from './search/Search';
@@ -56,7 +57,7 @@ export const IPAD_SCREEN = 'hekla.IPadScreen';
 
 export const Screens = new Map();
 Screens.set(STORIES_SCREEN, Stories);
-Screens.set(STORY_SCREEN, Story);
+Screens.set(STORY_SCREEN, gestureHandlerRootHOC(Story));
 Screens.set(SEARCH_SCREEN, Search);
 Screens.set(RESULT_SCREEN, Result);
 Screens.set(ACCOUNT_SCREEN, Account);
@@ -79,8 +80,8 @@ export const startApp = () => {
   StatusBar.setBarStyle('dark-content', true);
   const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
 
-  const selectedIconColor = getVar('--primary-color');
-  const selectedTextColor = getVar('--primary-color');
+  const selectedIconColor = getVar('--tint-bg');
+  const selectedTextColor = getVar('--tint-bg');
 
   const tabs = [
     {

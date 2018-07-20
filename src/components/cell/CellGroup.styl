@@ -1,18 +1,18 @@
 .host {
   &__android {
     border-bottom-width: 1px;
-    border-bottom-color: var(--content-divider-color);
-    background-color: var(--content-bg-color);
+    border-bottom-color: var(--content-border);
+    background-color: var(--content-bg);
   }
 }
 
 .items {
   &__ios {
     border-top-width: var(--hairline-width);
-    border-top-color: var(--content-divider-color);
+    border-top-color: var(--content-border);
 
     border-bottom-width: var(--hairline-width);
-    border-bottom-color: var(--content-divider-color);
+    border-bottom-color: var(--content-border);
   }
 }
 
@@ -25,11 +25,13 @@
 
   &__text {
     font-size: 13px;
-    color: var(--content-text-light-color);
+    color: var(--content-fg);
+    // TODO: tune opacity
+    opacity: 0.75;
     letter-spacing: -0.05px;
 
     &__android {
-      color: var(--primary-color);
+      color: var(--tint-bg);
     }
   }
 }
@@ -43,7 +45,9 @@
 
   &__text {
     font-size: 13px;
-    color: var(--content-text-light-color);
+    color: var(--content-fg);
+    // TODO: tune opacity
+    opacity: 0.65;
     letter-spacing: -0.05px;
   }
 }

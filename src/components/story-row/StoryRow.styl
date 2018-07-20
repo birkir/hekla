@@ -1,3 +1,5 @@
+// TODO: tune opacity
+
 .row {
   flex-direction: row;
 
@@ -12,14 +14,16 @@
     font-size: 15px;
     margin-bottom: 8px;
 
-    color: var(--content-text-light-color);
+    color: var(--content-fg);
+    opacity: 0.75
   }
 
   &__text {
     font-family: 'System';
     font-size: 14px;
     padding-right: 8px;
-    color: var(--content-text-light-color);
+    color: var(--content-fg);
+    opacity: 0.75
 
     &__active {
       color: var(--secondary-color);
@@ -27,7 +31,8 @@
   }
 
   &__icon {
-    tint-color: var(--content-text-light-color);
+    tint-color: var(--content-fg);
+    opacity: 0.75
     margin-right: 4px;
 
     &__active {
@@ -50,7 +55,8 @@
     margin-left: 8px;
 
     &__icon {
-      tint-color: var(--content-text-light-color);
+      tint-color: var(--content-fg);
+      opacity: 0.75
     }
 
     &__active {

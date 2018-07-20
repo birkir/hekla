@@ -163,7 +163,7 @@ export default class MetaLink extends React.Component<Props, State> {
       styles.content,
       isImage && styles.content__image,
       underlay && styles.content__underlay,
-      { borderColor: getVar('--meta-border-color') },
+      { borderColor: getVar('--meta-border') },
     ];
 
     const displayTitle = String(title || '').trim();
@@ -207,13 +207,14 @@ export default class MetaLink extends React.Component<Props, State> {
           {large && isImage && (
             <FastImage
               source={{ uri: image.url }}
-              style={[styles.image, { borderColor: getVar('--meta-border-color') }]}
+              style={[styles.image, { borderColor: getVar('--meta-border') }]}
               onError={this.onImageError}
               resizeMode="cover"
             />
           )}
           <View style={contentStyles}>
             {this.renderIcon()}
+            <View style={styles.divider} />
             <View style={styles.text}>
               {titleElement}
               {linkElement}

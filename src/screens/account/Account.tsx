@@ -13,6 +13,7 @@ import { when } from 'mobx';
 import { theme, applyThemeOptions, getVar } from 'styles';
 import { userSubmissionsScreen, userCommentsScreen, userFavoritesScreen, accountVotedScreen, accountHiddenScreen } from 'screens';
 import Login from './Login';
+import UI from 'stores/UI';
 const styles = theme(require('./Account.styl'));
 
 interface Props {
@@ -44,6 +45,10 @@ export default class AccountScreen extends React.Component<Props> {
     });
   }
 
+  componentWillMount() {
+    UI.addScreen(this);
+  }
+
   componentDidMount() {
     when(
       () => Account.user && Account.user.id !== null,
@@ -53,6 +58,10 @@ export default class AccountScreen extends React.Component<Props> {
 
   componentDidAppear() {
     this.updateOptions();
+  }
+
+  componentWillUnmount() {
+    UI.removeScreen(this);
   }
 
   @autobind
@@ -143,7 +152,7 @@ export default class AccountScreen extends React.Component<Props> {
             left={
               <CellIcon
                 source={require('assets/icons/32/submissions.png')}
-                tintColor={getVar('--primary-color')}
+                tintColor={getVar('--tint-bg')}
                 size={21}
               />
             }
@@ -155,7 +164,7 @@ export default class AccountScreen extends React.Component<Props> {
             left={
               <CellIcon
                 source={require('assets/icons/32/comments.png')}
-                tintColor={getVar('--primary-color')}
+                tintColor={getVar('--tint-bg')}
                 size={21}
               />
             }
@@ -167,7 +176,7 @@ export default class AccountScreen extends React.Component<Props> {
             left={
               <CellIcon
                 source={require('assets/icons/32/hide.png')}
-                tintColor={getVar('--primary-color')}
+                tintColor={getVar('--tint-bg')}
                 size={24}
               />
             }
@@ -179,7 +188,7 @@ export default class AccountScreen extends React.Component<Props> {
             left={
               <CellIcon
                 source={require('assets/icons/32/arrow-up.png')}
-                tintColor={getVar('--primary-color')}
+                tintColor={getVar('--tint-bg')}
                 size={24}
               />
             }
@@ -191,7 +200,7 @@ export default class AccountScreen extends React.Component<Props> {
             left={
               <CellIcon
                 source={require('assets/icons/32/star.png')}
-                tintColor={getVar('--primary-color')}
+                tintColor={getVar('--tint-bg')}
                 size={21}
               />
             }
