@@ -1,6 +1,5 @@
 import { StatusBar } from 'react-native';
 import { Navigation } from 'react-native-navigation';
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import Stories from './stories/Stories';
 import Story from './story/Story';
 import Search from './search/Search';
@@ -57,7 +56,7 @@ export const IPAD_SCREEN = 'hekla.IPadScreen';
 
 export const Screens = new Map();
 Screens.set(STORIES_SCREEN, Stories);
-Screens.set(STORY_SCREEN, gestureHandlerRootHOC(Story));
+Screens.set(STORY_SCREEN, Story);
 Screens.set(SEARCH_SCREEN, Search);
 Screens.set(RESULT_SCREEN, Result);
 Screens.set(ACCOUNT_SCREEN, Account);
