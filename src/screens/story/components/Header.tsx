@@ -104,11 +104,13 @@ export default class StoryHeader extends React.Component<Props> {
       return null;
     }
 
-    const { title, score, descendants, ago, text, prettyText, by, metadata = {}, url } = item;
+    const { title, text, prettyText, metadata = {}, url } = item;
+    const paddingLeft = Math.max(0, UI.insetLeft - 16);
+    const paddingRight = Math.max(0, UI.insetRight - 16);
 
     return (
       <View style={[styles.host, { borderBottomWidth: StyleSheet.hairlineWidth, marginBottom: -StyleSheet.hairlineWidth }]}>
-        <View>
+        <View style={{ paddingLeft, paddingRight }}>
           {!!title && <Text style={[styles.title, UI.font(17)]}>{title}</Text>}
           <MetaLink
             {...metadata}
@@ -120,9 +122,9 @@ export default class StoryHeader extends React.Component<Props> {
               {prettyText}
             </FormatText>
           )}
+          <StoryRow item={item} />
         </View>
-        <StoryRow item={item} />
-        <View style={[styles.actions, { borderTopWidth: StyleSheet.hairlineWidth }]}>
+        <View style={[styles.actions, { paddingLeft, paddingRight, borderTopWidth: StyleSheet.hairlineWidth }]}>
           <TouchableOpacity style={styles.actions__item} onPress={this.onVotePress}>
             <Image
               source={require('assets/icons/100/vote.png')}

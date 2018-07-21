@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, Text, Platform } from 'react-native';
 import { theme } from 'styles';
+import { observer } from 'mobx-react';
+import UI from 'stores/UI';
 const styles = theme(require('./CellGroup.styl'));
 
 interface Props {
@@ -11,7 +13,8 @@ interface Props {
   testID?: string;
 }
 
-export default class CellGroup extends React.PureComponent<Props, any> {
+@observer
+export default class CellGroup extends React.Component<Props, any> {
 
   renderHeader() {
     const { header } = this.props;
@@ -62,11 +65,12 @@ export default class CellGroup extends React.PureComponent<Props, any> {
 
   render() {
     const { children } = this.props;
+    const paddingLeft = Math.max(0, UI.insetLeft);
 
     return (
       <View style={[styles.host, styles[`host__${Platform.OS}`]]}>
         {this.renderHeader()}
-        <View style={[styles.items, styles[`items__${Platform.OS}`]]}>
+        <View style={[styles.items, styles[`items__${Platform.OS}`], { paddingLeft }]}>
           {React.Children.map(children, this.renderItem)}
         </View>
         {this.renderFooter()}

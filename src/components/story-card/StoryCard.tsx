@@ -54,6 +54,8 @@ export default class StoryCard extends React.Component<Props> {
   render() {
     const { item, testID } = this.props;
     const { title, text, prettyText, url, metadata = {} } = item;
+    const paddingLeft = Math.max(0, UI.insetLeft - 16);
+    const paddingRight = Math.max(0, UI.insetRight - 16);
 
     return (
       <TouchableHighlight
@@ -66,7 +68,7 @@ export default class StoryCard extends React.Component<Props> {
         activeOpacity={1}
         underlayColor={getVar('--content-bg-highlight', 'gray')}
       >
-        <View>
+        <View style={{ paddingLeft, paddingRight }}>
           {!!title && <Text style={[styles.title, UI.font(17), item.isRead && styles.read]}>{title}</Text>}
           <MetaLink
             {...metadata}

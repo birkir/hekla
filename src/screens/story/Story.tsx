@@ -72,11 +72,9 @@ export default class StoryScreen extends React.Component<Props> {
 
   @autobind
   async fetch({ force } = { force: false }) {
-    console.log(this.props);
     const start = new Date().getTime();
     this.setState({ loading: 1 });
     this.story = await Items.fetchItem(this.props.id, { force }) as IItemType;
-    console.log(this.story);
     this.updateOptions();
     this.setState({ loading: 2 });
     if (this.story) {
@@ -200,6 +198,7 @@ export default class StoryScreen extends React.Component<Props> {
     const size = this.story && this.story.comments.length;
     const isEmpty = loading === 0 && size === 0;
     const data = size > 0 && this.story.flatComments;
+
     return (
       <View style={styles.host} testID="STORY_SCREEN">
         <FlatList

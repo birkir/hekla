@@ -55,8 +55,6 @@ export const applyThemeOptions = (settings: any) => {
     }
 
     set(settings, 'layout.backgroundColor', getVar('--backdrop'));
-
-    console.log(settings.topBar);
   }
 
   if (Platform.OS === 'android') {

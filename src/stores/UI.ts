@@ -20,6 +20,8 @@ const UI = types
     settings: types.optional(Settings, {}),
     width: types.optional(types.number, width),
     height: types.optional(types.number, height),
+    insetLeft: types.optional(types.number, 0),
+    insetRight: types.optional(types.number, 0),
     isIpad: Platform.OS === 'ios' && (Platform as PlatformIOSStatic).isPad,
     isConnected: types.optional(types.boolean, false),
     preview: types.optional(
@@ -65,6 +67,14 @@ const UI = types
           screen.updateOptions();
         }
       });
+    },
+
+    updateInsets({ window = Dimensions.get('window') } = {}) {
+      const { width, height } = window;
+      const isX = Platform.OS === 'ios' && ((width === 375 && height === 812) || (width === 812 && height === 375));
+      const isLandscape = width > height;
+      self.insetLeft = (isX && isLandscape) ? 44 : 0;
+      self.insetRight = (isX && isLandscape) ? 44 : 0;
     },
 
     setComponentId(componentId: string, componentName?: string) {

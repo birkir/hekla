@@ -1,15 +1,15 @@
 import './utils/sentry';
-import { YellowBox, NetInfo, AsyncStorage, UIManager, Platform } from 'react-native';
+import { YellowBox, NetInfo, AsyncStorage, UIManager, Platform, Dimensions } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { Screens, startApp } from 'screens';
+import { db } from 'utils/firebase';
+import { onSnapshot } from 'mobx-state-tree';
+import { connectToDevTools } from 'mobx-devtools/lib/mobxDevtoolsBackend';
 import makeInspectable from 'mobx-devtools-mst';
 import UI from 'stores/UI';
 import Stories from 'stores/Stories';
 import Items from 'stores/Items';
-import { db } from 'utils/firebase';
-import { onSnapshot } from 'mobx-state-tree';
 import Account from 'stores/Account';
-import { connectToDevTools } from 'mobx-devtools/lib/mobxDevtoolsBackend';
 
 // Ignore yellow box
 YellowBox.ignoreWarnings([
@@ -47,6 +47,7 @@ Navigation.events().registerComponentDidAppearListener((componentId, componentNa
 Navigation.events().registerAppLaunchedListener(() => {
   if (__DEV__) {
     makeInspectable(UI);
+    makeInspectable(Account);
     makeInspectable(Stories);
     makeInspectable(Items);
   }
@@ -85,6 +86,9 @@ Navigation.events().registerComponentDidDisappearListener((componentId, componen
     });
   }
 });
+
+// Update insets on device rotation
+Dimensions.addEventListener('change', UI.updateInsets);
 
 // Firebase connection state
 db.ref('.info').on('value', (s: any) => {

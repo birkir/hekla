@@ -205,6 +205,9 @@ export default class Comment extends React.Component<Props> {
       return null;
     }
 
+    const paddingLeft = Math.max(0, UI.insetLeft - 16) + 16;
+    const paddingRight = Math.max(0, UI.insetRight - 16) + 16;
+
     return (
       <TouchableHighlight
         onPress={this.onPress}
@@ -213,7 +216,7 @@ export default class Comment extends React.Component<Props> {
         underlayColor={getVar('--content-bg-highlight')}
         style={[styles.host, card && styles.host__card]}
       >
-        <View style={[styles.container, styles[`level${depth}`]]}>
+        <View style={[styles.container, styles[`level${depth}`], { paddingLeft, paddingRight }]}>
           <View style={[styles.row, !collapsed && styles.row__expanded]}>
             <TouchableOpacity onPress={this.onUserPress}>
               <Text style={[styles.author, item.isOwn && styles.author__me]}>{by}</Text>

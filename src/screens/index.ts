@@ -182,6 +182,9 @@ export const startApp = () => {
               children: tabs,
             },
           },
+          options: {
+            displayMode: 'visible',
+          },
         },
       },
     });
