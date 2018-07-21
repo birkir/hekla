@@ -100,16 +100,29 @@ export default class MetaLink extends React.Component<Props, State> {
     const diff = timestamp - this.startTimestamp;
     if (force > 0.1 && diff > 350) {
       this.preview = true;
+      UI.setPreview({ active: true });
     }
     if (force > 0.75) {
-      this.commitTimeout = setTimeout(() => { this.preview = false; }, 1000);
+      this.commitTimeout = setTimeout(
+        () => {
+          this.preview = false;
+          UI.setPreview({ active: false });
+        },
+        1000,
+      );
     }
   }
 
   @autobind
   onTouchEnd() {
     clearTimeout(this.commitTimeout);
-    setTimeout(() => { this.preview = false; }, 1);
+    setTimeout(
+      () => {
+        this.preview = false;
+        UI.setPreview({ active: false });
+      },
+      1,
+    );
   }
 
   @autobind

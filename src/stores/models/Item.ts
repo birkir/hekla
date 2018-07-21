@@ -187,8 +187,8 @@ const Item = types.model('Item', {
       if (data) {
         self.by = data.by;
         self.descendants = data.descendants;
-        self.kids = self.kids;
-        self.score = self.score;
+        self.kids = data.kids;
+        self.score = data.score;
         self.time = data.time;
         self.title = data.title;
         self.text = data.text;
