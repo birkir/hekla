@@ -54,8 +54,9 @@ export default class StoryCard extends React.Component<Props> {
   render() {
     const { item, testID } = this.props;
     const { title, text, prettyText, url, metadata = {} } = item;
-    const paddingLeft = Math.max(0, UI.insetLeft - 16);
-    const paddingRight = Math.max(0, UI.insetRight - 16);
+    const paddingLeft = Math.max(0, UI.insetLeft - 16) + 16;
+    const paddingRight = Math.max(0, UI.insetRight - 16) + 16;
+    const isCompact = UI.settings.appearance.storySize === 'compact';
 
     return (
       <TouchableHighlight
@@ -64,32 +65,66 @@ export default class StoryCard extends React.Component<Props> {
         testID={testID}
         onPress={this.onPress}
         onPressIn={this.onPressIn}
-        style={styles.host}
+        style={[styles.host, isCompact && styles.host__compact]}
         activeOpacity={1}
         underlayColor={getVar('--content-bg-highlight', 'gray')}
       >
-        <View style={{ paddingLeft, paddingRight }}>
-          {!!title && <Text style={[styles.title, UI.font(17), item.isRead && styles.read]}>{title}</Text>}
-          <MetaLink
-            {...metadata}
-            url={url}
-            large={true}
-          />
-          {!!text && (
-            <View style={[styles.text, item.isRead && styles.read]}>
-              <FormatText
-                noLinks={true}
-                noFormat={true}
-                numberOfLines={10}
-                style={[styles.summary, UI.font(15)]}
-              >
-                {prettyText}
-              </FormatText>
-            </View>
+        <View
+          style={[
+            styles.container,
+            isCompact && [
+              styles.container__compact,
+              UI.settings.appearance.compactThumbnail === 'right' && styles.container__reverse,
+            ],
+            { paddingLeft, paddingRight },
+          ]}
+        >
+          {isCompact && UI.settings.appearance.compactThumbnail !== 'noThumbnails' && (
+            <MetaLink
+              {...metadata}
+              url={url}
+              compact={true}
+            />
           )}
-          <View style={item.isRead && styles.read}>
-            <StoryRow item={item} />
+          <View style={isCompact && styles.content}>
+            {!!title && (
+              <Text
+                style={[
+                  styles.title,
+                  isCompact && styles.title__compact,
+                  UI.font(isCompact ? 15 : 17),
+                  item.isRead && styles.read,
+                ]}
+              >
+                {title}
+              </Text>
+            )}
+            {!isCompact && (
+              <MetaLink
+                {...metadata}
+                url={url}
+                large={true}
+              />
+            )}
+            {!!text && !isCompact && (
+              <View style={[styles.text, item.isRead && styles.read]}>
+                <FormatText
+                  noLinks={true}
+                  noFormat={true}
+                  numberOfLines={10}
+                  style={[styles.summary, UI.font(15)]}
+                >
+                  {prettyText}
+                </FormatText>
+              </View>
+            )}
+            <View style={item.isRead && styles.read}>
+              <StoryRow item={item} compact={isCompact} />
+            </View>
           </View>
+          {isCompact && (
+            <View style={[styles.divider, { left: paddingLeft }]} />
+          )}
         </View>
       </TouchableHighlight>
     );

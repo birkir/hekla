@@ -16,6 +16,7 @@ interface Props {
     width?: number;
     height?: number;
   };
+  compact?: boolean;
   large?: boolean;
 }
 
@@ -145,12 +146,39 @@ export default class MetaLink extends React.Component<Props, State> {
 
   render() {
 
-    const { url, large } = this.props;
+    const { url, large, compact } = this.props;
     const { image, title, underlay, error } = this.state;
     const isImage = image && image.url && !error;
 
     if (!url) {
       return null;
+    }
+
+    if (compact) {
+      return (
+        <TouchableHighlight
+          ref={this.hostRef}
+          style={[
+            styles.compact,
+            UI.settings.appearance.compactThumbnail === 'right' && styles.compact__right,
+          ]}
+          onPress={this.onPress}
+          onPressIn={this.onPressIn}
+          activeOpacity={1}
+          underlayColor="transparent"
+          onHideUnderlay={this.onHideUnderlay}
+          onShowUnderlay={this.onShowUnderlay}
+        >
+          {isImage ? (
+            <FastImage
+              source={{ uri: image.url }}
+              style={[styles.compact__image, { borderColor: getVar('--meta-border') }]}
+              onError={this.onImageError}
+              resizeMode="cover"
+            />
+          ) : this.renderIcon()}
+        </TouchableHighlight>
+      );
     }
 
     // Match URL

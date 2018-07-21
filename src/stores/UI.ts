@@ -44,10 +44,10 @@ const UI = types
       }
       return `${prettyNumber(self.cacheSizeInBytes, '', 1024)}b`;
     },
-    font(size: number, heading: boolean = false) {
+    font(size: number) {
       return {
-        fontFamily: heading ? self.settings.appearance.fontFamilyHeading : self.settings.appearance.fontFamilyBody,
-        fontSize: UI.settings.appearance.useSystemFontSize ? size : size + self.settings.appearance.fontSize - 3,
+        fontFamily: self.settings.appearance.fontFamilyBody,
+        fontSize: self.settings.appearance.useSystemFontSize ? size : size + self.settings.appearance.fontSize - 3,
       };
     },
   }))

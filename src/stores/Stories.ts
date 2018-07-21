@@ -2,7 +2,7 @@ import { types, flow, applySnapshot, getSnapshot } from 'mobx-state-tree';
 import values from 'lodash/values';
 import compact from 'lodash/compact';
 import { db } from 'utils/firebase';
-import { ItemReference } from './models/Item';
+import Item, { ItemReference } from './models/Item';
 import StoriesType, { formatStoriesType } from './enums/StoriesType';
 import Items from './Items';
 
@@ -71,6 +71,11 @@ const Stories = types
 
           // Push items into stories array
           self.stories.push(...storyIds.filter(uniqById));
+          self.stories.push(Item.create({
+            id: `PAGE_${offset}_${limit}`,
+            type: 'page',
+            time: offset / limit,
+          }));
 
           self.isLoading = false;
 

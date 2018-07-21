@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight } from 'react-native';
+import { View, Text, Image, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
 import UI from 'stores/UI';
 import { theme, getVar } from 'styles';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 const styles = theme(require('./LoadMoreComments.styl'));
 
 type IItemType = typeof Item.Type;
@@ -20,9 +21,13 @@ interface Props {
 @observer
 export default class LoadMoreComments extends React.Component<Props> {
 
+  @observable
+  loading = false;
+
   @autobind
   onPress() {
     this.props.onPress(this.props);
+    this.loading = true;
   }
 
   render() {
@@ -46,7 +51,11 @@ export default class LoadMoreComments extends React.Component<Props> {
         >
           <View style={[styles.container, styles[`level${item.level}`], { paddingLeft, paddingRight }]}>
             <Text style={[styles.text, UI.font(14)]}>{total} more {total === 1 ? 'reply' : 'replies'}</Text>
-            <Image source={require('assets/icons/16/chevron-down.png')} style={styles.icon__more} />
+            {this.loading ? (
+              <ActivityIndicator size="small" style={styles.icon__more} />
+            ) : (
+              <Image source={require('assets/icons/16/chevron-down.png')} style={styles.icon__more} />
+            )}
           </View>
         </TouchableHighlight>
         <View style={styles[`divider${item.level}`]} />

@@ -160,6 +160,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
           <Comment
             depth={depth}
             collapsed={collapsed}
+            metalinks={UI.settings.appearance.commentsShowMetaLinks}
             hidden={hidden}
             item={item}
             onPress={this.onPress}

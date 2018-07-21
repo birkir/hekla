@@ -2,7 +2,32 @@
   background-color: var(--content-bg);
 
   margin-bottom: 8px;
-  padding: 16px;
+
+  &__compact {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+}
+
+.container {
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  flex-direction: column;
+
+  &__compact {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    flex-direction: row;
+  }
+
+  &__reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+.content {
+  flex: 1;
 }
 
 .title {
@@ -12,6 +37,10 @@
   margin-bottom: 16px;
 
   color: var(--content-fg);
+
+  &__compact {
+    margin-bottom: 8px;
+  }
 }
 
 .read {
@@ -26,6 +55,16 @@
   color: var(--content-fg);
   // TODO: tune opacity
   opacity: 0.65;
+}
+
+.divider {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 0;
+
+  height: var(--hairline-width);
+  background-color: var(--content-border);
 }
 
 .row {

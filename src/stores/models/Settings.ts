@@ -29,7 +29,6 @@ const Appearance = types
   .model({
     useSystemFontSize: types.optional(types.boolean, true),
     fontSize: types.optional(types.number, 3),
-    fontFamilyHeading: types.optional(Font, 'System'),
     fontFamilyBody: types.optional(Font, 'System'),
     theme: types.optional(Theme, 'light'),
     storySize: types.optional(StorySize, 'large'),

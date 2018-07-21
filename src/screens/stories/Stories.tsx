@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, FlatList, NativeModules, Dimensions, Platform } from 'react-native';
+import { View, FlatList, NativeModules, Dimensions, Platform, Text } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { autobind } from 'core-decorators';
 import { observer } from 'mobx-react';
@@ -191,6 +191,11 @@ export default class StoriesScreen extends React.Component<Props> {
   @autobind
   renderStory({ item }: { item: IItemType }) {
     if (!item) return null;
+    if (item.type === 'page' && UI.settings.appearance.showPageEndings) {
+      return (
+        <Text style={styles.page}>PAGE {item.time + 1}</Text>
+      );
+    }
     return (
       <StoryCard
         isMasterView={true}
