@@ -89,6 +89,7 @@ Navigation.events().registerComponentDidDisappearListener((componentId, componen
 
 // Update insets on device rotation
 Dimensions.addEventListener('change', UI.updateInsets);
+UI.updateInsets();
 
 // Firebase connection state
 db.ref('.info').on('value', (s: any) => {

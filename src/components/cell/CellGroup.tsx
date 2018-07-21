@@ -29,8 +29,10 @@ export default class CellGroup extends React.Component<Props, any> {
       return header;
     }
 
+    const paddingLeft = Math.max(0, UI.insetLeft) + 16;
+
     return (
-      <View style={[styles.header, styles[`header__${Platform.OS}`]]}>
+      <View style={[styles.header, styles[`header__${Platform.OS}`], { paddingLeft }]}>
         <Text style={[styles.header__text, styles[`header__text__${Platform.OS}`]]}>{String(header).toUpperCase()}</Text>
       </View>
     );
@@ -65,12 +67,11 @@ export default class CellGroup extends React.Component<Props, any> {
 
   render() {
     const { children } = this.props;
-    const paddingLeft = Math.max(0, UI.insetLeft);
 
     return (
       <View style={[styles.host, styles[`host__${Platform.OS}`]]}>
         {this.renderHeader()}
-        <View style={[styles.items, styles[`items__${Platform.OS}`], { paddingLeft }]}>
+        <View style={[styles.items, styles[`items__${Platform.OS}`]]}>
           {React.Children.map(children, this.renderItem)}
         </View>
         {this.renderFooter()}

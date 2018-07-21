@@ -129,14 +129,19 @@ const UI = types
 
     openURL(url: string, reactTag: number = -1) {
       const { browserOpenIn, browserUseReaderMode } = UI.settings.general;
+      let navBarBg = getVar('--navbar-bg');
+      if ((!navBarBg || navBarBg === 'transparent') && getVar('--navbar-style') === 'dark') {
+        navBarBg = '#000';
+      }
+      const navBarTint = getVar('--navbar-tint');
       if (Platform.OS === 'ios') {
         if (browserOpenIn === 'inApp') {
           return NativeModules.RNHekla.openSafari(self.componentId, {
             url,
             browserUseReaderMode,
             reactTag,
-            preferredBarTintColor: processColor(getVar('--navbar-bg')),
-            preferredControlTintColor: processColor(getVar('--navbar-tint')),
+            preferredBarTintColor: navBarBg && navBarBg !== 'transparent' ? processColor(navBarBg) : undefined,
+            preferredControlTintColor: navBarTint && navBarTint !== 'transparent' ? processColor(navBarTint) : undefined,
             dismissButtonStyle: 'done',
           });
         }
@@ -151,7 +156,7 @@ const UI = types
       }
       if (Platform.OS === 'android' && reactTag === -1) {
         CustomTabs.openURL(url, {
-          toolbarColor: getVar('--tint-bg'),
+          toolbarColor: navBarBg && navBarBg !== 'transparent' ? navBarBg : undefined,
           animations: ANIMATIONS_SLIDE,
           enableUrlBarHiding: true,
           showPageTitle: true,

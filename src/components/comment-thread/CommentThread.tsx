@@ -155,6 +155,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
           dragToss={0.01}
           animatedValueX={this.deltaX}
           animatedNativeDriver={true}
+          dragEnabled={UI.settings.general.commentSwipeActions}
         >
           <Comment
             depth={depth}

@@ -215,6 +215,7 @@ export default class Comment extends React.Component<Props> {
         activeOpacity={1}
         underlayColor={getVar('--content-bg-highlight')}
         style={[styles.host, card && styles.host__card]}
+        disabled={!UI.settings.general.commentTapToCollapse}
       >
         <View style={[styles.container, styles[`level${depth}`], { paddingLeft, paddingRight }]}>
           <View style={[styles.row, !collapsed && styles.row__expanded]}>
