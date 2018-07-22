@@ -16,6 +16,7 @@ iOS and Android client for Hacker News. Inspired by the Apollo client for Reddit
  - Browse top stories, newest, show HN, ask HN and jobs
  - Login with your Hacker News account to vote, reply and flag stories
  - Large or compact posts depending on your preference
+ - Offline and Travel friendly
  - 3D Touch support
  - iPad support
  - Multiple themes, adjustable font & text size
