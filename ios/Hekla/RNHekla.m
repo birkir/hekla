@@ -45,19 +45,19 @@ RCT_EXPORT_METHOD(openSafari:(NSString *)componentId options:(NSDictionary *)opt
   NSNumber* preferredBarTintColor = [options valueForKey:@"preferredBarTintColor"];
   NSNumber* preferredControlTintColor = [options valueForKey:@"preferredControlTintColor"];
   NSString* dismissButtonStyle = [options valueForKey:@"dismissButtonStyle"];
-  
+
   UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
-  
+
   SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:[[NSURL alloc] initWithString:url] entersReaderIfAvailable:[readerMode boolValue]];
-  
+
   if (preferredBarTintColor) {
     safariViewController.preferredBarTintColor = [RCTConvert UIColor:preferredBarTintColor];
   }
-  
+
   if (preferredControlTintColor) {
     safariViewController.preferredControlTintColor = [RCTConvert UIColor:preferredControlTintColor];
   }
-  
+
   if (@available(iOS 11.0, *)) {
     if ([dismissButtonStyle isEqualToString:@"done"]) {
       safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleDone;
@@ -69,7 +69,7 @@ RCT_EXPORT_METHOD(openSafari:(NSString *)componentId options:(NSDictionary *)opt
       safariViewController.dismissButtonStyle = SFSafariViewControllerDismissButtonStyleCancel;
     }
   }
-  
+
   (void)safariViewController.view;
 
   if ([reactTag intValue] >= 0) {
@@ -93,6 +93,16 @@ RCT_EXPORT_METHOD(openSafari:(NSString *)componentId options:(NSDictionary *)opt
      [rootVc.eventEmitter sendComponentDidDisappear:rootVc.componentId componentName:rootVc.componentId];
    }
  }
+}
+
+RCT_EXPORT_METHOD(getHeights:(NSString *)componentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+  UIViewController *vc = [ReactNativeNavigation findViewController:componentId];
+  NSObject *constants = @{
+                          @"topBarHeight": @(vc.navigationController.navigationBar.frame.size.height),
+                          @"statusBarHeight": @([UIApplication sharedApplication].statusBarFrame.size.height),
+                          @"bottomTabsHeight": @(vc.tabBarController.tabBar.frame.size.height)
+                          };
+  resolve(constants);
 }
 
 - (BOOL) isAppStoreReceiptSandbox {

@@ -26,13 +26,13 @@ gutter = 15px;
 }
 
 .center {
+  flex: 1;
   flex-direction: column;
 
   padding-right: gutter;
 }
 
 .right {
-  flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
@@ -81,6 +81,10 @@ gutter = 15px;
   &__text {
     font-size: 12px;
     color: var(--content-fg);
+    opacity: 0.75;
+
+    margin-right 8px;
+    margin-top: 4px;
   }
 }
 

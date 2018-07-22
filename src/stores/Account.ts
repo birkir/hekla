@@ -13,6 +13,9 @@ const Account = types
     isLoading: types.optional(types.boolean, false),
     isChecking: types.optional(types.boolean, true),
     voted: types.optional(types.map(types.boolean), {}),
+    favorited: types.optional(types.map(types.boolean), {}),
+    flagged: types.optional(types.map(types.boolean), {}),
+    hidden: types.optional(types.map(types.boolean), {}),
     read: types.optional(types.map(types.boolean), {}),
     user: types.maybe(types.reference(User)),
   })
@@ -24,13 +27,27 @@ const Account = types
   .actions((self) => {
 
     const populate = flow(function* () {
-      self.voted.clear();
-      let page = 1;
-      while (page < 10) {
-        const items = yield Hackernews.voted('submissions', self.user.id, page);
-        if (items.length === 0) break;
-        items.forEach(({ id }) => self.voted.set(id, true));
-        page += 1;
+      // Mark every item in list
+      const add = (where, items) => items.forEach(({ id }) => where.set(id, true));
+
+      // Sync last 30 voted stories
+      add(self.voted, yield Hackernews.voted('submissions', self.user.id, 1));
+
+      // Sync last 90 voted comments
+      for (let page = 1; page < 3; page += 1) {
+        add(self.voted, yield Hackernews.voted('comments', self.user.id, page));
+      }
+
+      // Sync last 30 favorited stories
+      add(self.favorited, yield Hackernews.favorites('submissions', self.user.id, 1));
+
+      // Sync last 90 favorited comments
+      for (let page = 1; page < 3; page += 1) {
+        add(self.favorited, yield Hackernews.favorites('comments', self.user.id, page));
+      }
+
+      for (let page = 1; page < 3; page += 1) {
+        add(self.hidden, yield Hackernews.hidden(page));
       }
     });
 
@@ -68,6 +85,8 @@ const Account = types
       self.isLoading = false;
       self.isLoggedIn = true;
 
+      // TODO: Lets not always populate this on login
+      // Keep a cache and then low-priority sync
       populate();
 
       return true;
@@ -89,12 +108,9 @@ const Account = types
     return {
       login,
       logout,
-      toggleVote(id: string, flag?: boolean) {
-        const isCurrentlyVoted = self.voted.get(id);
-        self.voted.set(id, typeof flag === 'undefined' ? !isCurrentlyVoted : flag);
-      },
-      setIsRead(id: string, flag = true) {
-        self.read.set(id, flag);
+      toggle(id: string, who: string, flag?: boolean) {
+        const isInList = self[who].get(id);
+        self[who].set(id, typeof flag === 'undefined' ? !isInList : flag);
       },
       setIsChecking(flag: boolean) {
         self.isChecking = flag;

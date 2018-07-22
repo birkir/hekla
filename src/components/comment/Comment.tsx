@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity, Platform, Clipboard, Alert } from 'react-native';
 import openActionSheet from 'utils/openActionSheet';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
@@ -34,41 +34,40 @@ export default class Comment extends React.Component<Props> {
   @autobind
   onMorePress() {
     const { item } = this.props;
-    const { isUserVote, isUserFavorite, isUserHidden } = item;
+
     const options = [{
       id: 'vote',
       icon: require('assets/icons/32/arrow-up.png'),
-      materialIcon: 'arrow-up',
       title: item.isVoted ? 'Unvote' : 'Vote',
       titleTextAlignment: 0,
     }, {
-      id: 'favorite',
-      icon: require('assets/icons/32/star.png'),
-      materialIcon: 'star-outline',
-      title: isUserFavorite ? 'Unfavorite' : 'Favorite',
-      titleTextAlignment: 0,
-    }, {
+    //   id: 'favorite',
+    //   icon: require('assets/icons/32/star.png'),
+    //   title: item.isFavorited ? 'Unfavorite' : 'Favorite',
+    //   titleTextAlignment: 0,
+    // }, {
       id: 'hide',
       icon: require('assets/icons/32/hide.png'),
-      materialIcon: isUserHidden ? 'eye-outline' : 'eye-off-outline',
-      title: isUserHidden ? 'Unhide' : 'Hide',
+      title: item.isHidden ? 'Unhide' : 'Hide',
       titleTextAlignment: 0,
     }, {
       id: 'reply',
       icon: require('assets/icons/32/reply.png'),
-      materialIcon: 'reply',
       title: 'Reply',
       titleTextAlignment: 0,
     }, {
       id: 'user',
       icon: require('assets/icons/32/user.png'),
-      materialIcon: 'account',
-      title: this.props.item.by,
+      title: Platform.OS === 'android' ? `User "${item.by}"` : item.by,
+      titleTextAlignment: 0,
+    }, {
+      id: 'copy',
+      icon: require('assets/icons/32/copy.png'),
+      title: 'Copy',
       titleTextAlignment: 0,
     }, {
       id: 'share',
       icon: require('assets/icons/32/share.png'),
-      materialIcon: 'share',
       title: 'Share',
       titleTextAlignment: 0,
     }];
@@ -76,11 +75,13 @@ export default class Comment extends React.Component<Props> {
     if (this.props.item.isOwn) {
       options.push({
         id: 'edit',
+        icon: require('assets/icons/32/edit.png'),
         title: 'Edit',
         titleTextAlignment: 0,
       } as any);
       options.push({
         id: 'delete',
+        icon: require('assets/icons/32/delete.png'),
         title: 'Delete',
         titleTextAlignment: 0,
       } as any);
@@ -88,34 +89,36 @@ export default class Comment extends React.Component<Props> {
 
     const title = Platform.OS === 'android' ? 'Comment' : undefined;
 
-    openActionSheet({ options, title, sheet: true, cancel: 'Cancel' }, this.onActionSelect);
+    openActionSheet({ options, title, type: 'list', cancel: 'Cancel' }, this.onActionSelect);
   }
 
   @autobind
   onActionSelect({ id }) {
+    const { item } = this.props;
     if (id === 'vote') {
-      this.props.item.vote();
+      item.vote();
     }
     if (id === 'favorite') {
-      this.props.item.favorite();
+      item.favorite();
     }
     if (id === 'hide') {
-      this.props.item.hide();
+      item.hide();
     }
     if (id === 'reply') {
-      replyScreen(this.props.item.id);
+      replyScreen(item.id);
     }
     if (id === 'user') {
-      userScreen(this.props.item.by);
+      userScreen(item.by);
     }
     if (id === 'share') {
-      Share.share({
-        message: this.props.item.prettyText,
-      });
+      this.onShare();
     }
-    if (this.props.item.by === Account.user.id) {
+    if (id === 'copy') {
+      Clipboard.setString(item.prettyText);
+    }
+    if (item.by === Account.user.id) {
       if (id === 'edit') {
-        replyScreen(this.props.item.id, true);
+        replyScreen(item.id, true);
       }
       if (id === 'delete') {
         this.onDelete();
@@ -162,6 +165,41 @@ export default class Comment extends React.Component<Props> {
     this.forceUpdate();
   }
 
+  @autobind
+  onShare() {
+    const options = [{
+      id: 'hackernews',
+      icon: require('assets/icons/32/hacker-news.png'),
+      title: 'Link to Comment',
+      titleTextAlignment: 0,
+    }, {
+      id: 'content',
+      icon: require('assets/icons/32/comments.png'),
+      title: 'Comment Text',
+      titleTextAlignment: 0,
+    }];
+
+    return openActionSheet({ options, type: 'list', cancel: 'Cancel' }, this.onShareAction);
+  }
+
+  @autobind
+  onShareAction({ id }) {
+    const { item } = this.props;
+
+    if (id === 'hackernews') {
+      Share.share({
+        url: item.hackernewsUrl,
+        title: `Comment by ${item.by}`,
+      });
+    }
+
+    if (id === 'content') {
+      Share.share({
+        message: item.prettyText,
+      });
+    }
+  }
+
   renderParent() {
     if (this.props.collapsed || !this.props.parent) {
       return null;
@@ -205,19 +243,17 @@ export default class Comment extends React.Component<Props> {
       return null;
     }
 
-    const paddingLeft = Math.max(0, UI.insetLeft - 16) + 16;
-    const paddingRight = Math.max(0, UI.insetRight - 16) + 16;
+    const paddingHorizontal = Math.max(0, UI.layout.inset - 16) + 16;
 
     return (
       <TouchableHighlight
-        onPress={this.onPress}
+        onPress={UI.settings.general.commentTapToCollapse ? this.onPress : undefined}
         onLongPress={this.onMorePress}
         activeOpacity={1}
         underlayColor={getVar('--content-bg-highlight')}
         style={[styles.host, card && styles.host__card]}
-        disabled={!UI.settings.general.commentTapToCollapse}
       >
-        <View style={[styles.container, styles[`level${depth}`], { paddingLeft, paddingRight }]}>
+        <View style={[styles.container, styles[`level${depth}`], { paddingHorizontal }]}>
           <View style={[styles.row, !collapsed && styles.row__expanded]}>
             <TouchableOpacity onPress={this.onUserPress}>
               <Text style={[styles.author, item.isOwn && styles.author__me]}>{by}</Text>

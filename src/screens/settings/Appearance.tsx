@@ -43,7 +43,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
   onStorySizePress() {
     const options = (Object as any).entries(storySize).map(([id, title]) => ({ id, title }));
 
-    openActionSheet({ options, title: 'Story Size', selectedId: UI.settings.appearance.storySize }, ({ id }) => {
+    openActionSheet({ options, title: 'Story Size', cancel: 'Cancel', selectedId: UI.settings.appearance.storySize }, ({ id }) => {
       UI.settings.setValue('appearance.storySize', id);
     });
   }
@@ -63,7 +63,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
   onCompactThumbnailPress() {
     const options = (Object as any).entries(compactThumbnail).map(([id, title]) => ({ id, title }));
 
-    openActionSheet({ options, title: 'Compact Thumbnail', selectedId: UI.settings.appearance.compactThumbnail }, ({ id }) => {
+    openActionSheet({ options, title: 'Compact Thumbnail', cancel: 'Cancel', selectedId: UI.settings.appearance.compactThumbnail }, ({ id }) => {
       UI.settings.setValue('appearance.compactThumbnail', id);
     });
   }
@@ -71,7 +71,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
   onCompactVoteButtonPress() {
     const options = (Object as any).entries(compactVoteButton).map(([id, title]) => ({ id, title }));
 
-    openActionSheet({ options, title: 'Compact Vote Button', selectedId: UI.settings.appearance.compactVoteButton }, ({ id }) => {
+    openActionSheet({ options, title: 'Compact Vote Button', cancel: 'Cancel', selectedId: UI.settings.appearance.compactVoteButton }, ({ id }) => {
       UI.settings.setValue('appearance.compactVoteButton', id);
     });
   }
@@ -126,6 +126,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
           <Cell
             title="Show Download button"
             value={<Switch value={UI.settings.appearance.largeShowDownloadButton} onValueChange={this.onLargeShowDownloadButtonChange} />}
+            subtitle="Load stories before entering subway etc"
           />
         </CellGroup>
         <CellGroup header="Compact Stories">
@@ -134,17 +135,17 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
             value={formatCompactThumbnail(UI.settings.appearance.compactThumbnail)}
             onPress={this.onCompactThumbnailPress}
           />
-          <Cell
+          {/* <Cell
             title="Vote Button"
             value={formatCompactVoteButton(UI.settings.appearance.compactVoteButton)}
             onPress={this.onCompactVoteButtonPress}
-          />
+          /> */}
         </CellGroup>
         <CellGroup header="Comments">
-          <Cell
+          {/* <Cell
             title="Use Color Scheme"
             value={<Switch value={UI.settings.appearance.commentsUseColorScheme} onValueChange={this.onCommentsUseColorSchemeChange} />}
-          />
+          /> */}
           <Cell
             title="Rich Meta Links"
             value={<Switch value={UI.settings.appearance.commentsShowMetaLinks} onValueChange={this.onCommentsShowMetaLinksChange} />}

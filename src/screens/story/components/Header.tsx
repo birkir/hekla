@@ -29,7 +29,7 @@ export default class StoryHeader extends React.Component<Props> {
 
   @autobind
   onFlagPress() {
-    if (this.props.item.isUserFlag) {
+    if (this.props.item.isFlagged) {
       return this.props.item.flag();
     }
 
@@ -77,7 +77,7 @@ export default class StoryHeader extends React.Component<Props> {
       titleTextAlignment: 0,
     }];
 
-    return openActionSheet({ options, cancel: 'Cancel' }, this.onShareAction);
+    return openActionSheet({ options, type: 'list', cancel: 'Cancel' }, this.onShareAction);
   }
 
   @autobind
@@ -105,12 +105,11 @@ export default class StoryHeader extends React.Component<Props> {
     }
 
     const { title, text, prettyText, metadata = {}, url } = item;
-    const paddingLeft = Math.max(0, UI.insetLeft - 16);
-    const paddingRight = Math.max(0, UI.insetRight - 16);
+    const paddingHorizontal = Math.max(0, UI.layout.inset - 16);
 
     return (
       <View style={[styles.host, { borderBottomWidth: StyleSheet.hairlineWidth, marginBottom: -StyleSheet.hairlineWidth }]}>
-        <View style={{ paddingLeft, paddingRight }}>
+        <View style={{ paddingHorizontal }}>
           {!!title && <Text style={[styles.title, UI.font(17)]}>{title}</Text>}
           <MetaLink
             {...metadata}
@@ -122,37 +121,37 @@ export default class StoryHeader extends React.Component<Props> {
               {prettyText}
             </FormatText>
           )}
-          <StoryRow item={item} />
+          <StoryRow actions={false} item={item} />
         </View>
-        <View style={[styles.actions, { paddingLeft, paddingRight, borderTopWidth: StyleSheet.hairlineWidth }]}>
+        <View style={[styles.actions, { paddingHorizontal, borderTopWidth: StyleSheet.hairlineWidth }]}>
           <TouchableOpacity style={styles.actions__item} onPress={this.onVotePress}>
             <Image
-              source={require('assets/icons/100/vote.png')}
+              source={require('assets/icons/32/arrow-up.png')}
               style={[styles.icon, item.isVoted && styles.icon__active]}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actions__item} onPress={this.onFlagPress}>
             <Image
-              source={require('assets/icons/100/flag.png')}
-              style={[styles.icon, item.isUserFlag && styles.icon__active, { width: 23, height: 23 }]}
+              source={require('assets/icons/32/flag.png')}
+              style={[styles.icon, item.isFlagged && styles.icon__active, { width: 24, height: 24 }]}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actions__item} onPress={this.onHidePress}>
             <Image
-              source={require('assets/icons/100/hide.png')}
-              style={[styles.icon, item.isUserHidden && styles.icon__active]}
+              source={require('assets/icons/32/hide.png')}
+              style={[styles.icon, item.isHidden && styles.icon__active]}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actions__item} onPress={this.onReplyPress}>
             <Image
-              source={require('assets/icons/100/reply.png')}
-              style={[styles.icon, { width: 34, height: 34 }]}
+              source={require('assets/icons/32/reply.png')}
+              style={styles.icon}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actions__item} onPress={this.onSharePress}>
             <Image
-              source={require('assets/icons/100/share.png')}
-              style={[styles.icon, { width: 26, height: 26 }]}
+              source={require('assets/icons/32/share.png')}
+              style={[styles.icon, { top: -2, width: 28, height: 28 }]}
             />
           </TouchableOpacity>
         </View>

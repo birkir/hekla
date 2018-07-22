@@ -38,8 +38,7 @@ export default class LoadMoreComments extends React.Component<Props> {
       return null;
     }
 
-    const paddingLeft = Math.max(0, UI.insetLeft);
-    const paddingRight = Math.max(0, UI.insetRight);
+    const paddingHorizontal = Math.max(0, UI.layout.inset);
 
     return (
       <View style={styles.host}>
@@ -49,10 +48,10 @@ export default class LoadMoreComments extends React.Component<Props> {
           underlayColor={getVar('--content-bg-highlight')}
           style={styles.content}
         >
-          <View style={[styles.container, styles[`level${item.level}`], { paddingLeft, paddingRight }]}>
+          <View style={[styles.container, styles[`level${item.level}`], { paddingHorizontal }]}>
             <Text style={[styles.text, UI.font(14)]}>{total} more {total === 1 ? 'reply' : 'replies'}</Text>
             {this.loading ? (
-              <ActivityIndicator size="small" style={styles.icon__more} />
+              <ActivityIndicator size="small" style={styles.loading} />
             ) : (
               <Image source={require('assets/icons/16/chevron-down.png')} style={styles.icon__more} />
             )}

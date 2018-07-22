@@ -127,8 +127,17 @@ export default class SettingsDonateScreen extends React.Component<Props> {
   render() {
     const { testID } = this.props;
     return (
-      <ScrollView style={styles.host} contentContainerStyle={styles.host__container} testID={testID}>
-        <Text style={styles.thankYou}>Thank you for supporting Hekla for Hacker News</Text>
+      <ScrollView
+        style={styles.host}
+        contentContainerStyle={styles.host__container}
+        testID={testID}
+      >
+        <Text style={styles.text}>
+          Oh wow, thanks, thanks to all of you, for reporting bugs, for requesting features, and, most importantly, for just using the app.
+          {'\n\n'}
+          Every contribution helps the app to stay current and fresh, thank you so much for even consider it.
+        </Text>
+
         {this.products.length > 0 && (
           <CellGroup>
             {this.products.map(this.renderProduct)}

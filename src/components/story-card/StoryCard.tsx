@@ -54,9 +54,12 @@ export default class StoryCard extends React.Component<Props> {
   render() {
     const { item, testID } = this.props;
     const { title, text, prettyText, url, metadata = {} } = item;
-    const paddingLeft = Math.max(0, UI.insetLeft - 16) + 16;
-    const paddingRight = Math.max(0, UI.insetRight - 16) + 16;
+    const paddingHorizontal = Math.max(0, UI.layout.inset - 16) + 16;
     const isCompact = UI.settings.appearance.storySize === 'compact';
+
+    if (!item.by && (!item.title || item.title === '' || item.time === 0)) {
+      return null;
+    }
 
     return (
       <TouchableHighlight
@@ -76,7 +79,7 @@ export default class StoryCard extends React.Component<Props> {
               styles.container__compact,
               UI.settings.appearance.compactThumbnail === 'right' && styles.container__reverse,
             ],
-            { paddingLeft, paddingRight },
+            { paddingHorizontal },
           ]}
         >
           {isCompact && UI.settings.appearance.compactThumbnail !== 'noThumbnails' && (
@@ -123,7 +126,7 @@ export default class StoryCard extends React.Component<Props> {
             </View>
           </View>
           {isCompact && (
-            <View style={[styles.divider, { left: paddingLeft }]} />
+            <View style={[styles.divider, { left: paddingHorizontal }]} />
           )}
         </View>
       </TouchableHighlight>

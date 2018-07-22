@@ -88,8 +88,8 @@ Navigation.events().registerComponentDidDisappearListener((componentId, componen
 });
 
 // Update insets on device rotation
-Dimensions.addEventListener('change', UI.updateInsets);
-UI.updateInsets();
+Dimensions.addEventListener('change', UI.updateLayout);
+UI.updateLayout();
 
 // Firebase connection state
 db.ref('.info').on('value', (s: any) => {
@@ -114,3 +114,5 @@ onSnapshot(UI.settings, (snapshot) => {
 onSnapshot(Account.read, (snapshot) => {
   AsyncStorage.setItem('Account.read', JSON.stringify(snapshot));
 });
+
+console.log(Navigation);

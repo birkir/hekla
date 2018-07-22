@@ -143,8 +143,7 @@ export default class Cell extends React.Component<Props, any> {
     const border = bordered && (typeof index === 'undefined' || index > 0);
     const isRight = selected || more || this.props.value || this.props.right;
 
-    const paddingLeft = Math.max(0, UI.insetLeft);
-    const paddingRight = Math.max(0, UI.insetRight);
+    const paddingHorizontal = Math.max(0, UI.layout.inset);
 
     return (
       <Touchable
@@ -162,7 +161,7 @@ export default class Cell extends React.Component<Props, any> {
           style={[
             styles.host,
             styles[`host__${Platform.OS}`],
-            { paddingLeft, paddingRight },
+            { paddingHorizontal },
             this.isUnderlay && styles.host__underlay,
           ]}
         >

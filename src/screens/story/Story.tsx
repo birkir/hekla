@@ -56,14 +56,13 @@ export default class StoryScreen extends React.Component<Props> {
 
   componentDidAppear() {
     UI.setComponentId(this.props.componentId);
+
+    // Improves performance, but suffers UI flashes
+    this.fetch();
   }
 
   componentWillMount() {
     UI.addScreen(this);
-  }
-
-  componentDidMount() {
-    this.fetch();
   }
 
   componentWillUnmount() {

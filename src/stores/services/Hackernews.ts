@@ -111,21 +111,22 @@ class Hackernews {
     if (auth) {
       await this.fetch(`fave?id=${id}&auth=${auth}${unhideqs}`);
       // TODO: How can we make sure it's favorited?
-      return true;
+      return flag;
     }
 
     return false;
   }
 
-  async hide(id, hide = false) {
+  async hide(id, flag = false) {
+    console.log('Hide %o %o', id, flag);
     const auths = await this.fetchAuthsForItem(id);
     const { auth = null } = auths.find(item => item.action === 'hide' && item.id === id) || {};
-    const unhideqs = !hide ? '&un=t' : '';
+    const unhideqs = !flag ? '&un=t' : '';
 
     if (auth) {
       await this.fetch(`hide?id=${id}&auth=${auth}${unhideqs}`);
       // TODO: How can we make sure it's hidden?
-      return true;
+      return flag;
     }
 
     return false;
@@ -139,7 +140,7 @@ class Hackernews {
     if (auth) {
       await this.fetch(`flag?id=${id}&auth=${auth}${unflagqs}`);
       // TODO: How can we make sure it's flagged?
-      return true;
+      return flag;
     }
 
     return false;

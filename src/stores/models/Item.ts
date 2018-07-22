@@ -37,12 +37,6 @@ const Item = types.model('Item', {
   offset: types.optional(types.number, 0),
   isPending: types.optional(types.boolean, false),
   isError: types.optional(types.boolean, false),
-
-  // User fields
-  isUserVote: types.optional(types.boolean, false),
-  isUserFlag: types.optional(types.boolean, false),
-  isUserHidden: types.optional(types.boolean, false),
-  isUserFavorite: types.optional(types.boolean, false),
 })
 .views(self => ({
   get date() {
@@ -57,12 +51,24 @@ const Item = types.model('Item', {
     return `https://news.ycombinator.com/item?id=${self.id}`;
   },
 
+  get isOwn() {
+    return self.by === Account.userId;
+  },
+
   get isVoted() {
     return !!Account.voted.get(self.id);
   },
 
-  get isOwn() {
-    return self.by === Account.userId;
+  get isFavorited() {
+    return !!Account.favorited.get(self.id);
+  },
+
+  get isHidden() {
+    return !!Account.hidden.get(self.id);
+  },
+
+  get isFlagged() {
+    return !!Account.flagged.get(self.id);
   },
 
   get isRead() {
@@ -73,17 +79,10 @@ const Item = types.model('Item', {
     return Math.max(0, self.kids.length - self.offset);
   },
 
-  // get isFlag() {
-  //   return !!Account.flags.get(self.id);
-  // },
+  get deepFetchedCount() {
+    return self.comments.map(item => item.deepFetchedCount).reduce((a, b) => a + b, 0) + self.comments.length;
+  },
 
-  // get isHidden() {
-  //   return !!Account.hidden.get(self.id);
-  // },
-
-  /**
-   * Print date in short format like `10h` or `6w`
-   */
   get ago() {
     return age(new Date(self.time * 1000));
   },
@@ -93,7 +92,7 @@ const Item = types.model('Item', {
   },
 
   /**
-   * Get recursive comments for this item in flat array
+   * Get recursive comments for this item in a flat array
    * [[1,2],[3,[4,5]],6] => [1,2,3,4,5,6]
    * @return {Array}
    */
@@ -116,7 +115,7 @@ const Item = types.model('Item', {
    * Fetch a single comment by id
    * @param id Item ID
    */
-  async fetchComment(id: string, opts = { force: undefined, index: 0 }) {
+  async fetchComment(id: string, opts = { force: undefined, index: 0, all: false }) {
     try {
       // Fetch comment from backend (or cache)
       const comment = await Items.fetchItem(id, { force: opts.force }) as any;
@@ -126,7 +125,7 @@ const Item = types.model('Item', {
       // Update belongsTo list with parents
       comment.setBelongsTo([self.id, ...self.belongsTo]);
       // Fetch nested comments
-      if (opts.index < (MAX_LEVELS - 1 - self.level)) {
+      if (opts.index < (MAX_LEVELS - 1 - self.level) || opts.all) {
         await comment.fetchComments(opts);
       }
       return comment;
@@ -137,15 +136,15 @@ const Item = types.model('Item', {
   /**
    * Fetch kids as comments
    */
-  fetchComments({ force = false, offset = self.offset } = {}) {
+  fetchComments({ force = false, offset = self.offset, all = false } = {}) {
     return flow(function* () {
       const end = offset > 0 ? 20 : (MAX_LEVELS - 1 - self.level) * ITEMS_PER_LEVEL;
       const limit = Math.min(20, Math.max(1, end));
       // Get list of comments to fetch
-      const commentIds = self.kids.slice(offset, offset + limit).map(String);
+      const commentIds = all ? self.kids.map(String) : self.kids.slice(offset, offset + limit).map(String);
       // Fetch them
       const comments = yield Promise.all(commentIds.map((id, index) =>
-        (self as any).fetchComment(id, { force, offset, index })));
+        (self as any).fetchComment(id, { force, offset, index, all })));
       const addIds = comments.filter(n => n && n.id).map(n => n.id);
       // Push their id's
       if (offset === 0) {
@@ -157,10 +156,6 @@ const Item = types.model('Item', {
       // Return comments
       return self.comments;
     })();
-  },
-
-  read() {
-    Account.setIsRead(self.id);
   },
 
   fetchParent() {
@@ -197,6 +192,10 @@ const Item = types.model('Item', {
     })();
   },
 
+  read() {
+    Account.toggle(self.id, 'read', true);
+  },
+
   setMetadata(metadata: any) {
     self.metadata = metadata;
   },
@@ -214,30 +213,39 @@ const Item = types.model('Item', {
   },
 
   vote() {
-    // Represent the correct UI action.
-    Account.toggleVote(self.id);
-
-    // Vote on Hacker News service
-    Hackernews.vote(self.id, self.isVoted).then((flag: boolean) => {
-      // Sync the result (may end up conflicting the user action).
-      Account.toggleVote(self.id, flag),
-      (self as any).incrementScore((flag ? 1 : -1));
+    const assumedFlag = !self.isVoted;
+    Account.toggle(self.id, 'voted');
+    (self as any).incrementScore((assumedFlag ? 1 : -1));
+    Hackernews.vote(self.id, assumedFlag).then((flag: boolean) => {
+      Account.toggle(self.id, 'voted', flag);
+      if (flag !== assumedFlag) {
+        (self as any).incrementScore((flag ? -1 : 1));
+      }
     });
   },
 
   flag() {
-    self.isUserFlag = !self.isUserFlag;
-    return Hackernews.flag(self.id, self.isUserFlag);
+    const assumedFlag = !self.isFlagged;
+    Account.toggle(self.id, 'flagged');
+    Hackernews.flag(self.id, assumedFlag).then((flag: boolean) => {
+      Account.toggle(self.id, 'flagged', flag);
+    });
   },
 
   hide() {
-    self.isUserHidden = !self.isUserHidden;
-    return Hackernews.hide(self.id, self.isUserHidden);
+    const assumedFlag = !self.isHidden;
+    Account.toggle(self.id, 'hidden');
+    Hackernews.hide(self.id, assumedFlag).then((flag: boolean) => {
+      Account.toggle(self.id, 'hidden', flag);
+    });
   },
 
   favorite() {
-    self.isUserFavorite = !self.isUserFavorite;
-    return Hackernews.favorite(self.id, self.isUserFavorite);
+    const assumedFlag = !self.isFavorited;
+    Account.toggle(self.id, 'favorited');
+    Hackernews.favorite(self.id, assumedFlag).then((flag: boolean) => {
+      Account.toggle(self.id, 'favorited', flag);
+    });
   },
 
   delete() {

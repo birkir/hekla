@@ -29,7 +29,7 @@ export default class CellGroup extends React.Component<Props, any> {
       return header;
     }
 
-    const paddingLeft = Math.max(0, UI.insetLeft) + 16;
+    const paddingLeft = Math.max(0, UI.layout.inset) + 16;
 
     return (
       <View style={[styles.header, styles[`header__${Platform.OS}`], { paddingLeft }]}>

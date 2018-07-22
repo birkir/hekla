@@ -34,7 +34,7 @@ const Appearance = types
     storySize: types.optional(StorySize, 'large'),
     showPageEndings: types.optional(types.boolean, false),
     largeShowVoteButton: types.optional(types.boolean, true),
-    largeShowDownloadButton: types.optional(types.boolean, true),
+    largeShowDownloadButton: types.optional(types.boolean, false),
     compactThumbnail: types.optional(CompactThumbnail, 'left'),
     compactVoteButton: types.optional(CompactVoteButton, 'left'),
     commentsUseColorScheme: types.optional(types.boolean, true),

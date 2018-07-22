@@ -2,14 +2,24 @@ import { ActionSheetIOS, Platform } from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import DialogAndroid from 'react-native-dialogs';
 
-export default ({ options, title = undefined, message = undefined, selectedId = undefined, sheet = false, cancel = null }, callback) => {
+export default (
+  {
+    options,
+    type = 'radio',
+    title = undefined,
+    message = undefined,
+    selectedId = undefined,
+    cancel = null,
+  },
+  callback,
+) => {
 
   if (Platform.OS === 'android') {
     return DialogAndroid.showPicker(title, null, {
       selectedId,
       // positiveText: null,
-      negativeText: 'Cancel',
-      type: DialogAndroid.listRadio,
+      negativeText: cancel,
+      type: type === 'radio' ? DialogAndroid.listRadio : DialogAndroid.listPlain,
       items: options.map((item: any) => ({
         id: item.id,
         label: item.title,

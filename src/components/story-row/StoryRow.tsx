@@ -5,6 +5,8 @@ import { observer } from 'mobx-react';
 import Item from 'stores/models/Item';
 import { theme } from 'styles';
 import { userScreen } from 'screens';
+import UI from 'stores/UI';
+import { observable } from 'mobx';
 const styles = theme(require('./StoryRow.styl'));
 
 type IItemType = typeof Item.Type;
@@ -12,11 +14,15 @@ type IItemType = typeof Item.Type;
 interface Props {
   item: IItemType;
   compact?: boolean;
+  actions?: boolean;
   testID?: string;
 }
 
 @observer
 export default class StoryRow extends React.Component<Props> {
+
+  @observable
+  isDownloaded = false;
 
   @autobind
   onVotePress() {
@@ -28,8 +34,16 @@ export default class StoryRow extends React.Component<Props> {
     return userScreen(this.props.item.by);
   }
 
+  @autobind
+  async onDownloadPress() {
+    await this.props.item.refetch();
+    await this.props.item.fetchComments({ offset: 0, all: true, force: true });
+    this.isDownloaded = true;
+    setTimeout(() => { this.isDownloaded = false; }, 1750);
+  }
+
   render() {
-    const { item, compact, testID } = this.props;
+    const { item, compact, actions = true, testID } = this.props;
     const { ago, by, descendants, score } = item;
 
     const author = (
@@ -52,11 +66,21 @@ export default class StoryRow extends React.Component<Props> {
             <Text style={styles.row__text}>{ago}</Text>
           </View>
         </View>
-        {!compact && (
+        {!compact && actions && (
           <View style={styles.row__actions}>
-            <TouchableOpacity onPress={this.onVotePress} style={styles.row__action}>
-              <Image style={[styles.row__action__icon, item.isVoted && styles.row__action__active]} source={require('assets/icons/32/arrow-up.png')} />
-            </TouchableOpacity>
+            {UI.settings.appearance.largeShowDownloadButton && (
+              <TouchableOpacity onPress={this.onDownloadPress} style={styles.row__action}>
+                <Image
+                  style={[styles.row__action__icon, this.isDownloaded && styles.downloaded]}
+                  source={this.isDownloaded ? require('assets/icons/32/cloud-check.png') : require('assets/icons/32/cloud-sync.png')}
+                />
+              </TouchableOpacity>
+            )}
+            {UI.settings.appearance.largeShowVoteButton && (
+              <TouchableOpacity onPress={this.onVotePress} style={styles.row__action}>
+                <Image style={[styles.row__action__icon, item.isVoted && styles.row__action__active]} source={require('assets/icons/32/arrow-up.png')} />
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </View>

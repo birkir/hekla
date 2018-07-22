@@ -13,7 +13,7 @@ const Users = types
           const res = yield db.ref(`v0/user/${id}`)
             .once('value')
             .then(s => s.val());
-          res.submitted = res.submitted.map(n => String(n));
+          res.submitted = (res.submitted || []).map(n => String(n));
           const user = User.create(res);
 
           if (!self.users.has(id)) {

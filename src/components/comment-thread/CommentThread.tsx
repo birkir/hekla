@@ -106,7 +106,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
             isActionLeftActive && styles.action__left__active,
             hidden ? { opacity: 0, backgroundColor: 'transparent' } : {},
             {
-              width: UI.width,
+              width: UI.layout.width,
               paddingLeft: dragDistance + actionWidth,
               transform: [{
                 translateX: this.deltaX.interpolate({
@@ -127,7 +127,7 @@ export default class CommentThread extends React.PureComponent<Props, State> {
             isActionRightActive && styles.action__right__active,
             hidden ? { opacity: 0, backgroundColor: 'transparent' } : {},
             {
-              width: UI.width,
+              width: UI.layout.width,
               paddingRight: actionWidth,
               transform: [{
                 translateX: this.deltaX.interpolate({

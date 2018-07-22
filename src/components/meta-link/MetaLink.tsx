@@ -147,11 +147,22 @@ export default class MetaLink extends React.Component<Props, State> {
   }
 
   renderIcon() {
+    const { url } = this.props;
+    let source = require('assets/icons/32/safari.png');
+
+    if (url.match(/\.pdf$/)) {
+      source = require('assets/icons/32/pdf.png');
+    }
+
+    if (url.match(/\.[webm|mp4|flv|ogg|gifv?|mov]$/)) {
+      source = require('assets/icons/32/video.png');
+    }
+
     return (
       <View style={styles.icon}>
         <Image
           style={styles.icon__safari}
-          source={require('assets/icons/32/safari.png')}
+          source={source}
         />
       </View>
     );

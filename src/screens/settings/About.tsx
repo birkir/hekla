@@ -59,11 +59,11 @@ export default class SettingsAboutScreen extends React.Component<Props> {
   }
 
   onPrivacyPolicyPress() {
-    UI.openURL('https://github.com/birkir/hekla/master/PRIVAY_POLICY.md');
+    UI.openURL('https://github.com/birkir/hekla/blob/master/PRIVACY_POLICY.md');
   }
 
   onCreditsPress() {
-    UI.openURL('https://github.com/birkir/hekla/master/CREDITS.md');
+    UI.openURL('https://github.com/birkir/hekla/blob/master/CREDITS.md');
   }
 
   @autobind

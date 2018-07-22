@@ -67,7 +67,7 @@ export default class SettingsGeneralScreen extends React.Component<Props> {
       title,
       titleTextAlignment: 0,
     }));
-    openActionSheet({ options, title: 'Open Links in', selectedId: UI.settings.general.browserOpenIn }, this.onOpenLinksInChange);
+    openActionSheet({ options, title: 'Open Links in', cancel: 'Cancel', selectedId: UI.settings.general.browserOpenIn }, this.onOpenLinksInChange);
   }
 
   @autobind

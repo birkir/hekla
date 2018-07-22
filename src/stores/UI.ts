@@ -7,9 +7,10 @@ import prettyNumber from 'utils/prettyNumber';
 import Stories from './Stories';
 import { IPAD_SCREEN, STORIES_SCREEN } from 'screens';
 import { getVar } from 'styles';
+import { Navigation } from 'react-native-navigation';
 
+const { RNHekla } = NativeModules;
 const { width, height } = Dimensions.get('window');
-
 const Screens = new Set();
 
 const UI = types
@@ -18,10 +19,17 @@ const UI = types
     iPadMasterComponentId: types.maybe(types.string),
     iPadDetailComponentId: types.maybe(types.string),
     settings: types.optional(Settings, {}),
-    width: types.optional(types.number, width),
-    height: types.optional(types.number, height),
-    insetLeft: types.optional(types.number, 0),
-    insetRight: types.optional(types.number, 0),
+    layout: types.optional(
+      types.model('UILayout', {
+        width: types.optional(types.number, width),
+        height: types.optional(types.number, height),
+        bottomTabsHeight: types.optional(types.number, 0),
+        topBarHeight: types.optional(types.number, 0),
+        statusBarHeight: types.optional(types.number, 0),
+        inset: types.optional(types.number, 0),
+      }),
+      {},
+    ),
     isIpad: Platform.OS === 'ios' && (Platform as PlatformIOSStatic).isPad,
     isConnected: types.optional(types.boolean, false),
     preview: types.optional(
@@ -69,12 +77,21 @@ const UI = types
       });
     },
 
-    updateInsets({ window = Dimensions.get('window') } = {}) {
-      const { width, height } = window;
-      const isX = Platform.OS === 'ios' && ((width === 375 && height === 812) || (width === 812 && height === 375));
-      const isLandscape = width > height;
-      self.insetLeft = (isX && isLandscape) ? 44 : 0;
-      self.insetRight = (isX && isLandscape) ? 44 : 0;
+    updateLayout({ window = Dimensions.get('window') } = {}) {
+      return flow(function* () {
+        const { width, height } = window;
+        const isX = Platform.OS === 'ios' && ((width === 375 && height === 812) || (width === 812 && height === 375));
+        const isLandscape = width > height;
+        self.layout.inset = (isX && isLandscape) ? 44 : 0;
+        self.layout.width = width;
+        self.layout.height = height;
+        const constants = yield (Platform.OS === 'android') ? Navigation.constants() : RNHekla.getHeights(self.componentId);
+        if (constants) {
+          self.layout.bottomTabsHeight = constants.bottomTabsHeight;
+          self.layout.topBarHeight = constants.topBarHeight;
+          self.layout.statusBarHeight = constants.statusBarHeight;
+        }
+      })();
     },
 
     setComponentId(componentId: string, componentName?: string) {
@@ -94,6 +111,9 @@ const UI = types
       }
 
       self.componentId = componentId;
+
+      // Update layout on screen change
+      (self as any).updateLayout();
     },
 
     setPreview(preview) {
@@ -121,13 +141,7 @@ const UI = types
       })();
     },
 
-    updateWindow() {
-      const { width, height } = Dimensions.get('window');
-      self.width = width;
-      self.height = height;
-    },
-
-    openURL(url: string, reactTag: number = -1) {
+    openURL(url: string, reactTag: number = -1, dismiss: string = 'done') {
       const { browserOpenIn, browserUseReaderMode } = UI.settings.general;
       let navBarBg = getVar('--navbar-bg');
       if ((!navBarBg || navBarBg === 'transparent') && getVar('--navbar-style') === 'dark') {
@@ -136,26 +150,22 @@ const UI = types
       const navBarTint = getVar('--navbar-tint');
       if (Platform.OS === 'ios') {
         if (browserOpenIn === 'inApp') {
-          return NativeModules.RNHekla.openSafari(self.componentId, {
+          return RNHekla.openSafari(self.componentId, {
             url,
-            browserUseReaderMode,
             reactTag,
+            readerMode: browserUseReaderMode,
             preferredBarTintColor: navBarBg && navBarBg !== 'transparent' ? processColor(navBarBg) : undefined,
             preferredControlTintColor: navBarTint && navBarTint !== 'transparent' ? processColor(navBarTint) : undefined,
-            dismissButtonStyle: 'done',
+            dismissButtonStyle: dismiss,
           });
         }
 
         if (browserOpenIn === 'chrome') {
           return CustomTabs.openURL(url);
         }
-
-        return Linking.openURL(url)
-          .then(() => null)
-          .catch(() => null);
       }
       if (Platform.OS === 'android' && reactTag === -1) {
-        CustomTabs.openURL(url, {
+        return CustomTabs.openURL(url, {
           toolbarColor: navBarBg && navBarBg !== 'transparent' ? navBarBg : undefined,
           animations: ANIMATIONS_SLIDE,
           enableUrlBarHiding: true,
@@ -163,6 +173,11 @@ const UI = types
           enableDefaultShare: true,
         });
       }
+
+      // Fallback to default openURL
+      return Linking.openURL(url)
+        .then(() => null)
+        .catch(() => null);
     },
 
     restartApp() {

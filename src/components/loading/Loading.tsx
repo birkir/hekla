@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, Platform, ActivityIndicator } from 'react-native';
+import { getVar } from 'styles';
 const styles = require('./Loading.styl');
 
 interface Props {
@@ -54,7 +55,9 @@ export default class Loading extends React.PureComponent<Props> {
 
     return (
       <View style={hostStyles}>
-        <ActivityIndicator />
+        <ActivityIndicator
+          color={Platform.OS === 'android' ? getVar('--tint-bg') : undefined}
+        />
       </View>
     );
   }

@@ -22,14 +22,6 @@ interface Props {
 
 type IItemType = typeof Item.Type;
 
-type Layout = {
-  bottomTabsHeight: number;
-  topBarHeight: number;
-  statusBarHeight: number;
-  width: number;
-  height: number;
-};
-
 @observer
 export default class StoriesScreen extends React.Component<Props> {
 
@@ -44,11 +36,6 @@ export default class StoriesScreen extends React.Component<Props> {
 
   @observable
   limit = 25;
-
-  @observable
-  layout = {
-    bottomTabsHeight: -200,
-  } as Layout;
 
   static get options() {
     return applyThemeOptions({
@@ -137,27 +124,6 @@ export default class StoriesScreen extends React.Component<Props> {
     }
   }
 
-  @autobind
-  async onLayout() {
-    let bars = {
-      bottomTabsHeight: 0,
-      topBarHeight: 0,
-      statusBarHeight: 0,
-    };
-
-    if (Platform.OS === 'ios') {
-      bars = await Navigation.constants();
-    }
-
-    const { width, height } = Dimensions.get('window');
-
-    this.layout = {
-      ...bars,
-      width,
-      height,
-    };
-  }
-
   async fetchData() {
     if (this.offset === 0) {
       if (!this.isRefreshing) {
@@ -175,7 +141,7 @@ export default class StoriesScreen extends React.Component<Props> {
 
   @autobind
   async scrollToTop() {
-    const { topBarHeight, statusBarHeight } = this.layout;
+    const { topBarHeight, statusBarHeight } = UI.layout;
     if (this.listRef.current) {
       this.listRef.current.scrollToOffset({ offset: -(topBarHeight + statusBarHeight) });
       await new Promise(r => setTimeout(r, 330));
@@ -190,12 +156,16 @@ export default class StoriesScreen extends React.Component<Props> {
 
   @autobind
   renderStory({ item }: { item: IItemType }) {
-    if (!item) return null;
+    if (!item || item.isHidden) {
+      return null;
+    }
+
     if (item.type === 'page' && UI.settings.appearance.showPageEndings) {
       return (
         <Text style={styles.page}>PAGE {item.time + 1}</Text>
       );
     }
+
     return (
       <StoryCard
         isMasterView={true}
@@ -210,7 +180,6 @@ export default class StoriesScreen extends React.Component<Props> {
       <View
         style={styles.host}
         testID="STORIES_SCREEN"
-        onLayout={this.onLayout}
       >
         <FlatList
           ref={this.listRef}
@@ -227,7 +196,7 @@ export default class StoriesScreen extends React.Component<Props> {
           scrollEnabled={UI.scrollEnabled}
         />
         <Toast
-          bottom={this.layout.bottomTabsHeight}
+          bottom={UI.layout.bottomTabsHeight}
           visible={!UI.isConnected}
           message="You are offline"
           icon={require('assets/icons/16/offline.png')}

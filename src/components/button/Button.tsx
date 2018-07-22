@@ -54,7 +54,10 @@ export default class Button extends React.Component<Props> {
       >
         <View style={buttonStyles} elevation={fill ? 3 : undefined}>
           {loading ? (
-            <ActivityIndicator style={styles.loading} color="white" />
+            <ActivityIndicator
+              style={styles.loading}
+              color="white"
+            />
           ) : (
             <Text style={textStyles}>
               {titleLabel}
