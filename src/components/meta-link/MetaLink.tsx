@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Text, Image, TouchableHighlight, findNodeHandle, Platform } from 'react-native';
+import TouchablePreview from 'components/touchable-preview/TouchablePreview';
 import FastImage from 'react-native-fast-image';
 import { autobind } from 'core-decorators';
 import UI from 'stores/UI';
@@ -37,7 +38,7 @@ interface State {
 export default class MetaLink extends React.Component<Props, State> {
 
   private commitTimeout;
-  private preview: boolean = false;
+  // private preview: boolean = false;
   private startTimestamp: number = 0;
   private dead: boolean = false;
   private hostRef = React.createRef() as any;
@@ -74,69 +75,12 @@ export default class MetaLink extends React.Component<Props, State> {
 
   @autobind
   async onPress() {
-    if (!this.preview) {
-      UI.openURL(this.props.url);
-    }
+    UI.openURL(this.props.url);
   }
 
   @autobind
-  async onPressIn() {
-    if (Platform.OS !== 'ios') return;
-
-    const reactTag = findNodeHandle(this.hostRef.current);
+  async onPressIn(reactTag: number) {
     UI.openURL(this.props.url, reactTag);
-  }
-
-  @autobind
-  onTouchStart(e) {
-    const { timestamp } = e.nativeEvent;
-    this.startTimestamp = timestamp;
-  }
-
-  @autobind
-  onTouchMove(e) {
-    clearTimeout(this.commitTimeout);
-    const { force, timestamp } = e.nativeEvent;
-    const diff = timestamp - this.startTimestamp;
-    if (force > 0.1 && diff > 350) {
-      this.preview = true;
-      UI.setPreview({ active: true });
-    }
-    if (force > 0.75) {
-      this.commitTimeout = setTimeout(
-        () => {
-          this.preview = false;
-          UI.setPreview({ active: false });
-        },
-        1000,
-      );
-    }
-  }
-
-  @autobind
-  onTouchEnd() {
-    clearTimeout(this.commitTimeout);
-    setTimeout(
-      () => {
-        this.preview = false;
-        UI.setPreview({ active: false });
-      },
-      1,
-    );
-  }
-
-  @autobind
-  onShowUnderlay() {
-    this.setState({
-      underlay: true,
-    });
-  }
-
-  @autobind
-  onHideUnderlay() {
-    this.setState({
-      underlay: false,
-    });
   }
 
   @autobind
@@ -144,6 +88,16 @@ export default class MetaLink extends React.Component<Props, State> {
     this.setState({
       error: true,
     });
+  }
+
+  @autobind
+  onShowUnderlay() {
+    this.setState({ underlay: true });
+  }
+
+  @autobind
+  onHideUnderlay() {
+    this.setState({ underlay: false });
   }
 
   renderIcon() {
@@ -180,18 +134,13 @@ export default class MetaLink extends React.Component<Props, State> {
 
     if (compact) {
       return (
-        <TouchableHighlight
-          ref={this.hostRef}
+        <TouchablePreview
+          onPress={this.onPress}
+          onPressIn={this.onPressIn}
           style={[
             styles.compact,
             UI.settings.appearance.compactThumbnail === 'right' && styles.compact__right,
           ]}
-          onPress={this.onPress}
-          onPressIn={this.onPressIn}
-          activeOpacity={1}
-          underlayColor="transparent"
-          onHideUnderlay={this.onHideUnderlay}
-          onShowUnderlay={this.onShowUnderlay}
         >
           {isImage ? (
             <FastImage
@@ -201,7 +150,7 @@ export default class MetaLink extends React.Component<Props, State> {
               resizeMode="cover"
             />
           ) : this.renderIcon()}
-        </TouchableHighlight>
+        </TouchablePreview>
       );
     }
 
@@ -245,39 +194,34 @@ export default class MetaLink extends React.Component<Props, State> {
     );
 
     return (
-      <TouchableHighlight
-        ref={this.hostRef}
-        style={[styles.host, large && styles.host__large]}
+      <TouchablePreview
         onPress={this.onPress}
         onPressIn={this.onPressIn}
-        activeOpacity={1}
-        underlayColor="transparent"
-        onHideUnderlay={this.onHideUnderlay}
+        style={[styles.host, large && styles.host__large]}
         onShowUnderlay={this.onShowUnderlay}
+        onHideUnderlay={this.onHideUnderlay}
       >
-        <View onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onTouchMove={this.onTouchMove}>
-          {large && isImage && (
-            <FastImage
-              source={{ uri: image.url }}
-              style={[styles.image, { borderColor: getVar('--meta-border') }]}
-              onError={this.onImageError}
-              resizeMode="cover"
-            />
-          )}
-          <View style={contentStyles}>
-            {this.renderIcon()}
-            <View style={styles.divider} />
-            <View style={styles.text}>
-              {titleElement}
-              {linkElement}
-            </View>
-            <Image
-              style={styles.chevron}
-              source={require('assets/icons/16/chevron-right.png')}
-            />
+        {large && isImage && (
+          <FastImage
+            source={{ uri: image.url }}
+            style={[styles.image, { borderColor: getVar('--meta-border') }]}
+            onError={this.onImageError}
+            resizeMode="cover"
+          />
+        )}
+        <View style={contentStyles}>
+          {this.renderIcon()}
+          <View style={styles.divider} />
+          <View style={styles.text}>
+            {titleElement}
+            {linkElement}
           </View>
+          <Image
+            style={styles.chevron}
+            source={require('assets/icons/16/chevron-right.png')}
+          />
         </View>
-      </TouchableHighlight>
+      </TouchablePreview>
     );
   }
 }

@@ -56,38 +56,9 @@ Navigation.events().registerAppLaunchedListener(() => {
   UI.hydrate().then(startApp);
 });
 
-console.log(Navigation);
-
-// Listen for Navigation events
-// Navigation.events().registerNativeEventListener((name, params) => {
-//   if (name === 'previewContext') {
-//     UI.setPreview({
-//       srcComponentId: params.componentId,
-//       dstComponentId: params.previewComponentId,
-//       active: true,
-//     });
-//   }
-
-//   if (name === 'previewCommit') {
-//     UI.setPreview({
-//       active: false,
-//     });
-//   }
-// });
-
 // Listen for componentDidAppear screen events
 Navigation.events().registerComponentDidAppearListener(({ componentId, componentName }) => {
   UI.setComponentId(componentId, componentName);
-});
-
-// Listen for componentDidDisappear screen events
-Navigation.events().registerComponentDidDisappearListener(({ componentId, componentName }) => {
-  if (UI.preview.dstComponentId === componentId) {
-    UI.setComponentId(UI.preview.srcComponentId);
-    UI.setPreview({
-      active: false,
-    });
-  }
 });
 
 // Calculate layout on device rotation (and initially)

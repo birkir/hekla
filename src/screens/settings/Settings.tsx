@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { ScrollView, Platform, Switch, NativeModules } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { observer } from 'mobx-react';
-import { autorun } from 'mobx';
 import { autobind } from 'core-decorators';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import CodePush from 'react-native-code-push';

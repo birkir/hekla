@@ -53,6 +53,11 @@ export default class StoryScreen extends React.Component<Props> {
   @observable
   isLoading = true;
 
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
+  }
+
   componentDidMount() {
     this.fetch({ partial: true });
   }

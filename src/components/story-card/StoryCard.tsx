@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Image, Text, TouchableHighlight, TouchableOpacity, findNodeHandle, Platform } from 'react-native';
+import TouchablePreview from 'components/touchable-preview/TouchablePreview';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
 import UI from 'stores/UI';
@@ -23,32 +24,17 @@ interface Props {
 @observer
 export default class StoryCard extends React.Component<Props> {
 
-  hostRef = React.createRef() as any;
-
   @autobind
-  onPress() {
+  onPress(reactTag?: number) {
     const { item, isMasterView } = this.props;
     const { id, descendants } = item;
+
     return storyScreen({
       id,
       descendants,
       isMasterView,
+      reactTag,
     });
-  }
-
-  @autobind
-  onPressIn() {
-    if (Platform.OS !== 'ios') return;
-    const { item, isMasterView } = this.props;
-    const { id, descendants } = item;
-    return storyScreen({
-      id,
-      descendants,
-      isMasterView,
-      reactTag: findNodeHandle(this.hostRef.current),
-    });
-
-    return;
   }
 
   render() {
@@ -62,15 +48,10 @@ export default class StoryCard extends React.Component<Props> {
     }
 
     return (
-      <TouchableHighlight
-        ref={this.hostRef}
-        accessibilityComponentType="button"
-        testID={testID}
+      <TouchablePreview
         onPress={this.onPress}
-        onPressIn={this.onPressIn}
+        onPressIn={this.onPress}
         style={[styles.host, isCompact && styles.host__compact]}
-        activeOpacity={1}
-        underlayColor={getVar('--content-bg-highlight', 'gray')}
       >
         <View
           style={[
@@ -129,7 +110,7 @@ export default class StoryCard extends React.Component<Props> {
             <View style={[styles.divider, { left: paddingHorizontal }]} />
           )}
         </View>
-      </TouchableHighlight>
+      </TouchablePreview>
     );
   }
 }

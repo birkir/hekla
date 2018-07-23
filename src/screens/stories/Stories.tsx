@@ -201,7 +201,7 @@ export default class StoriesScreen extends React.Component<Props> {
           onEndReachedThreshold={0.75}
           onRefresh={this.onRefresh}
           onEndReached={this.onEndReached}
-          // scrollEnabled={UI.scrollEnabled}
+          scrollEnabled={UI.scrollEnabled}
         />
         <Toast
           bottom={UI.layout.bottomTabsHeight}
