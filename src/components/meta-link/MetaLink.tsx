@@ -135,6 +135,7 @@ export default class MetaLink extends React.Component<Props, State> {
     if (compact) {
       return (
         <TouchablePreview
+          componentName="SAFARI_VIEW"
           onPress={this.onPress}
           onPressIn={this.onPressIn}
           style={[
@@ -195,31 +196,34 @@ export default class MetaLink extends React.Component<Props, State> {
 
     return (
       <TouchablePreview
+        componentName="SAFARI_VIEW"
         onPress={this.onPress}
         onPressIn={this.onPressIn}
         style={[styles.host, large && styles.host__large]}
         onShowUnderlay={this.onShowUnderlay}
         onHideUnderlay={this.onHideUnderlay}
       >
-        {large && isImage && (
-          <FastImage
-            source={{ uri: image.url }}
-            style={[styles.image, { borderColor: getVar('--meta-border') }]}
-            onError={this.onImageError}
-            resizeMode="cover"
-          />
-        )}
-        <View style={contentStyles}>
-          {this.renderIcon()}
-          <View style={styles.divider} />
-          <View style={styles.text}>
-            {titleElement}
-            {linkElement}
+        <View>
+          {large && isImage && (
+            <FastImage
+              source={{ uri: image.url }}
+              style={[styles.image, { borderColor: getVar('--meta-border') }]}
+              onError={this.onImageError}
+              resizeMode="cover"
+            />
+          )}
+          <View style={contentStyles}>
+            {this.renderIcon()}
+            <View style={styles.divider} />
+            <View style={styles.text}>
+              {titleElement}
+              {linkElement}
+            </View>
+            <Image
+              style={styles.chevron}
+              source={require('assets/icons/16/chevron-right.png')}
+            />
           </View>
-          <Image
-            style={styles.chevron}
-            source={require('assets/icons/16/chevron-right.png')}
-          />
         </View>
       </TouchablePreview>
     );

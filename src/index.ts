@@ -39,11 +39,6 @@ if (Platform.OS === 'android') {
 Screens.forEach((ScreenComponent, key) =>
   Navigation.registerComponent(key, () => ScreenComponent));
 
-// Set current componentId
-// Navigation.events().registerComponentDidAppearListener(({ componentId, componentName }) => {
-//   UI.setComponentId(componentId);
-// });
-
 // Start application
 Navigation.events().registerAppLaunchedListener(() => {
   if (__DEV__) {
@@ -58,7 +53,12 @@ Navigation.events().registerAppLaunchedListener(() => {
 
 // Listen for componentDidAppear screen events
 Navigation.events().registerComponentDidAppearListener(({ componentId, componentName }) => {
-  UI.setComponentId(componentId, componentName);
+  UI.onDidAppear(componentId, componentName);
+});
+
+// Listen for componentDidAppear screen events
+Navigation.events().registerComponentDidDisappearListener(({ componentId, componentName }) => {
+  UI.onDidDisappear(componentId, componentName);
 });
 
 // Calculate layout on device rotation (and initially)

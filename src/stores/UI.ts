@@ -34,8 +34,7 @@ const UI = types
     isConnected: types.optional(types.boolean, false),
     preview: types.optional(
       types.model('Preview', {
-        srcComponentId: types.maybe(types.string),
-        dstComponentId: types.maybe(types.string),
+        componentName: types.maybe(types.string),
         active: types.optional(types.boolean, false),
       }),
       {},
@@ -94,7 +93,11 @@ const UI = types
       })();
     },
 
-    setComponentId(componentId: string, componentName?: string) {
+    onDidAppear(componentId: string, componentName?: string) {
+
+      if (componentName === self.preview.componentName) {
+        return;
+      }
 
       // STORIES_SCREEN = master
       if (componentName === STORIES_SCREEN) {
@@ -116,8 +119,19 @@ const UI = types
       (self as any).updateLayout();
     },
 
-    setPreview(preview) {
-      self.preview = preview;
+    onDidDisappear(componentId: string, componentName?: string) {
+      if (componentName === self.preview.componentName) {
+        self.preview.componentName = null;
+        self.preview.active = false;
+      }
+    },
+
+    setPreviewComponentName(componentName) {
+      self.preview.componentName = componentName;
+    },
+
+    setPreviewActive(flag: boolean) {
+      self.preview.active = flag;
     },
 
     setIsConnected(connected) {

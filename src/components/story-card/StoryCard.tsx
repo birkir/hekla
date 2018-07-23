@@ -9,7 +9,7 @@ import StoryRow from 'components/story-row/StoryRow';
 import MetaLink from 'components/meta-link/MetaLink';
 import { observer } from 'mobx-react';
 import { theme, getVar } from 'styles';
-import { storyScreen } from 'screens';
+import { STORY_SCREEN, storyScreen } from 'screens';
 const styles = theme(require('./StoryCard.styl'));
 
 type IItemType = typeof Item.Type;
@@ -49,6 +49,7 @@ export default class StoryCard extends React.Component<Props> {
 
     return (
       <TouchablePreview
+        componentName={STORY_SCREEN}
         onPress={this.onPress}
         onPressIn={this.onPress}
         style={[styles.host, isCompact && styles.host__compact]}

@@ -223,6 +223,7 @@ export default class StoryScreen extends React.Component<Props> {
           refreshing={this.isRefreshing}
           onRefresh={this.onRefresh}
           initialNumToRender={5}
+          scrollEnabled={UI.scrollEnabled}
         />
       </View>
     );
