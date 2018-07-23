@@ -106,8 +106,8 @@ android {
         applicationId "is.pipe.hekla"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 19
-        versionName "1.0.13"
+        versionCode 20
+        versionName "1.0.14"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
