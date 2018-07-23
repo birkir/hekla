@@ -6,6 +6,7 @@ import { db } from 'utils/firebase';
 import { onSnapshot } from 'mobx-state-tree';
 import { connectToDevTools } from 'mobx-devtools/lib/mobxDevtoolsBackend';
 import makeInspectable from 'mobx-devtools-mst';
+import debounce from 'lodash/debounce';
 import UI from 'stores/UI';
 import Stories from 'stores/Stories';
 import Items from 'stores/Items';
@@ -39,9 +40,9 @@ Screens.forEach((ScreenComponent, key) =>
   Navigation.registerComponent(key, () => ScreenComponent));
 
 // Set current componentId
-Navigation.events().registerComponentDidAppearListener((componentId, componentName) => {
-  UI.setComponentId(componentId);
-});
+// Navigation.events().registerComponentDidAppearListener(({ componentId, componentName }) => {
+//   UI.setComponentId(componentId);
+// });
 
 // Start application
 Navigation.events().registerAppLaunchedListener(() => {
@@ -55,30 +56,32 @@ Navigation.events().registerAppLaunchedListener(() => {
   UI.hydrate().then(startApp);
 });
 
-// Listen for Navigation events
-Navigation.events().registerNativeEventListener((name, params) => {
-  if (name === 'previewContext') {
-    UI.setPreview({
-      srcComponentId: params.componentId,
-      dstComponentId: params.previewComponentId,
-      active: true,
-    });
-  }
+console.log(Navigation);
 
-  if (name === 'previewCommit') {
-    UI.setPreview({
-      active: false,
-    });
-  }
-});
+// Listen for Navigation events
+// Navigation.events().registerNativeEventListener((name, params) => {
+//   if (name === 'previewContext') {
+//     UI.setPreview({
+//       srcComponentId: params.componentId,
+//       dstComponentId: params.previewComponentId,
+//       active: true,
+//     });
+//   }
+
+//   if (name === 'previewCommit') {
+//     UI.setPreview({
+//       active: false,
+//     });
+//   }
+// });
 
 // Listen for componentDidAppear screen events
-Navigation.events().registerComponentDidAppearListener((componentId, componentName) => {
+Navigation.events().registerComponentDidAppearListener(({ componentId, componentName }) => {
   UI.setComponentId(componentId, componentName);
 });
 
 // Listen for componentDidDisappear screen events
-Navigation.events().registerComponentDidDisappearListener((componentId, componentName) => {
+Navigation.events().registerComponentDidDisappearListener(({ componentId, componentName }) => {
   if (UI.preview.dstComponentId === componentId) {
     UI.setComponentId(UI.preview.srcComponentId);
     UI.setPreview({
@@ -87,7 +90,7 @@ Navigation.events().registerComponentDidDisappearListener((componentId, componen
   }
 });
 
-// Update insets on device rotation
+// Calculate layout on device rotation (and initially)
 Dimensions.addEventListener('change', UI.updateLayout);
 UI.updateLayout();
 
@@ -106,13 +109,13 @@ NetInfo.getConnectionInfo().then(({ type }) => {
   UI.setIsConnected(type !== 'none');
 });
 
-// Persist Settings!
-onSnapshot(UI.settings, (snapshot) => {
-  AsyncStorage.setItem('UI.settings', JSON.stringify(snapshot));
-});
+// Persist some stuff (debounced to 1s)
+onSnapshot(UI.settings, debounce(
+  snapshot => AsyncStorage.setItem('UI.settings', JSON.stringify(snapshot)),
+  1000,
+));
 
-onSnapshot(Account.read, (snapshot) => {
-  AsyncStorage.setItem('Account.read', JSON.stringify(snapshot));
-});
-
-console.log(Navigation);
+onSnapshot(Account, debounce(
+  snapshot => AsyncStorage.setItem('Account', JSON.stringify(snapshot)),
+  1000,
+));

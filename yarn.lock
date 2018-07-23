@@ -721,9 +721,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native@0.51.1":
-  version "0.51.1"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.51.1.tgz#ab47c0d17c68149cbe5233d9f67dc586c61146df"
+"@types/react-native@0.51.x":
+  version "0.51.10"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.51.10.tgz#ab060c0b87110a32a2e797ebaef5b485a7856217"
   dependencies:
     "@types/react" "*"
 
@@ -1995,13 +1995,37 @@ color-convert@^1.9.0:
   dependencies:
     color-name "^1.1.1"
 
-color-name@^1.1.1:
+color-convert@^1.9.1:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.2.tgz#49881b8fba67df12a96bdf3f56c0aab9e7913147"
+  dependencies:
+    color-name "1.1.1"
+
+color-name@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.1.tgz#4b1415304cf50028ea81643643bd82ea05803689"
+
+color-name@^1.0.0, color-name@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
+
+color-string@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.2.tgz#26e45814bc3c9a7cbd6751648a41434514a773a9"
+  dependencies:
+    color-name "^1.0.0"
+    simple-swizzle "^0.2.2"
 
 color-support@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-support/-/color-support-1.1.3.tgz#93834379a1cc9a0c61f82f52f0d04322251bd5a2"
+
+color@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/color/-/color-3.0.0.tgz#d920b4328d534a3ac8295d68f7bd4ba6c427be9a"
+  dependencies:
+    color-convert "^1.9.1"
+    color-string "^1.5.2"
 
 colors@0.5.x:
   version "0.5.1"
@@ -3686,6 +3710,10 @@ is-accessor-descriptor@^1.0.0:
 is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
+
+is-arrayish@^0.3.1:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.3.2.tgz#4574a2ae56f7ab206896fb431eaeed066fdf8f03"
 
 is-binary-path@^1.0.0:
   version "1.0.1"
@@ -6268,15 +6296,15 @@ react-native-keychain@3.0.0-rc.3:
   version "3.0.0-rc.3"
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-3.0.0-rc.3.tgz#891ea07a564d1bf46b644bc615af21f15a04b12b"
 
-react-native-navigation@2.0.2394:
-  version "2.0.2394"
-  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2394.tgz#c454d007bbb30d6c474f988c10c2113c06030a79"
+react-native-navigation@2.0.2422:
+  version "2.0.2422"
+  resolved "https://registry.yarnpkg.com/react-native-navigation/-/react-native-navigation-2.0.2422.tgz#d950224f3ad2742e8b78c4a44c6350e3b933c942"
   dependencies:
     "@types/jest" "22.x.x"
     "@types/lodash" "4.x.x"
     "@types/prop-types" "15.x.x"
     "@types/react" "16.x.x"
-    "@types/react-native" "0.51.1"
+    "@types/react-native" "0.51.x"
     "@types/react-test-renderer" "16.x.x"
     hoist-non-react-statics "2.x.x"
     lodash "4.x.x"
@@ -7008,6 +7036,12 @@ simple-plist@^0.2.1:
     bplist-creator "0.0.7"
     bplist-parser "0.1.1"
     plist "2.0.1"
+
+simple-swizzle@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
+  dependencies:
+    is-arrayish "^0.3.1"
 
 single-line-log@^1.1.2:
   version "1.1.2"

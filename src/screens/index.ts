@@ -79,8 +79,10 @@ export const startApp = () => {
   StatusBar.setBarStyle('dark-content', true);
   const isSplitView = UI.isIpad && UI.settings.appearance.iPadSidebarEnabled;
 
-  const selectedIconColor = getVar('--tint-bg');
-  const selectedTextColor = getVar('--tint-bg');
+  const iconColor = getVar('--tabbar-fg');
+  const textColor = getVar('--tabbar-fg');
+  const selectedIconColor = getVar('--tabbar-tint');
+  const selectedTextColor = getVar('--tabbar-tint');
 
   const tabs = [
     {
@@ -97,6 +99,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            iconColor,
+            textColor,
             selectedIconColor,
             selectedTextColor,
             text: 'Stories',
@@ -115,6 +119,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            iconColor,
+            textColor,
             selectedIconColor,
             selectedTextColor,
             text: 'Account',
@@ -132,6 +138,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            iconColor,
+            textColor,
             selectedIconColor,
             selectedTextColor,
             text: 'Search',
@@ -149,6 +157,8 @@ export const startApp = () => {
         }],
         options: {
           bottomTab: {
+            iconColor,
+            textColor,
             selectedIconColor,
             selectedTextColor,
             text: 'Settings',

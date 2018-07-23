@@ -58,38 +58,48 @@ export const applyThemeOptions = (settings: any) => {
   }
 
   if (Platform.OS === 'android') {
-    set(settings, 'bottomTabs.titleDisplayMode', 'alwaysShow');
-    set(settings, 'statusBar.backgroundColor', getVar('--primary-dark-color'));
+    set(settings, 'statusBar.backgroundColor', getVar('--statusbar-bg'));
+
+    // NavBar    // NavBar
+    const navBarStyle = getVar('--navbar-style', 'light');
+    const navBarBg = getVar('--navbar-bg', 'transparent');
+
+    const tabBarStyle = getVar('--tabbar-style', 'light');
+    const tabBarBg = getVar('--tabbar-bg', 'transparent');
+
+    // Top Bar
     set(settings, 'topBar.background.color', getVar('--tint-bg'));
-    set(settings, 'topBar.buttonColor', 'white');
-    set(settings, 'topBar.title.color', 'white');
-    set(settings, 'topBar.backButton.color', 'white');
+    set(settings, 'topBar.title.color', getVar('--tint-fg'));
+    set(settings, 'topBar.buttonColor', getVar('--tint-fg'));
+    set(settings, 'topBar.backButton.color', getVar('--tint-fg'));
+
+    // Bottom tabs
+    if (!tabBarBg || tabBarBg === 'transparent') {
+      set(settings, 'bottomTabs.backgroundColor', getVar('--backdrop'));
+    } else {
+      set(settings, 'bottomTabs.backgroundColor', getVar('--tabbar-bg'));
+    }
+
+    set(settings, 'bottomTabs.selectedTabColor', getVar('--tabbar-tint'));
+    set(settings, 'bottomTabs.titleDisplayMode', 'alwaysShow');
+
+    if (settings.bottomTab) {
+      set(settings, 'bottomTab.iconColor', getVar('--tabbar-fg'));
+      set(settings, 'bottomTab.textColor', getVar('--tabbar-fg'));
+      set(settings, 'bottomTab.selectedTextColor', getVar('--tabbar-tint'));
+      set(settings, 'bottomTab.selectedIconColor', getVar('--tabbar-tint'));
+    }
+
+    if (!settings.layout || (settings.layout && !settings.layout.backgroundColor)) {
+      set(settings, 'layout.backgroundColor', getVar('--content-bg'));
+    }
 
     if (settings.topBar.rightButtons) {
       set(settings, 'topBar.rightButtons', settings.topBar.rightButtons.map(button => ({
         ...button,
-        color: 'white',
+        color: getVar('--tint-fg'),
       })));
     }
-
-    // if (isDarkTheme) {
-    //   set(settings, 'bottomTabs.backgroundColor', '#000000');
-    //   set(settings, 'bottomTabs.backgroundColor', '#000000');
-
-    //   if (settings.bottomTab) {
-    //     set(settings, 'bottomTab.iconColor', '#FFFFFF');
-    //     set(settings, 'bottomTab.textColor', '#FFFFFF');
-    //   }
-    // } else {
-    //   set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
-    //   set(settings, 'bottomTabs.backgroundColor', '#FFFFFF');
-
-    //   if (settings.bottomTab) {
-    //     set(settings, 'bottomTab.iconColor', '#363636');
-    //     set(settings, 'bottomTab.textColor', '#363636');
-    //   }
-    // }
-
   }
 
   return settings;

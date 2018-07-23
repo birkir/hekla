@@ -125,9 +125,15 @@ const Account = types
 (async () => {
   Account.setIsChecking(true);
 
-  const data = await AsyncStorage.getItem('Account.read');
-  if (data) {
-    applySnapshot(Account.read, JSON.parse(data));
+  try {
+    const data = JSON.parse(await AsyncStorage.getItem('Account'));
+    applySnapshot(Account.read, data.read);
+    applySnapshot(Account.voted, data.voted);
+    applySnapshot(Account.favorited, data.favorited);
+    applySnapshot(Account.flagged, data.flagged);
+    applySnapshot(Account.hidden, data.hidden);
+  } catch (err) {
+    console.log('Could not decode Account');
   }
 
   let username;

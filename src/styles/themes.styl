@@ -17,6 +17,8 @@ applyTheme() {
   --tint-bg: $statusBar-background;
   --tint-fg: $editor-foreground;
 
+  --statusbar-bg: $editorIndentGuide-background;
+
   // Navbar background color
   --navbar-bg: $editor-background;
   // Navbar text color
@@ -40,9 +42,6 @@ applyTheme() {
   --content-bg-highlight: $editorGutter-background;
   // Content text color
   --content-fg: $editor-foreground;
-  // --content-fg-65: rgba($editor-foreground, 65%);
-  // --content-fg-75: rgba($editor-foreground, 75%);
-  // --content-fg-85: rgba($editor-foreground, 85%);
 
   // Content border color
   --content-border: $editorIndentGuide-background;
@@ -78,6 +77,7 @@ applyTheme() {
 
   applyTheme();
   --content-fg-50: rgba($editor-foreground, 50%);
+  --statusbar-bg: darken($statusBar-background, 50%);
   --navbar-bg: transparent;
   --tabbar-bg: transparent;
   --tabbar-fg: #A1A1A1;
@@ -85,17 +85,18 @@ applyTheme() {
 }
 
 .dark {
-  $editor-background = #2a2626;
+  $editor-background = #222222;
   $editor-foreground = #ffffff;
-  $editorIndentGuide-background = #453e3e;
+  $editorIndentGuide-background = #444444;
   $statusBar-background = #ff2d55;
-  $sideBar-background = #373232;
+  $sideBar-background = #373737;
   $sideBar-foreground = #ffffff;
-  $sideBarSectionHeader-background = #3f3939;
-  $editorGutter-background = #252121;
+  $sideBarSectionHeader-background = #393939;
+  $editorGutter-background = #191919;
 
   applyTheme();
   --content-fg-50: rgba($editor-foreground, 50%);
+  --statusbar-bg: darken($statusBar-background, 50%);
   --navbar-style: dark;
   --navbar-bg: transparent;
   --tabbar-style: dark;
@@ -115,6 +116,10 @@ applyTheme() {
 
   applyTheme();
   --content-fg-50: rgba($editor-foreground, 50%);
+  --statusbar-bg: darken($statusBar-background, 33%);
+  --tabbar-bg: darken($editor-background, 50%)
+  --tabbar-fg: $sideBar-foreground;
+  --tabbar-tint: $statusBar-background;
 }
 
 .piggyLight {
@@ -129,7 +134,9 @@ applyTheme() {
 
   applyTheme();
   --content-fg-50: rgba($editor-foreground, 50%);
+  --tint-fg: #ffffff;
   --tabbar-fg: #A1A1A1;
+  --statusbar-bg: darken($statusBar-background, 25%);
 }
 
 .glowfish {
@@ -144,4 +151,7 @@ applyTheme() {
 
   applyTheme();
   --content-fg-50: rgba($editor-foreground, 50%);
+  --tint-fg: white;
+  --statusbar-bg: darken($statusBar-background, 25%);
+  --tabbar-bg: darken($sideBar-background, 33%);
 }

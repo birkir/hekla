@@ -1,18 +1,15 @@
 patch-package
 --- a/node_modules/react-native-navigation/lib/ios/RNNBackgroundOptions.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBackgroundOptions.m
-@@ -3,9 +3,9 @@
+@@ -3,7 +3,7 @@
  @implementation RNNBackgroundOptions
  
  - (void)applyOn:(UIViewController *)viewController {
 -	if (self.color) {
 +	if (self.color && [self.color doubleValue] > 0) {
  		UIColor* backgroundColor = [RCTConvert UIColor:self.color];
--		viewController.navigationController.navigationBar.barTintColor = backgroundColor;
-+        viewController.navigationController.navigationBar.barTintColor = backgroundColor;
+ 		viewController.navigationController.navigationBar.barTintColor = backgroundColor;
  	} else {
- 		viewController.navigationController.navigationBar.barTintColor = nil;
- 	}
 --- a/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNBottomTabsOptions.h
 @@ -11,6 +11,7 @@
@@ -43,36 +40,9 @@ patch-package
  	
  	if (self.translucent) {
  		viewController.tabBarController.tabBar.translucent = [self.translucent boolValue];
---- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
-+++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.h
-@@ -1,6 +1,7 @@
- #import <Foundation/Foundation.h>
- #import <React/RCTBridge.h>
- #import "RNNBridgeManagerDelegate.h"
-+#import "RNNStore.h"
- 
- typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBridge* bridge);
- 
-@@ -11,5 +12,6 @@ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBri
- - (void)registerExternalComponent:(NSString *)name callback:(RNNExternalViewCreator)callback;
- 
- @property (readonly, nonatomic, strong) RCTBridge *bridge;
-+@property (readonly, nonatomic, strong) RNNStore *store;
- 
- @end
---- a/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.m
-+++ b/node_modules/react-native-navigation/lib/ios/RNNBridgeManager.m
-@@ -12,6 +12,7 @@
- @interface RNNBridgeManager() <RCTBridgeDelegate>
- 
- @property (nonatomic, strong, readwrite) RCTBridge *bridge;
-+@property (nonatomic, strong, readwrite) RNNStore *store;
- 
- @end
- 
 --- a/node_modules/react-native-navigation/lib/ios/RNNCommandsHandler.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNCommandsHandler.m
-@@ -101,16 +101,28 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
+@@ -98,16 +98,28 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
  	RNNRootViewController *newVc = (RNNRootViewController *)[_controllerFactory createLayoutAndSaveToStore:layout];
  	UIViewController *fromVC = [_store findComponentForId:componentId];
  	
@@ -91,7 +61,7 @@ patch-package
 +                RNNRootViewController* rvc  = (RNNRootViewController*)vcc;
 +                NSDictionary * params = @{ @"previewComponentId": newVc.componentId, @"componentId": rvc.componentId };
 +                if (newVc.options.preview.commit) {
-+                    [self->_eventEmitter sendOnNavigationEvent:@"previewCommit" params:params];
++//                    [self->_eventEmitter sendOnNavigationEvent:@"previewCommit" params:params];
 +                    [CATransaction begin];
 +                    [CATransaction setCompletionBlock:^{
 +                        [self->_eventEmitter sendOnNavigationCommandCompletion:push params:@{@"componentId": componentId}];
@@ -100,13 +70,13 @@ patch-package
 +                    [rvc.navigationController pushViewController:newVc animated:YES];
 +                    [CATransaction commit];
 +                } else {
-+                    [self->_eventEmitter sendOnNavigationEvent:@"previewDismissed" params:params];
++//                    [self->_eventEmitter sendOnNavigationEvent:@"previewDismissed" params:params];
 +                }
 +            };
  			CGSize size = CGSizeMake(rootVc.view.frame.size.width, rootVc.view.frame.size.height);
  			
  			if (newVc.options.preview.width) {
-@@ -125,7 +137,10 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
+@@ -122,7 +134,10 @@ -(void)push:(NSString*)componentId layout:(NSDictionary*)layout completion:(RNNT
  				newVc.preferredContentSize = size;
  			}
  
@@ -117,7 +87,7 @@ patch-package
 +			});
  		}
  	} else {
- 		[newVc onReactViewReady:^{
+ 		id animationDelegate = (newVc.options.animations.push.hasCustomAnimation || newVc.isCustomTransitioned) ? newVc : nil;
 --- a/node_modules/react-native-navigation/lib/ios/RNNPreviewOptions.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNPreviewOptions.h
 @@ -2,7 +2,7 @@
@@ -131,22 +101,22 @@ patch-package
  @property (nonatomic, strong) NSNumber* commit;
 --- a/node_modules/react-native-navigation/lib/ios/RNNRootViewController.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNRootViewController.h
-@@ -12,6 +12,7 @@
- @class RNNRootViewController;
+@@ -7,6 +7,7 @@
+ #import "RNNAnimator.h"
  
  typedef void (^RNNReactViewReadyCompletionBlock)(void);
 +typedef void(^PreviewCallback)(UIViewController *vc);
  
- @interface RNNRootViewController : UIViewController	<RNNRootViewProtocol, UIViewControllerPreviewingDelegate, UISearchResultsUpdating, UISearchBarDelegate>
+ @interface RNNRootViewController : UIViewController	<UIViewControllerPreviewingDelegate, UISearchResultsUpdating, UISearchBarDelegate, UINavigationControllerDelegate, UISplitViewControllerDelegate>
  
-@@ -22,6 +23,7 @@ typedef void (^RNNReactViewReadyCompletionBlock)(void);
+@@ -16,6 +17,7 @@ typedef void (^RNNReactViewReadyCompletionBlock)(void);
  @property (nonatomic) id<RNNRootViewCreator> creator;
  @property (nonatomic, strong) RNNAnimator* animator;
  @property (nonatomic, strong) UIViewController* previewController;
 +@property (nonatomic, copy) PreviewCallback previewCallback;
  
  
- -(instancetype)initWithName:(NSString*)name
+ - (instancetype)initWithName:(NSString*)name
 --- a/node_modules/react-native-navigation/lib/ios/RNNRootViewController.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNRootViewController.m
 @@ -22,6 +22,8 @@ @interface RNNRootViewController() {
@@ -158,22 +128,22 @@ patch-package
  -(instancetype)initWithName:(NSString*)name
  				withOptions:(RNNNavigationOptions*)options
  			withComponentId:(NSString*)componentId
-@@ -281,28 +283,22 @@ - (void)orientationDidChange:(NSNotification*)notification {
+@@ -292,27 +294,21 @@ - (void)orientationDidChange:(NSNotification*)notification {
  
  - (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
  	if (self.previewController) {
--		RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
--		[_eventEmitter sendOnNavigationEvent:@"previewContext" params:@{
--																		@"previewComponentId": vc.componentId,
--																		@"componentId": self.componentId
--																		}];
-+    if ([self.previewController isKindOfClass:[RNNRootViewController class]]) {
-+      RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
-+      [_eventEmitter sendOnNavigationEvent:@"previewContext" params:@{
-+                                      @"previewComponentId": vc.componentId,
-+                                      @"componentId": self.componentId
-+                                      }];
-+    }
+-//		RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
+-//		[_eventEmitter sendOnNavigationEvent:@"previewContext" params:@{
+-//																		@"previewComponentId": vc.componentId,
+-//																		@"componentId": self.componentId
+-//																		}];
++        if ([self.previewController isKindOfClass:[RNNRootViewController class]]) {
++//          RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
++//          [_eventEmitter sendOnNavigationEvent:@"previewContext" params:@{
++//                                          @"previewComponentId": vc.componentId,
++//                                          @"componentId": self.componentId
++//                                          }];
++        }
  	}
  	return self.previewController;
  }
@@ -181,25 +151,23 @@ patch-package
  
  - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit {
 -	RNNRootViewController * vc = (RNNRootViewController*) self.previewController;
--	NSDictionary * params = @{
--							  @"previewComponentId": vc.componentId,
--							  @"componentId": self.componentId
--							  };
+-//	NSDictionary * params = @{
+-//							  @"previewComponentId": vc.componentId,
+-//							  @"componentId": self.componentId
+-//							  };
 -	if (vc.options.preview.commit) {
--		[_eventEmitter sendOnNavigationEvent:@"previewCommit" params:params];
+-//		[_eventEmitter sendOnNavigationEvent:@"previewCommit" params:params];
 -		[self.navigationController pushViewController:vc animated:false];
 -	} else {
--		[_eventEmitter sendOnNavigationEvent:@"previewDismissed" params:params];
--	}
-+  if (self.previewCallback) {
+-//		[_eventEmitter sendOnNavigationEvent:@"previewDismissed" params:params];
++	if (self.previewCallback) {
 +		self.previewCallback(self);
-+  }
+ 	}
  }
  
- - (void)onActionPress:(NSString *)id {
 --- a/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.h
 +++ b/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.h
-@@ -13,6 +13,7 @@
+@@ -14,6 +14,7 @@
  @property (nonatomic, strong) NSNumber* visible;
  @property (nonatomic, strong) NSNumber* hideOnScroll;
  @property (nonatomic, strong) NSNumber* buttonColor;
@@ -209,7 +177,7 @@ patch-package
  @property (nonatomic, strong) NSNumber* drawBehind;
 --- a/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.m
 +++ b/node_modules/react-native-navigation/lib/ios/RNNTopBarOptions.m
-@@ -116,6 +116,11 @@ - (void)applyOn:(UIViewController*)viewController {
+@@ -119,6 +119,11 @@ - (void)applyOn:(UIViewController*)viewController {
  	} else {
  		disableTopBarTransparent();
  	}
@@ -223,23 +191,11 @@ patch-package
  		viewController.navigationController.navigationBar.translucent = [self.translucent boolValue];
 --- a/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.h
 +++ b/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.h
-@@ -15,4 +15,6 @@ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBri
+@@ -1,6 +1,7 @@
+ #import <Foundation/Foundation.h>
+ #import <UIKit/UIKit.h>
+ #import <React/RCTBridge.h>
++#import <React/RCTUIManager.h>
+ #import "RNNBridgeManagerDelegate.h"
  
- + (RCTBridge *)getBridge;
- 
-++ (UIViewController *)findViewController:(NSString *)componentId;
-+
- @end
---- a/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.m
-+++ b/node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.m
-@@ -31,6 +31,10 @@ + (RCTBridge *)getBridge {
- 	return [[ReactNativeNavigation sharedInstance].bridgeManager bridge];
- }
- 
-++ (UIViewController *)findViewController:(NSString *)componentId {
-+  RNNStore *store = [[ReactNativeNavigation sharedInstance].bridgeManager store];
-+  return [store findComponentForId:componentId];
-+}
- 
- # pragma mark - instance
- 
+ typedef UIViewController * (^RNNExternalViewCreator)(NSDictionary* props, RCTBridge* bridge);

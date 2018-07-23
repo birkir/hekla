@@ -41,10 +41,6 @@ export default class StoryScreen extends React.Component<Props> {
     });
   }
 
-  state = {
-    loading: 0,
-  } as any;
-
   @observable
   story: IItemType;
 
@@ -52,12 +48,16 @@ export default class StoryScreen extends React.Component<Props> {
   comments: IItemType[];
 
   @observable
-  isRefreshing: boolean = false;
+  isRefreshing = false;
+
+  @observable
+  isLoading = true;
+
+  componentDidMount() {
+    this.fetch({ partial: true });
+  }
 
   componentDidAppear() {
-    UI.setComponentId(this.props.componentId);
-
-    // Improves performance, but suffers UI flashes
     this.fetch();
   }
 
@@ -70,18 +70,28 @@ export default class StoryScreen extends React.Component<Props> {
   }
 
   @autobind
-  async fetch({ force } = { force: false }) {
+  async fetch({ partial = false } = {}) {
     const start = new Date().getTime();
-    this.setState({ loading: 1 });
-    this.story = await Items.fetchItem(this.props.id, { force }) as IItemType;
-    this.updateOptions();
-    this.setState({ loading: 2 });
-    if (this.story) {
-      if (!UI.preview.active || (UI.preview.active && UI.settings.general.markReadOn3dTouch)) {
-        this.story.read(true);
-      }
-      await this.story.fetchComments({ force, offset: 0 });
+    this.isLoading = true;
+    this.story = await Items.fetchItem(this.props.id) as IItemType;
+
+    if (!this.story || partial) {
+      return;
     }
+
+    Navigation.mergeOptions(this.props.componentId, {
+      topBar: {
+        title: {
+          text: prettyNumber(this.story.descendants || 0, 'Comments'),
+        },
+      },
+    });
+
+    if (!UI.preview.active || (UI.preview.active && UI.settings.general.markReadOn3dTouch)) {
+      this.story.read(true);
+    }
+
+    await this.story.fetchComments({ offset: 0 });
 
     // Wait at least 990ms for new data to make loading
     // indicators non janky.
@@ -90,7 +100,7 @@ export default class StoryScreen extends React.Component<Props> {
       await new Promise(r => setTimeout(r, delay));
     }
 
-    this.setState({ loading: 0 });
+    this.isLoading = false;
   }
 
   @autobind
@@ -115,7 +125,7 @@ export default class StoryScreen extends React.Component<Props> {
   async onRefresh() {
     ReactNativeHapticFeedback.trigger('impactLight', true);
     this.isRefreshing = true;
-    await this.fetch({ force: true });
+    await this.fetch();
     this.isRefreshing = false;
   }
 
@@ -147,12 +157,8 @@ export default class StoryScreen extends React.Component<Props> {
     }
   }
 
-  async updateOptions() {
-    const opts = StoryScreen.options;
-    if (this.story) {
-      set(opts, 'topBar.title.text', prettyNumber(this.story.descendants || 0, 'Comments'));
-    }
-    Navigation.mergeOptions(this.props.componentId, opts);
+  updateOptions() {
+    Navigation.mergeOptions(this.props.componentId, StoryScreen.options);
   }
 
   @autobind
@@ -193,9 +199,8 @@ export default class StoryScreen extends React.Component<Props> {
   }
 
   render() {
-    const { loading } = this.state;
     const size = this.story && this.story.comments.length;
-    const isEmpty = loading === 0 && size === 0;
+    const isEmpty = !this.isLoading && size === 0;
     const data = size > 0 && this.story.flatComments;
 
     return (
@@ -203,8 +208,8 @@ export default class StoryScreen extends React.Component<Props> {
         <FlatList
           ref={this.flatList}
           style={styles.list}
-          ListHeaderComponent={!UI.preview.active && <Header item={this.story} />}
-          ListFooterComponent={loading > 0 && <Loading previewing={UI.preview.active} />}
+          ListHeaderComponent={<Header item={this.story} />}
+          ListFooterComponent={this.isLoading && !this.isRefreshing && <Loading visible={true} />}
           ListEmptyComponent={isEmpty && <Empty message="No comments" />}
           data={data}
           extraData={this.collapsedInView.size}
@@ -213,7 +218,6 @@ export default class StoryScreen extends React.Component<Props> {
           refreshing={this.isRefreshing}
           onRefresh={this.onRefresh}
           initialNumToRender={5}
-          scrollEnabled={UI.scrollEnabled}
         />
       </View>
     );

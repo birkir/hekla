@@ -20,7 +20,7 @@ const Items = types
        * @param {number} index Index of item in list
        * @return {Promise}
        */
-      fetchItem(id: string, { force = false, metadata = false } = {}) {
+      fetchItem(id: string, { force = true, metadata = false } = {}) {
         return flow(function* () {
           const key = String(id);
 

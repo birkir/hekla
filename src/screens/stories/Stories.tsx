@@ -12,7 +12,7 @@ import Toast from 'components/toast/Toast';
 import Stories from 'stores/Stories';
 import Item from 'stores/models/Item';
 import UI from 'stores/UI';
-import { theme, applyThemeOptions } from 'styles';
+import { theme, applyThemeOptions, getVar } from 'styles';
 const styles = theme(require('./Stories.styl'));
 
 interface Props {
@@ -50,12 +50,20 @@ export default class StoriesScreen extends React.Component<Props> {
           icon: require('assets/icons/25/slider.png'),
         }],
       },
+      layout: {
+        backgroundColor: getVar('--backdrop'),
+      },
       bottomTab: {
         text: 'Stories',
         testID: 'STORIES_TAB',
         icon: require('assets/icons/25/stories.png'),
       },
     });
+  }
+
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
   }
 
   @autobind
@@ -76,23 +84,23 @@ export default class StoriesScreen extends React.Component<Props> {
       }
     });
 
-    this.dispose = Navigation.events().registerNativeEventListener((name, params) => {
-      if (name === 'bottomTabSelected') {
-        const { selectedTabIndex, unselectedTabIndex } = params;
-        if (selectedTabIndex === unselectedTabIndex && UI.componentId === this.props.componentId) {
-          this.scrollToTop();
-        }
-      }
-    });
+    // this.dispose = Navigation.events().registerNativeEventListener((name, params) => {
+    //   if (name === 'bottomTabSelected') {
+    //     const { selectedTabIndex, unselectedTabIndex } = params;
+    //     if (selectedTabIndex === unselectedTabIndex && UI.componentId === this.props.componentId) {
+    //       this.scrollToTop();
+    //     }
+    //   }
+    // });
   }
 
   componentWillUnmount() {
     Stories.dispose();
-    this.dispose.remove();
+    // this.dispose.remove();
     UI.removeScreen(this);
   }
 
-  onNavigationButtonPressed(buttonId) {
+  navigationButtonPressed({ buttonId }) {
     if (buttonId === 'change') {
       storyTypeActionSheet(this.onStoryTypeChange);
     }
@@ -193,7 +201,7 @@ export default class StoriesScreen extends React.Component<Props> {
           onEndReachedThreshold={0.75}
           onRefresh={this.onRefresh}
           onEndReached={this.onEndReached}
-          scrollEnabled={UI.scrollEnabled}
+          // scrollEnabled={UI.scrollEnabled}
         />
         <Toast
           bottom={UI.layout.bottomTabsHeight}

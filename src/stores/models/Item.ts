@@ -136,7 +136,7 @@ const Item = types.model('Item', {
   /**
    * Fetch kids as comments
    */
-  fetchComments({ force = false, offset = self.offset, all = false } = {}) {
+  fetchComments({ force = true, offset = self.offset, all = false } = {}) {
     return flow(function* () {
       const end = offset > 0 ? 20 : (MAX_LEVELS - 1 - self.level) * ITEMS_PER_LEVEL;
       const limit = Math.min(20, Math.max(1, end));
@@ -213,6 +213,7 @@ const Item = types.model('Item', {
   },
 
   vote() {
+    if (!Account.isLoggedIn) return null;
     const assumedFlag = !self.isVoted;
     Account.toggle(self.id, 'voted');
     (self as any).incrementScore((assumedFlag ? 1 : -1));
@@ -225,6 +226,7 @@ const Item = types.model('Item', {
   },
 
   flag() {
+    if (!Account.isLoggedIn) return null;
     const assumedFlag = !self.isFlagged;
     Account.toggle(self.id, 'flagged');
     Hackernews.flag(self.id, assumedFlag).then((flag: boolean) => {
@@ -233,6 +235,7 @@ const Item = types.model('Item', {
   },
 
   hide() {
+    if (!Account.isLoggedIn) return null;
     const assumedFlag = !self.isHidden;
     Account.toggle(self.id, 'hidden');
     Hackernews.hide(self.id, assumedFlag).then((flag: boolean) => {
@@ -241,6 +244,7 @@ const Item = types.model('Item', {
   },
 
   favorite() {
+    if (!Account.isLoggedIn) return null;
     const assumedFlag = !self.isFavorited;
     Account.toggle(self.id, 'favorited');
     Hackernews.favorite(self.id, assumedFlag).then((flag: boolean) => {
@@ -250,6 +254,7 @@ const Item = types.model('Item', {
 
   delete() {
     return new Promise((resolve, reject) => {
+      if (!Account.isLoggedIn) return reject();
       const ref = db.ref(`v0/item/${self.id}`);
       ref.on('value', async (s) => {
         ref.off('value');
@@ -279,6 +284,10 @@ const Item = types.model('Item', {
    */
   reply(text: string) {
     return flow(function* () {
+
+      if (!Account.isLoggedIn) {
+        return null;
+      }
 
       // Create placeholder comment
       const comment = Item.create({

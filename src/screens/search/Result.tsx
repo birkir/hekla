@@ -59,10 +59,6 @@ export default class ResultScreen extends React.Component<Props> {
     this.fetchData();
   }
 
-  componentDidAppear() {
-    UI.setComponentId(this.props.componentId);
-  }
-
   componentWillUnmount() {
     UI.removeScreen(this);
   }

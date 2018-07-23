@@ -37,7 +37,7 @@ export default class StoryRow extends React.Component<Props> {
   @autobind
   async onDownloadPress() {
     await this.props.item.refetch();
-    await this.props.item.fetchComments({ offset: 0, all: true, force: true });
+    await this.props.item.fetchComments({ offset: 0, all: true });
     this.isDownloaded = true;
     setTimeout(() => { this.isDownloaded = false; }, 1750);
   }
