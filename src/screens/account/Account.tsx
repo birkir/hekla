@@ -33,7 +33,7 @@ export default class AccountScreen extends React.Component<Props> {
         rightButtons: Account.isLoggedIn ? [
           {
             id: 'logout',
-            title: 'Logout',
+            text: 'Logout',
           },
         ] : [],
       },
@@ -43,6 +43,11 @@ export default class AccountScreen extends React.Component<Props> {
         icon: require('assets/icons/25/user.png'),
       },
     });
+  }
+
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
   }
 
   componentWillMount() {
@@ -66,10 +71,12 @@ export default class AccountScreen extends React.Component<Props> {
 
   @autobind
   updateOptions() {
-    Navigation.mergeOptions(this.props.componentId, AccountScreen.options);
+    const opts = AccountScreen.options;
+    console.log('updateOptions', opts);
+    Navigation.mergeOptions(this.props.componentId, opts);
   }
 
-  onNavigationButtonPressed(buttonId) {
+  navigationButtonPressed({ buttonId }) {
     if (buttonId === 'logout') {
       this.onLogout();
     }

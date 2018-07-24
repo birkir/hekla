@@ -29,13 +29,13 @@ export default class ReplyScreen extends React.Component<Props> {
         leftButtons: [
           {
             id: 'cancel',
-            title: 'Cancel',
+            text: 'Cancel',
           },
         ],
         rightButtons: [
           {
             id: 'post',
-            title: 'Post',
+            text: 'Post',
             fontFamily: 'Helvetica-Bold',
             color: '#CCC',
           },
@@ -54,6 +54,11 @@ export default class ReplyScreen extends React.Component<Props> {
     isLoading: false,
     isEmpty: true,
   };
+
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
+  }
 
   componentDidAppear() {
     this.updateOptions();
@@ -122,7 +127,7 @@ export default class ReplyScreen extends React.Component<Props> {
     });
   }
 
-  onNavigationButtonPressed(buttonId) {
+  navigationButtonPressed({ buttonId }) {
 
     if (buttonId === 'cancel') {
       this.dismiss();

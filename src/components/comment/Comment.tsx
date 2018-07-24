@@ -9,6 +9,7 @@ import Account from 'stores/Account';
 import UI from 'stores/UI';
 import { theme, getVar } from 'styles';
 import { observer } from 'mobx-react';
+import promptLogin from 'utils/promptLogin';
 const styles = theme(require('./Comment.styl'));
 
 type IItemType = typeof Item.Type;
@@ -105,7 +106,11 @@ export default class Comment extends React.Component<Props> {
       item.hide();
     }
     if (id === 'reply') {
-      replyScreen(item.id);
+      if (Account.isLoggedIn) {
+        replyScreen(item.id);
+      } else {
+        promptLogin();
+      }
     }
     if (id === 'user') {
       userScreen(item.by);

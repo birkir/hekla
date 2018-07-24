@@ -45,6 +45,11 @@ export default class SearchScreen extends React.Component<Props> {
   @observable
   isFocused = false;
 
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
+  }
+
   componentWillMount() {
     UI.addScreen(this);
   }
@@ -62,9 +67,14 @@ export default class SearchScreen extends React.Component<Props> {
   }
 
   @autobind
-  onSearchBarUpdated(query: string, isFocused: boolean) {
-    this.query = query;
+  searchBarUpdated({ text, isFocused }) {
+    this.query = text;
     this.isFocused = isFocused;
+  }
+
+  @autobind
+  searchBarCancelPressed() {
+    this.isFocused = false;
   }
 
   @autobind
@@ -79,11 +89,6 @@ export default class SearchScreen extends React.Component<Props> {
 
   @autobind
   onSearchBlur() {
-    this.isFocused = false;
-  }
-
-  @autobind
-  onSearchBarCancelPressed() {
     this.isFocused = false;
   }
 

@@ -10,6 +10,8 @@ import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import { replyScreen } from 'screens';
 import { theme } from 'styles';
+import Account from 'stores/Account';
+import promptLogin from 'utils/promptLogin';
 const styles = theme(require('./Header.styl'));
 
 type IItemType = typeof Item.Type;
@@ -29,6 +31,10 @@ export default class StoryHeader extends React.Component<Props> {
 
   @autobind
   onFlagPress() {
+    if (!Account.isLoggedIn) {
+      return promptLogin();
+    }
+
     if (this.props.item.isFlagged) {
       return this.props.item.flag();
     }
@@ -56,6 +62,9 @@ export default class StoryHeader extends React.Component<Props> {
 
   @autobind
   onReplyPress() {
+    if (!Account.isLoggedIn) {
+      return promptLogin();
+    }
     return replyScreen(this.props.item.id);
   }
 

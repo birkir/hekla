@@ -26,7 +26,7 @@ type IItemType = typeof Item.Type;
 export default class StoriesScreen extends React.Component<Props> {
 
   private listRef = React.createRef() as any;
-  private dispose;
+  private bottomTabSelectedListener;
 
   @observable
   isRefreshing = false;
@@ -46,7 +46,7 @@ export default class StoriesScreen extends React.Component<Props> {
         hideOnScroll: UI.settings.general.hideBarsOnScroll,
         rightButtons: [{
           id: 'change',
-          title: 'Change',
+          text: 'Change',
           icon: require('assets/icons/25/slider.png'),
         }],
       },
@@ -84,19 +84,16 @@ export default class StoriesScreen extends React.Component<Props> {
       }
     });
 
-    // this.dispose = Navigation.events().registerNativeEventListener((name, params) => {
-    //   if (name === 'bottomTabSelected') {
-    //     const { selectedTabIndex, unselectedTabIndex } = params;
-    //     if (selectedTabIndex === unselectedTabIndex && UI.componentId === this.props.componentId) {
-    //       this.scrollToTop();
-    //     }
-    //   }
-    // });
+    this.bottomTabSelectedListener = Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex, unselectedTabIndex }) => {
+      if (selectedTabIndex === unselectedTabIndex && UI.componentId === this.props.componentId) {
+        this.scrollToTop();
+      }
+    });
   }
 
   componentWillUnmount() {
     Stories.dispose();
-    // this.dispose.remove();
+    this.bottomTabSelectedListener.remove();
     UI.removeScreen(this);
   }
 

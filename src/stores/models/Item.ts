@@ -2,6 +2,7 @@ import { types, flow } from 'mobx-state-tree';
 import { XmlEntities } from 'html-entities';
 import flattenDeep from 'lodash/flattenDeep';
 import age from 'utils/age';
+import promptLogin from 'utils/promptLogin';
 import Metadata from './Metadata';
 import Items from '../Items';
 import Hackernews from '../services/Hackernews';
@@ -213,7 +214,9 @@ const Item = types.model('Item', {
   },
 
   vote() {
-    if (!Account.isLoggedIn) return null;
+    if (!Account.isLoggedIn) {
+      return promptLogin();
+    }
     const assumedFlag = !self.isVoted;
     Account.toggle(self.id, 'voted');
     (self as any).incrementScore((assumedFlag ? 1 : -1));
@@ -226,7 +229,9 @@ const Item = types.model('Item', {
   },
 
   flag() {
-    if (!Account.isLoggedIn) return null;
+    if (!Account.isLoggedIn) {
+      return promptLogin();
+    }
     const assumedFlag = !self.isFlagged;
     Account.toggle(self.id, 'flagged');
     Hackernews.flag(self.id, assumedFlag).then((flag: boolean) => {
@@ -235,7 +240,9 @@ const Item = types.model('Item', {
   },
 
   hide() {
-    if (!Account.isLoggedIn) return null;
+    if (!Account.isLoggedIn) {
+      return promptLogin();
+    }
     const assumedFlag = !self.isHidden;
     Account.toggle(self.id, 'hidden');
     Hackernews.hide(self.id, assumedFlag).then((flag: boolean) => {
@@ -244,7 +251,9 @@ const Item = types.model('Item', {
   },
 
   favorite() {
-    if (!Account.isLoggedIn) return null;
+    if (!Account.isLoggedIn) {
+      return promptLogin();
+    }
     const assumedFlag = !self.isFavorited;
     Account.toggle(self.id, 'favorited');
     Hackernews.favorite(self.id, assumedFlag).then((flag: boolean) => {
@@ -254,7 +263,9 @@ const Item = types.model('Item', {
 
   delete() {
     return new Promise((resolve, reject) => {
-      if (!Account.isLoggedIn) return reject();
+      if (!Account.isLoggedIn) {
+        return reject(promptLogin());
+      }
       const ref = db.ref(`v0/item/${self.id}`);
       ref.on('value', async (s) => {
         ref.off('value');
@@ -286,7 +297,7 @@ const Item = types.model('Item', {
     return flow(function* () {
 
       if (!Account.isLoggedIn) {
-        return null;
+        return promptLogin();
       }
 
       // Create placeholder comment

@@ -38,7 +38,7 @@ export default class ResultScreen extends React.Component<Props> {
         rightButtons: [
           {
             id: 'sort',
-            title: Search.sort === 'search' ? 'Popular' : 'Newest',
+            text: Search.sort === 'search' ? 'Popular' : 'Newest',
           },
         ],
         largeTitle: {
@@ -50,6 +50,11 @@ export default class ResultScreen extends React.Component<Props> {
 
   @observable
   isRefreshing = false;
+
+  constructor(props) {
+    super(props);
+    Navigation.events().bindComponent(this);
+  }
 
   componentWillMount() {
     UI.addScreen(this);
@@ -63,7 +68,7 @@ export default class ResultScreen extends React.Component<Props> {
     UI.removeScreen(this);
   }
 
-  onNavigationButtonPressed(buttonId) {
+  navigationButtonPressed({ buttonId }) {
     if (buttonId === 'sort') {
       const options = [{
         id: 'popular',
