@@ -52,6 +52,10 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
     UI.settings.setValue('appearance.showPageEndings', flag);
   }
 
+  onLargeThumbnailChange(flag: boolean) {
+    UI.settings.setValue('appearance.largeShowThumbnail', flag);
+  }
+
   onLargeShowVoteButtonChange(flag: boolean) {
     UI.settings.setValue('appearance.largeShowVoteButton', flag);
   }
@@ -86,7 +90,7 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
 
   oniPadSidebarChange(flag: boolean) {
     UI.settings.setValue('appearance.iPadSidebarEnabled', flag);
-    UI.restartApp();
+    setTimeout(() => UI.restartApp(), 1200);
   }
 
   render() {
@@ -119,6 +123,10 @@ export default class SettingsAppearanceScreen extends React.Component<Props> {
           />
         </CellGroup>
         <CellGroup header="Large Stories">
+          <Cell
+            title="Show Thumbnails"
+            value={<Switch value={UI.settings.appearance.largeShowThumbnail} onValueChange={this.onLargeThumbnailChange} />}
+          />
           <Cell
             title="Show Vote button"
             value={<Switch value={UI.settings.appearance.largeShowVoteButton} onValueChange={this.onLargeShowVoteButtonChange} />}

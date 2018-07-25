@@ -56,13 +56,20 @@ export default class MetaLink extends React.Component<Props, State> {
     this.dead = true;
   }
 
+  get showThumbnail() {
+    if (UI.settings.appearance.storySize === 'large') {
+      return UI.settings.appearance.largeShowThumbnail;
+    }
+    return UI.settings.appearance.compactThumbnail === 'noThumbnails';
+  }
+
   async fetch() {
     const { url } = this.props;
     if (!url || this.state.title || this.state.image) return;
     this.setState({ loading: true });
     const { title, image } = await fetchMetadata(url);
     if (this.dead) return;
-    if (image && typeof image.url === 'string') {
+    if (image && typeof image.url === 'string' && this.showThumbnail) {
       const res = await FastImage.preload([{ uri: image.url }]);
     }
     if (this.dead) return;
@@ -204,7 +211,7 @@ export default class MetaLink extends React.Component<Props, State> {
         onHideUnderlay={this.onHideUnderlay}
       >
         <View>
-          {large && isImage && (
+          {this.showThumbnail && large && isImage && (
             <FastImage
               source={{ uri: image.url }}
               style={[styles.image, { borderColor: getVar('--meta-border') }]}

@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		274D552420FD8861001D7912 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 274D552320FD8861001D7912 /* StoreKit.framework */; };
 		B0739A8F5C9048E9AC93D045 /* libPods-Hekla.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3988A5A05ABF10E5A9B33ED5 /* libPods-Hekla.a */; };
@@ -344,11 +345,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Hekla/Hekla.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Birkir Rafn Gudjonsson (5PD7JU2FJC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Birkir Rafn Gudjonsson (5PD7JU2FJC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 49;
-				DEVELOPMENT_TEAM = "5PD7JU2FJC";
+				DEVELOPMENT_TEAM = 5PD7JU2FJC;
 				INFOPLIST_FILE = Hekla/Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
@@ -362,7 +363,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = is.pipe.hekla;
 				PRODUCT_NAME = Hekla;
-				PROVISIONING_PROFILE = "6aff70ad-71eb-461c-858d-cb95fa181b6c";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -386,8 +387,10 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 5PD7JU2FJC;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -427,8 +430,10 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 5PD7JU2FJC;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

@@ -33,31 +33,21 @@ const Appearance = types
     theme: types.optional(Theme, 'light'),
     storySize: types.optional(StorySize, 'large'),
     showPageEndings: types.optional(types.boolean, false),
+    largeShowThumbnail: types.optional(types.boolean, true),
     largeShowVoteButton: types.optional(types.boolean, true),
     largeShowDownloadButton: types.optional(types.boolean, false),
     compactThumbnail: types.optional(CompactThumbnail, 'left'),
     compactVoteButton: types.optional(CompactVoteButton, 'left'),
     commentsUseColorScheme: types.optional(types.boolean, true),
     commentsShowMetaLinks: types.optional(types.boolean, true),
-    iPadSidebarEnabled: types.optional(types.boolean, false),
-  })
-  .views(self => ({
-    get isDarkTheme() {
-      if (self.theme === 'solarizedDark') {
-        return true;
-      }
-      if (self.theme === 'dark') {
-        return true;
-      }
-
-      return false;
-    },
-  }));
+    iPadSidebarEnabled: types.optional(types.boolean, true),
+  });
 
 const Settings = types
   .model('Settings', {
     general: types.optional(General, {}),
     appearance: types.optional(Appearance, {}),
+    isFirstRun: types.optional(types.boolean, true),
     isBeta: types.optional(types.boolean, config.isTestFlight || false),
   })
   .actions(self => ({
