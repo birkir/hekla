@@ -21,7 +21,7 @@ interface Props {
 export default class TouchablePreview extends React.Component<Props> {
 
   private hostRef = React.createRef() as any;
-  private isPressIn;
+  private isPressedIn;
   private startTouch;
   private commitTimeout;
 
@@ -47,7 +47,7 @@ export default class TouchablePreview extends React.Component<Props> {
         return;
       }
       
-      this.onPressIn = true;
+      this.isPressedIn = true;
 
       UI.setPreviewComponentName(this.props.componentName);
 
@@ -71,7 +71,7 @@ export default class TouchablePreview extends React.Component<Props> {
 
   @autobind
   onTouchMove(e) {
-    if (!this.startTouch || !this.isPressIn) {
+    if (!this.startTouch || !this.isPressedIn) {
       return;
     }
 
@@ -98,7 +98,7 @@ export default class TouchablePreview extends React.Component<Props> {
   onTouchEnd() {
     // Unset startTouch for blocking further touch movements
     this.startTouch = null;
-    this.isPressIn = false;
+    this.isPressedIn = false;
     UI.setPreviewActive(false);
   }
 
