@@ -88,10 +88,6 @@ export default class TouchablePreview extends React.Component<Props> {
     const a = this.startTouch.x - pageX;
     const b = this.startTouch.y - pageY;
     const distance = Math.abs(Math.sqrt((a * a) + (b * b)));
-
-    if (distance > MAX_DISTANCE) {
-      return this.onTouchEnd();
-    }
     
     if (force > PREVIEW_MIN_FORCE && diff > PREVIEW_DELAY) {
       UI.setPreviewActive(true);
