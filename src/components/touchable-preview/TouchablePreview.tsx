@@ -21,7 +21,8 @@ interface Props {
 export default class TouchablePreview extends React.Component<Props> {
 
   private hostRef = React.createRef() as any;
-  private startTimestamp;
+  private isPressIn;
+  private startTouch;
   private commitTimeout;
 
   @autobind
@@ -45,6 +46,8 @@ export default class TouchablePreview extends React.Component<Props> {
       if (!this.props.onPressIn) {
         return;
       }
+      
+      this.onPressIn = true;
 
       UI.setPreviewComponentName(this.props.componentName);
 
@@ -61,20 +64,35 @@ export default class TouchablePreview extends React.Component<Props> {
 
   @autobind
   onTouchStart(e) {
+    const { timestamp, pageX, pageY } = e.nativeEvent;
     // Store the timstamp of touch start
-    this.startTimestamp = e.nativeEvent.timestamp;
+    this.startTouch = { timestamp, x: pageX, y: pageY };
   }
 
   @autobind
   onTouchMove(e) {
+    if (!this.startTouch || !this.isPressIn) {
+      return;
+    }
+
     const PREVIEW_DELAY = 350;
-    const PREVIEW_MIN_FORCE = 0.1;
+    const PREVIEW_MIN_FORCE = 0.125;
     const PREVIEW_MAX_FORCE = 0.75;
-
+    const MAX_DISTANCE = 50;
+    
     // Extract force and timestamp from nativeEvent
-    const { force, timestamp } = e.nativeEvent;
-    const diff = (timestamp - this.startTimestamp);
+    const { force, timestamp, pageX, pageY } = e.nativeEvent;
+    const diff = (timestamp - this.startTouch.timestamp);
+    
+    // Get distance of touch movement
+    const a = this.startTouch.x - pageX;
+    const b = this.startTouch.y - pageY;
+    const distance = Math.abs(Math.sqrt((a * a) + (b * b)));
 
+    if (distance > MAX_DISTANCE) {
+      return this.onTouchEnd();
+    }
+    
     if (force > PREVIEW_MIN_FORCE && diff > PREVIEW_DELAY) {
       UI.setPreviewActive(true);
     }
@@ -82,6 +100,9 @@ export default class TouchablePreview extends React.Component<Props> {
 
   @autobind
   onTouchEnd() {
+    // Unset startTouch for blocking further touch movements
+    this.startTouch = null;
+    this.isPressIn = false;
     UI.setPreviewActive(false);
   }
 
