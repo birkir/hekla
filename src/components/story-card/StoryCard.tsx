@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Image, Text, TouchableHighlight, TouchableOpacity, findNodeHandle, Platform } from 'react-native';
+import { View, Text } from 'react-native';
 import TouchablePreview from 'components/touchable-preview/TouchablePreview';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';
@@ -8,7 +8,7 @@ import FormatText from 'components/format-text/FormatText';
 import StoryRow from 'components/story-row/StoryRow';
 import MetaLink from 'components/meta-link/MetaLink';
 import { observer } from 'mobx-react';
-import { theme, getVar } from 'styles';
+import { theme } from 'styles';
 import { STORY_SCREEN, storyScreen } from 'screens';
 const styles = theme(require('./StoryCard.styl'));
 
@@ -38,7 +38,7 @@ export default class StoryCard extends React.Component<Props> {
   }
 
   render() {
-    const { item, testID } = this.props;
+    const { item } = this.props;
     const { title, text, prettyText, url, metadata = {} } = item;
     const paddingHorizontal = Math.max(0, UI.layout.inset - 16) + 16;
     const isCompact = UI.settings.appearance.storySize === 'compact';

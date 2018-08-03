@@ -7,7 +7,7 @@ import Item from 'stores/models/Item';
 import { replyScreen } from 'screens';
 import UI from 'stores/UI';
 import Comment from 'components/comment/Comment';
-import { theme, getVar } from 'styles';
+import { theme } from 'styles';
 const styles = theme(require('./CommentThread.styl'));
 
 type IItemType = typeof Item.Type;

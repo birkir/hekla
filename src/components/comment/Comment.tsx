@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity, Platform, Clipboard, Alert } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableWithoutFeedback, Share, TouchableOpacity, Platform, Clipboard } from 'react-native';
 import openActionSheet from 'utils/openActionSheet';
 import { autobind } from 'core-decorators';
 import Item from 'stores/models/Item';

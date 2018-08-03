@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Animated, Image, View, Slider, GestureResponderEvent, Platform } from 'react-native';
+import { Text, Animated, Image, View, Slider, Platform } from 'react-native';
 import { theme } from 'styles';
 import { observer } from 'mobx-react';
 const styles = theme(require('./SliderFontSize.styl'));

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Image, Text, Keyboard, NativeModules, LayoutAnimation } from 'react-native';
+import { View, ScrollView, Image, Text, Keyboard, LayoutAnimation } from 'react-native';
 import { observer } from 'mobx-react';
 import Input from './components/Input';
 import Button from 'components/button/Button';
 import { autobind } from 'core-decorators';
 import Account from 'stores/Account';
 import UI from 'stores/UI';
-import { theme, getVar } from 'styles';
+import { theme } from 'styles';
 const styles = theme(require('./Login.styl'));
 
 interface Props {

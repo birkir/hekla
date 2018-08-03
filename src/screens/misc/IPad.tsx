@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text } from 'react-native';
 import { observer } from 'mobx-react';
 const styles = require('./IPad.styl');
 

@@ -23,7 +23,7 @@ import UI from '../stores/UI';
 import Item from '../stores/models/Item';
 import prettyNumber from 'utils/prettyNumber';
 import { getVar } from 'styles';
-import { autorun, when } from 'mobx';
+import { when } from 'mobx';
 
 type IItemType = typeof Item.Type;
 

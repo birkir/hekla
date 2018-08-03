@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, TouchableHighlight, findNodeHandle, Platform } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import TouchablePreview from 'components/touchable-preview/TouchablePreview';
 import FastImage from 'react-native-fast-image';
 import { autobind } from 'core-decorators';

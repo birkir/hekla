@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, Platform, Switch, Alert, ActivityIndicator } from 'react-native';
+import { ScrollView, Platform, Switch, Alert } from 'react-native';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import { Navigation } from 'react-native-navigation';
