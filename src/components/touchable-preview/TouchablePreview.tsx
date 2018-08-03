@@ -45,7 +45,6 @@ export default class TouchablePreview extends React.Component<Props> {
       if (!this.props.onPressIn) {
         return;
       }
-      
       this.isPressedIn = true;
 
       UI.setPreviewComponentName(this.props.componentName);
@@ -76,16 +75,16 @@ export default class TouchablePreview extends React.Component<Props> {
 
     const PREVIEW_DELAY = 350;
     const PREVIEW_MIN_FORCE = 0.125;
-    
+
     // Extract force and timestamp from nativeEvent
     const { force, timestamp, pageX, pageY } = e.nativeEvent;
     const diff = (timestamp - this.startTouch.timestamp);
-    
+
     // Get distance of touch movement
     const a = this.startTouch.x - pageX;
     const b = this.startTouch.y - pageY;
     const distance = Math.abs(Math.sqrt((a * a) + (b * b)));
-    
+
     if (force > PREVIEW_MIN_FORCE && diff > PREVIEW_DELAY) {
       UI.setPreviewActive(true);
     }
