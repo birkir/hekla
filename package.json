@@ -96,6 +96,7 @@
   },
   "jest": {
     "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
       "^.+\\.jsx?$": "babel-jest",
       "^.+\\.tsx?$": "ts-jest",
       "^.+\\.styl$": "<rootDir>/scripts/jest-css-modules.js"

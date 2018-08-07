@@ -1,5 +1,5 @@
 /// <reference path="../../../node_modules/@types/jest/index.d.ts" />
-const age = require('../age');
+const age = require('../age').default;
 
 it('should show <1m', () => {
   const today = Date.now();

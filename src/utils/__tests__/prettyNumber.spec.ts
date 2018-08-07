@@ -1,5 +1,5 @@
 /// <reference path="../../../node_modules/@types/jest/index.d.ts" />
-const prettyNumber = require('../prettyNumber');
+const prettyNumber = require('../prettyNumber').default;
 
 it('should show suffix', () => {
   expect(prettyNumber(0, 'Comments')).toBe('0 Comments');
