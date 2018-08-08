@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import { storySize, formatStorySize } from 'stores/enums/StorySize';
 import { formatCompactThumbnail, compactThumbnail } from 'stores/enums/CompactThumbnail';
-import { formatCompactVoteButton, compactVoteButton } from 'stores/enums/CompactVoteButton';
+import { compactVoteButton } from 'stores/enums/CompactVoteButton';
 import Cell from 'components/cell/Cell';
 import CellGroup from 'components/cell/CellGroup';
 import openActionSheet from 'utils/openActionSheet';

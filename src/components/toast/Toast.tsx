@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Text, Animated, Image, NativeModules, SafeAreaView } from 'react-native';
-import UI from 'stores/UI';
+import { Text, Animated, Image } from 'react-native';
 const styles = require('./Toast.styl');
 
 interface Props {

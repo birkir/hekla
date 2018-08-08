@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { View, FlatList, Text, LayoutAnimation, TouchableOpacity, Platform } from 'react-native';
+import { View, FlatList, Text, LayoutAnimation, Platform } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import { autobind } from 'core-decorators';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import set from 'lodash/set';
 import Item from 'stores/models/Item';
 import Items from 'stores/Items';
 import UI from 'stores/UI';

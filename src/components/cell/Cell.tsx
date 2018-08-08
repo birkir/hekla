@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Platform, TouchableNativeFeedback, TouchableHighlight, Image, GestureResponderEvent } from 'react-native';
+import { View, Text, Platform, TouchableNativeFeedback, TouchableHighlight, Image } from 'react-native';
 import { theme } from 'styles';
 import { observer, Observer } from 'mobx-react';
 import { observable } from 'mobx';

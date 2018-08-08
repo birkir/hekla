@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text } from 'react-native';
-import { theme, getVar } from 'styles';
+import { theme } from 'styles';
 import { observer } from 'mobx-react';
 import { autobind } from 'core-decorators';
 import UI from 'stores/UI';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { autobind } from 'core-decorators';
 import StoryCard from 'components/story-card/StoryCard';
