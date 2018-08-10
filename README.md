@@ -41,6 +41,23 @@ iOS and Android client for Hacker News. Inspired by the Apollo client for Reddit
  - CSS Modules with Stylus
  - patch-package for custom native code
 
+## Getting Started
+
+You will need to grab your own `google-services.json` and `GoogleService-Info.plist`. Head over to firebase.com and create a new application.
+
+You will then need to modify your configuration files to match the Hacker News API:
+
+`./android/app/google-services.json`:
+```js
+    "firebase_url": "https://hacker-news.firebaseio.com"
+```
+
+`./ios/Hekla/GoogleService-Info.plist`
+```xml
+	<key>DATABASE_URL</key>
+	<string>https://hacker-news.firebaseio.com</string>
+```
+
 ## Contributing
 
 If you are interested in helping out, feel free to submit issues, pull-requests or even [contact me](mailto:birkir.gudjonsson@gmail.com). I am open to all kind of contributions.

@@ -1,20 +1,20 @@
-import * as React from "react";
-import { View, FlatList, Text } from "react-native";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-import { autobind } from "core-decorators";
-import { observer } from "mobx-react";
-import { observable, autorun } from "mobx";
-import { Navigation } from "react-native-navigation";
-import storyTypeActionSheet from "utils/actionsheets/storyType";
-import StoryCard from "components/story-card/StoryCard";
-import Loading from "components/loading/Loading";
-import Toast from "components/toast/Toast";
-import { ConnectivityRenderer } from "react-native-offline";
-import Stories from "stores/Stories";
-import Item from "stores/models/Item";
-import UI from "stores/UI";
-import { theme, applyThemeOptions, getVar } from "styles";
-const styles = theme(require("./Stories.styl"));
+import * as React from 'react';
+import { View, FlatList, Text } from 'react-native';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import { autobind } from 'core-decorators';
+import { observer } from 'mobx-react';
+import { observable, autorun } from 'mobx';
+import { Navigation } from 'react-native-navigation';
+import storyTypeActionSheet from 'utils/actionsheets/storyType';
+import StoryCard from 'components/story-card/StoryCard';
+import Loading from 'components/loading/Loading';
+import Toast from 'components/toast/Toast';
+import Stories from 'stores/Stories';
+import Item from 'stores/models/Item';
+import UI from 'stores/UI';
+import ConnectivityRenderer from 'react-native-offline';
+import { theme, applyThemeOptions, getVar } from 'styles';
+const styles = theme(require('./Stories.styl'));
 
 interface Props {
   children: React.ReactNode;
@@ -41,25 +41,25 @@ export default class StoriesScreen extends React.Component<Props> {
     return applyThemeOptions({
       topBar: {
         title: {
-          text: String(Stories.prettyType)
+          text: String(Stories.prettyType),
         },
         hideOnScroll: UI.settings.general.hideBarsOnScroll,
         rightButtons: [
           {
-            id: "change",
-            text: "Change",
-            icon: require("assets/icons/25/slider.png")
-          }
-        ]
+            id: 'change',
+            text: 'Change',
+            icon: require('assets/icons/25/slider.png'),
+          },
+        ],
       },
       layout: {
-        backgroundColor: getVar("--backdrop")
+        backgroundColor: getVar('--backdrop'),
       },
       bottomTab: {
-        text: "Stories",
-        testID: "STORIES_TAB",
-        icon: require("assets/icons/25/stories.png")
-      }
+        text: 'Stories',
+        testID: 'STORIES_TAB',
+        icon: require('assets/icons/25/stories.png'),
+      },
     });
   }
 
@@ -94,7 +94,7 @@ export default class StoriesScreen extends React.Component<Props> {
         ) {
           this.scrollToTop();
         }
-      }
+      },
     );
   }
 
@@ -105,14 +105,14 @@ export default class StoriesScreen extends React.Component<Props> {
   }
 
   navigationButtonPressed({ buttonId }) {
-    if (buttonId === "change") {
+    if (buttonId === 'change') {
       storyTypeActionSheet(this.onStoryTypeChange);
     }
   }
 
   @autobind
   async onRefresh() {
-    ReactNativeHapticFeedback.trigger("impactLight", true);
+    ReactNativeHapticFeedback.trigger('impactLight', true);
     this.offset = 0;
     this.isRefreshing = true;
     await this.fetchData();
@@ -156,7 +156,7 @@ export default class StoriesScreen extends React.Component<Props> {
     const { topBarHeight, statusBarHeight } = UI.layout;
     if (this.listRef.current) {
       this.listRef.current.scrollToOffset({
-        offset: -(topBarHeight + statusBarHeight)
+        offset: -(topBarHeight + statusBarHeight),
       });
       await new Promise(r => setTimeout(r, 330));
     }
@@ -174,7 +174,7 @@ export default class StoriesScreen extends React.Component<Props> {
       return null;
     }
 
-    if (item.type === "page" && UI.settings.appearance.showPageEndings) {
+    if (item.type === 'page' && UI.settings.appearance.showPageEndings) {
       return <Text style={styles.page}>PAGE {item.time + 1}</Text>;
     }
 
