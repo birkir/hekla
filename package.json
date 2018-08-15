@@ -44,7 +44,7 @@
     "react-native-interactable": "0.1.10",
     "react-native-keychain": "3.0.0-rc.3",
     "react-native-navigation": "2.0.2422",
-    "react-native-offline": "^3.11.1",
+    "react-native-offline": "3.11.1",
     "react-native-progress": "3.5.0",
     "react-native-rate": "1.0.9",
     "react-native-sentry": "0.38.2",
