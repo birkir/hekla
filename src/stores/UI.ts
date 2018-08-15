@@ -160,7 +160,7 @@ const UI = types
       const { browserOpenIn, browserUseReaderMode } = UI.settings.general;
       let navBarBg = getVar('--navbar-bg');
       if ((!navBarBg || navBarBg === 'transparent') && getVar('--navbar-style') === 'dark') {
-        navBarBg = '#000';
+        navBarBg = '#000000';
       }
       const navBarTint = getVar('--navbar-tint');
       if (Platform.OS === 'ios') {
