@@ -2,13 +2,11 @@
 ![iOS](https://i.imgur.com/iKS60zc.png) [![Build status](https://build.appcenter.ms/v0.1/apps/7122aa1e-d794-4c37-b8d3-800cb455b694/branches/master/badge)](https://appcenter.ms)
 ![Android](https://i.imgur.com/DBQqqX3.png) [![Build status](https://build.appcenter.ms/v0.1/apps/f99344c4-99b2-467b-a9c0-6f73ded73240/branches/master/badge)](https://appcenter.ms)
 
-# Hekla for Hacker News
+# <img src="./assets/android/mipmap-xxxhdpi/ic_launcher.png" height="24" /> Hekla for Hacker News
 
-![Logo](./assets/android/mipmap-xxxhdpi/ic_launcher.png)
+[<img src="http://pluspng.com/img-png/get-it-on-google-play-badge-png-open-2000.png" height="54">](https://play.google.com/store/apps/details?id=is.pipe.hekla) [<img src="https://devimages-cdn.apple.com/app-store/marketing/guidelines/images/badge-example-alternate_2x.png" height="54">](https://itunes.apple.com/us/app/hekla/id1405096983?mt=8)
 
 iOS and Android client for Hacker News. Inspired by the Apollo client for Reddit.
-
-[<img src="http://pluspng.com/img-png/get-it-on-google-play-badge-png-open-2000.png" height="64">](https://play.google.com/store/apps/details?id=is.pipe.hekla) [<img src="https://devimages-cdn.apple.com/app-store/marketing/guidelines/images/badge-example-alternate_2x.png" height="64">](https://itunes.apple.com/us/app/hekla/id1405096983?mt=8)
 
 ##### App features:
 
