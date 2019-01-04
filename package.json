@@ -78,7 +78,7 @@
     "mobx-devtools-mst": "0.9.18",
     "patch-package": "5.1.1",
     "postinstall-prepare": "1.0.1",
-    "react-dom": "16.4.1",
+    "react-dom": "16.4.2",
     "react-native-css-transformer": "1.2.2",
     "react-native-stylus-transformer": "1.1.2",
     "react-native-typescript-transformer": "1.2.10",
