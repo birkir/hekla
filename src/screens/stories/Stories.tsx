@@ -12,6 +12,7 @@ import Toast from 'components/toast/Toast';
 import Stories from 'stores/Stories';
 import Item from 'stores/models/Item';
 import UI from 'stores/UI';
+import ConnectivityRenderer from 'react-native-offline';
 import { theme, applyThemeOptions, getVar } from 'styles';
 const styles = theme(require('./Stories.styl'));
 
@@ -24,7 +25,6 @@ type IItemType = typeof Item.Type;
 
 @observer
 export default class StoriesScreen extends React.Component<Props> {
-
   private listRef = React.createRef() as any;
   private bottomTabSelectedListener;
 
@@ -44,11 +44,13 @@ export default class StoriesScreen extends React.Component<Props> {
           text: String(Stories.prettyType),
         },
         hideOnScroll: UI.settings.general.hideBarsOnScroll,
-        rightButtons: [{
-          id: 'change',
-          text: 'Change',
-          icon: require('assets/icons/25/slider.png'),
-        }],
+        rightButtons: [
+          {
+            id: 'change',
+            text: 'Change',
+            icon: require('assets/icons/25/slider.png'),
+          },
+        ],
       },
       layout: {
         backgroundColor: getVar('--backdrop'),
@@ -84,11 +86,16 @@ export default class StoriesScreen extends React.Component<Props> {
       }
     });
 
-    this.bottomTabSelectedListener = Navigation.events().registerBottomTabSelectedListener(({ selectedTabIndex, unselectedTabIndex }) => {
-      if (selectedTabIndex === unselectedTabIndex && UI.componentId === this.props.componentId) {
-        this.scrollToTop();
-      }
-    });
+    this.bottomTabSelectedListener = Navigation.events().registerBottomTabSelectedListener(
+      ({ selectedTabIndex, unselectedTabIndex }) => {
+        if (
+          selectedTabIndex === unselectedTabIndex &&
+          UI.componentId === this.props.componentId
+        ) {
+          this.scrollToTop();
+        }
+      },
+    );
   }
 
   componentWillUnmount() {
@@ -148,7 +155,9 @@ export default class StoriesScreen extends React.Component<Props> {
   async scrollToTop() {
     const { topBarHeight, statusBarHeight } = UI.layout;
     if (this.listRef.current) {
-      this.listRef.current.scrollToOffset({ offset: -(topBarHeight + statusBarHeight) });
+      this.listRef.current.scrollToOffset({
+        offset: -(topBarHeight + statusBarHeight),
+      });
       await new Promise(r => setTimeout(r, 330));
     }
   }
@@ -166,26 +175,15 @@ export default class StoriesScreen extends React.Component<Props> {
     }
 
     if (item.type === 'page' && UI.settings.appearance.showPageEndings) {
-      return (
-        <Text style={styles.page}>PAGE {item.time + 1}</Text>
-      );
+      return <Text style={styles.page}>PAGE {item.time + 1}</Text>;
     }
 
-    return (
-      <StoryCard
-        isMasterView={true}
-        key={item.id}
-        item={item}
-      />
-    );
+    return <StoryCard isMasterView={true} key={item.id} item={item} />;
   }
 
   render() {
     return (
-      <View
-        style={styles.host}
-        testID="STORIES_SCREEN"
-      >
+      <View style={styles.host} testID="STORIES_SCREEN">
         <FlatList
           ref={this.listRef}
           style={styles.list}
@@ -200,12 +198,15 @@ export default class StoriesScreen extends React.Component<Props> {
           onEndReached={this.onEndReached}
           scrollEnabled={UI.scrollEnabled}
         />
-        <Toast
-          bottom={UI.layout.bottomTabsHeight}
-          visible={!UI.isConnected}
-          message="You are offline"
-          icon={require('assets/icons/16/offline.png')}
-        />
+        <ConnectivityRenderer pingServerUrl={'https://www.google33.com'}>
+          {isConnected => (
+          <Toast
+            bottom={UI.layout.bottomTabsHeight}
+            visible={!isConnected}
+            message="You are offline"
+            icon={require('assets/icons/16/offline.png')}
+          />)}
+        </ConnectivityRenderer>
       </View>
     );
   }
