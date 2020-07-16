@@ -24,7 +24,7 @@
     "date-fns": "1.29.0",
     "html-entities": "1.2.1",
     "jsc-android": "224109.0.0",
-    "lodash": "4.17.11",
+    "lodash": "4.17.19",
     "mobx": "5.0.3",
     "mobx-devtools": "^0.9.18",
     "mobx-react": "5.2.3",
